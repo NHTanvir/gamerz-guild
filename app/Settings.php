@@ -3,7 +3,6 @@
  * All settings related functions
  */
 namespace Codexpert\Gamerz_Guild\App;
-use Codexpert\Gamerz_Guild\Helper;
 use Codexpert\Plugin\Base;
 use Codexpert\Plugin\Settings as Settings_API;
 
@@ -281,18 +280,18 @@ class Settings extends Base {
 					// 'color'		=> '#d30c5c',
 					'sticky'	=> false,
 					'fields'    => [
-						'sample_select3' => [
-							'id'      => 'sample_select3',
-							'label'     => __( 'Select with Chosen', 'gamerz-guild' ),
-							'type'      => 'select',
-							'desc'      => __( 'jQuery Chosen plugin enabled. <a href="https://harvesthq.github.io/chosen/" target="_blank">[See more]</a>', 'gamerz-guild' ),
-							// 'class'     => '',
-							'options'   => Helper::get_posts( [ 'post_type' => 'page' ], false, true ),
-							'default'   => 2,
-							'disabled'  => false, // true|false
-							'multiple'  => false, // true|false
-							'chosen'    => true
-						],
+						// 'sample_select3' => [
+						// 	'id'      => 'sample_select3',
+						// 	'label'     => __( 'Select with Chosen', 'gamerz-guild' ),
+						// 	'type'      => 'select',
+						// 	'desc'      => __( 'jQuery Chosen plugin enabled. <a href="https://harvesthq.github.io/chosen/" target="_blank">[See more]</a>', 'gamerz-guild' ),
+						// 	// 'class'     => '',
+						// 	'options'   => Helper::get_posts( [ 'post_type' => 'page' ], false, true ),
+						// 	'default'   => 2,
+						// 	'disabled'  => false, // true|false
+						// 	'multiple'  => false, // true|false
+						// 	'chosen'    => true
+						// ],
 						'sample_multiselect3' => [
 							'id'      => 'sample_multiselect3',
 							'label'     => __( 'Multi-select with Chosen', 'gamerz-guild' ),

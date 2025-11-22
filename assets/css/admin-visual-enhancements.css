@@ -1,0 +1,88 @@
+/* Admin Visual Enhancements CSS for Gamerz Guild */
+
+/* Dashboard styling */
+.gamerz-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.gamerz-dashboard-card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.gamerz-dashboard-card h3 {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Settings page styling */
+.gamerz-settings-section {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.gamerz-settings-section h2 {
+    margin-top: 0;
+}
+
+/* Guild page styling */
+.gamerz-guild-card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.gamerz-guild-members {
+    margin-top: 20px;
+}
+
+.gamerz-member-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.gamerz-member-row:last-child {
+    border-bottom: none;
+}
+
+/* Table styling for admin lists */
+.wp-list-table .gamerz-rank-column {
+    width: 150px;
+}
+
+.wp-list-table .gamerz-xp-column {
+    width: 100px;
+}
+
+.wp-list-table .gamerz-status-column {
+    width: 100px;
+}
+
+/* Responsive admin styles */
+@media screen and (max-width: 782px) {
+    .gamerz-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .gamerz-member-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

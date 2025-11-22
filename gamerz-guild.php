@@ -62,14 +62,15 @@ final class Plugin {
 
 	/**
 	 * Includes files
-	 * 
+	 *
 	 * @access private
-	 * 
+	 *
 	 * @uses composer
 	 * @uses psr-4
 	 */
 	private function include() {
 		require_once( dirname( __FILE__ ) . '/vendor/autoload.php' );
+		require_once( dirname( __FILE__ ) . '/includes/main.php' );
 	}
 
 	/**
