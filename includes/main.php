@@ -200,6 +200,44 @@ class Main {
 
 		register_post_type( 'guild', $guild_args );
 
+		// Register meta fields for Gutenberg compatibility
+		register_post_meta( 'guild', '_guild_tagline', [
+			'show_in_rest' => true,
+			'single' => true,
+			'type' => 'string',
+			'auth_callback' => function() { return current_user_can( 'edit_posts' ); },
+		] );
+
+		register_post_meta( 'guild', '_guild_description', [
+			'show_in_rest' => true,
+			'single' => true,
+			'type' => 'string',
+			'auth_callback' => function() { return current_user_can( 'edit_posts' ); },
+		] );
+
+		register_post_meta( 'guild', '_guild_max_members', [
+			'show_in_rest' => true,
+			'single' => true,
+			'type' => 'integer',
+			'default' => 20,
+			'auth_callback' => function() { return current_user_can( 'edit_posts' ); },
+		] );
+
+		register_post_meta( 'guild', '_guild_creator_id', [
+			'show_in_rest' => true,
+			'single' => true,
+			'type' => 'integer',
+			'auth_callback' => function() { return current_user_can( 'edit_posts' ); },
+		] );
+
+		register_post_meta( 'guild', '_guild_status', [
+			'show_in_rest' => true,
+			'single' => true,
+			'type' => 'string',
+			'default' => 'active',
+			'auth_callback' => function() { return current_user_can( 'edit_posts' ); },
+		] );
+
 		// Register Challenges post type
 		$challenge_labels = array(
 			'name'                  => _x( 'Challenges', 'Post type general name', 'gamerz-guild' ),

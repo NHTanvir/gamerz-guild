@@ -33,53 +33,11 @@ class Guild {
 	 * Initialize the guild system
 	 */
 	public function init() {
-		add_action( 'init', [ $this, 'register_post_type' ] );
-		add_action( 'init', [ $this, 'setup_actions' ] );
-	}
-
-	/**
-	 * Register the guild post type
-	 */
-	public function register_post_type() {
-		$args = [
-			'labels'				=> [
-				'name'				=> __( 'Guilds', 'gamerz-guild' ),
-				'singular_name'		=> __( 'Guild', 'gamerz-guild' ),
-				'add_new'			=> __( 'Add New Guild', 'gamerz-guild' ),
-				'add_new_item'		=> __( 'Add New Guild', 'gamerz-guild' ),
-				'edit_item'			=> __( 'Edit Guild', 'gamerz-guild' ),
-				'new_item'			=> __( 'New Guild', 'gamerz-guild' ),
-				'view_item'			=> __( 'View Guild', 'gamerz-guild' ),
-				'search_items'		=> __( 'Search Guilds', 'gamerz-guild' ),
-				'not_found'			=> __( 'No guilds found', 'gamerz-guild' ),
-				'not_found_in_trash'=> __( 'No guilds found in trash', 'gamerz-guild' ),
-				'parent_item_colon'	=> __( 'Parent Guild:', 'gamerz-guild' ),
-				'menu_name'			=> __( 'Guilds', 'gamerz-guild' ),
-			],
-			'public'				=> true,
-			'publicly_queryable'	=> true,
-			'show_ui'				=> true,
-			'show_in_menu'			=> true,
-			'query_var'				=> true,
-			'rewrite'				=> [ 'slug' => 'guild' ],
-			'capability_type'		=> 'post',
-			'has_archive'			=> true,
-			'hierarchical'			=> false,
-			'menu_position'			=> null,
-			'supports'				=> [ 'title', 'editor', 'thumbnail', 'custom-fields' ],
-			'show_in_rest'			=> true,
-		];
-
-		register_post_type( $this->post_type, $args );
-	}
-
-	/**
-	 * Setup additional actions
-	 */
-	public function setup_actions() {
-		// Add guild meta fields
+		// Add guild meta fields and Gutenberg support directly
 		add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
 		add_action( 'save_post', [ $this, 'save_meta_box' ] );
+		// Use higher priority to ensure it runs after core Gutenberg scripts are loaded
+		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_gutenberg_assets' ], 20 );
 	}
 
 	/**
@@ -94,6 +52,55 @@ class Guild {
 			'normal',
 			'default'
 		);
+	}
+
+	/**
+	 * Enqueue Gutenberg editor assets
+	 */
+	public function enqueue_gutenberg_assets() {
+
+		global $post;
+
+		// Check if we're editing a guild post
+		$is_guild_post_type = false;
+		if ( $post && $post->post_type === $this->post_type ) {
+			$is_guild_post_type = true;
+		} else {
+			// Check if post_type parameter in URL is 'guild'
+			if ( isset( $_GET['post'] ) && get_post_type( intval( $_GET['post'] ) ) === $this->post_type ) {
+				$is_guild_post_type = true;
+			} elseif ( isset( $_GET['post_type'] ) && $_GET['post_type'] === $this->post_type ) {
+				$is_guild_post_type = true;
+			} elseif ( get_current_screen() && get_current_screen()->post_type === $this->post_type ) {
+				$is_guild_post_type = true;
+			}
+		}
+
+		if ( $is_guild_post_type ) {
+			wp_enqueue_script(
+				'guild-gutenberg-sidebar',
+				plugin_dir_url( dirname( dirname( __DIR__ ) ) ) . 'assets/js/guild-gutenberg.js',
+				array(
+					'wp-plugins',
+					'wp-edit-post',
+					'wp-element',
+					'wp-components',
+					'wp-data',
+					'wp-block-editor',
+					'wp-compose',
+					'wp-i18n'
+				),
+				filemtime( plugin_dir_path( dirname( dirname( __DIR__ ) ) ) . 'assets/js/guild-gutenberg.js' ),
+				true
+			);
+
+			// Localize script to ensure i18n works properly
+			wp_add_inline_script(
+				'guild-gutenberg-sidebar',
+				'wp.i18n.setLocaleData( { "gamerz-guild": { domain: "gamerz-guild" } }, "gamerz-guild" );',
+				'after'
+			);
+		}
 	}
 
 	/**
@@ -144,8 +151,14 @@ class Guild {
 	 * Save meta box data
 	 */
 	public function save_meta_box( $post_id ) {
-		if ( ! isset( $_POST['guild_details_nonce'] ) || ! wp_verify_nonce( $_POST['guild_details_nonce'], 'save_guild_details' ) ) {
-			return;
+		// Check if the request is coming from classic editor by checking for our nonce
+		$is_classic_editor_save = isset( $_POST['guild_details_nonce'] );
+
+		// For classic editor, verify nonce
+		if ( $is_classic_editor_save ) {
+			if ( ! isset( $_POST['guild_details_nonce'] ) || ! wp_verify_nonce( $_POST['guild_details_nonce'], 'save_guild_details' ) ) {
+				return;
+			}
 		}
 
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -156,6 +169,9 @@ class Guild {
 			return;
 		}
 
+		// Save data - this handles both classic editor and serves as a fallback
+		// In Gutenberg, the meta fields registered with register_post_meta are saved automatically
+		// But we still process these fields to ensure compatibility across both editors
 		if ( isset( $_POST['guild_tagline'] ) ) {
 			update_post_meta( $post_id, '_guild_tagline', sanitize_text_field( $_POST['guild_tagline'] ) );
 		}
