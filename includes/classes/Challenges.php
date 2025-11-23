@@ -27,13 +27,6 @@ class Challenges {
 	 * Constructor function
 	 */
 	public function __construct() {
-		$this->init();
-	}
-
-	/**
-	 * Initialize the challenges system
-	 */
-	public function init() {
 		add_action( 'init', [ $this, 'setup_hooks' ] );
 	}
 
@@ -43,19 +36,17 @@ class Challenges {
 	public function setup_hooks() {
 		// Register custom post type for challenges
 		add_action( 'init', [ $this, 'register_challenge_post_type' ] );
-		
-		// Add challenge completion hooks
-		add_action( 'wp_ajax_complete_challenge', [ $this, 'handle_challenge_completion' ] );
-		add_action( 'wp_ajax_submit_challenge_proof', [ $this, 'handle_challenge_proof_submission' ] );
-		
-		// Shortcodes for displaying challenges
-		add_shortcode( 'gamerz_weekly_challenges', [ $this, 'render_weekly_challenges_shortcode' ] );
-		add_shortcode( 'gamerz_my_challenges', [ $this, 'render_my_challenges_shortcode' ] );
-		
-		// Cron job to reset weekly challenges
-		add_action( 'gamerz_reset_weekly_challenges', [ $this, 'reset_weekly_challenges' ] );
-		if ( ! wp_next_scheduled( 'gamerz_reset_weekly_challenges' ) ) {
-			wp_schedule_event( strtotime( 'next monday 00:00:00' ), 'weekly', 'gamerz_reset_weekly_challenges' );
+
+		// Add challenge completion hooks and cron (only if myCRED is active)
+		if ( class_exists( 'myCRED' ) ) {
+			add_action( 'wp_ajax_complete_challenge', [ $this, 'handle_challenge_completion' ] );
+			add_action( 'wp_ajax_submit_challenge_proof', [ $this, 'handle_challenge_proof_submission' ] );
+
+			// Cron job to reset weekly challenges
+			add_action( 'gamerz_reset_weekly_challenges', [ $this, 'reset_weekly_challenges' ] );
+			if ( ! wp_next_scheduled( 'gamerz_reset_weekly_challenges' ) ) {
+				wp_schedule_event( strtotime( 'next monday 00:00:00' ), 'weekly', 'gamerz_reset_weekly_challenges' );
+			}
 		}
 	}
 
@@ -269,7 +260,7 @@ class Challenges {
 	 */
 	public function award_challenge_rewards( $user_id, $challenge_id, $challenge_data = [] ) {
 		$xp_system = new XP_System();
-		
+
 		// Award XP
 		$reward_xp = isset( $challenge_data['reward_xp'] ) ? $challenge_data['reward_xp'] : 50;
 		if ( $reward_xp > 0 ) {
@@ -279,7 +270,7 @@ class Challenges {
 					'weekly_challenge',
 					$user_id,
 					$reward_xp,
-					sprintf( __( 'Completed weekly challenge: %s', 'gamerz-guild' ), 
+					sprintf( __( 'Completed weekly challenge: %s', 'gamerz-guild' ),
 						isset( $challenge_data['title'] ) ? $challenge_data['title'] : 'Weekly Challenge' ),
 					$challenge_id,
 					[],
@@ -467,9 +458,12 @@ class Challenges {
 	 * Render weekly challenges shortcode
 	 */
 	public function render_weekly_challenges_shortcode( $atts ) {
+
+		error_log('render weekly challenges');
 		$atts = shortcode_atts( [
 			'title' => 'Weekly Challenges',
 		], $atts );
+
 
 		$challenges = $this->get_current_challenges();
 		$user_id = get_current_user_id();
@@ -759,6 +753,7 @@ class Challenges {
 		$atts = shortcode_atts( [
 			'title' => 'My Challenge History',
 		], $atts );
+
 
 		$user_id = get_current_user_id();
 		if ( ! $user_id ) {

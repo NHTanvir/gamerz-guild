@@ -22,18 +22,6 @@ class Leaderboard {
 	 * Constructor function
 	 */
 	public function __construct() {
-		$this->init();
-	}
-
-	/**
-	 * Initialize the leaderboard system
-	 */
-	public function init() {
-		// Check if myCred is active
-		if ( ! class_exists( 'myCRED' ) ) {
-			return;
-		}
-
 		add_action( 'init', [ $this, 'setup_hooks' ] );
 	}
 
@@ -41,12 +29,10 @@ class Leaderboard {
 	 * Setup hooks
 	 */
 	public function setup_hooks() {
-		// Shortcode for displaying leaderboards
-		add_shortcode( 'gamerz_leaderboard', [ $this, 'render_leaderboard_shortcode' ] );
-		add_shortcode( 'gamerz_xp_progress', [ $this, 'render_xp_progress_shortcode' ] );
-		
-		// AJAX for updating leaderboards
-		add_action( 'wp_ajax_update_leaderboard', [ $this, 'update_leaderboard_ajax' ] );
+		// AJAX for updating leaderboards (only if myCRED is active)
+		if ( class_exists( 'myCRED' ) ) {
+			add_action( 'wp_ajax_update_leaderboard', [ $this, 'update_leaderboard_ajax' ] );
+		}
 	}
 
 	/**
@@ -78,11 +64,11 @@ class Leaderboard {
 
 		foreach ( $users as $user ) {
 			$user_xp = $mycred->get_users_cred( $user->ID );
-			
+
 			if ( $user_xp > 0 ) { // Only include users with XP
 				$rank_system = new Rank_System();
 				$rank_info = $rank_system->get_user_rank( $user->ID );
-				
+
 				$leaderboard[] = [
 					'rank' => $rank,
 					'user_id' => $user->ID,
@@ -141,7 +127,7 @@ class Leaderboard {
 			if ( $user ) {
 				$rank_system = new Rank_System();
 				$rank_info = $rank_system->get_user_rank( $member_data['user_id'] );
-				
+
 				$leaderboard[] = [
 					'rank' => $rank,
 					'user_id' => $user->ID,
@@ -221,7 +207,7 @@ class Leaderboard {
 		foreach ( $time_based_xp as $user_data ) {
 			$rank_system = new Rank_System();
 			$rank_info = $rank_system->get_user_rank( $user_data['user_id'] );
-			
+
 			$leaderboard[] = [
 				'rank' => $rank,
 				'user_id' => $user_data['user_id'],
@@ -323,6 +309,7 @@ class Leaderboard {
 			'title' => 'Top Scrubs',
 		], $atts );
 
+
 		ob_start();
 
 		$leaderboard = [];
@@ -342,7 +329,7 @@ class Leaderboard {
 					}
 					$atts['guild_id'] = $guild_id;
 				}
-				
+
 				if ( $atts['guild_id'] ) {
 					$leaderboard = $this->get_guild_leaderboard( $atts['guild_id'], $atts['limit'] );
 					$guild = get_post( $atts['guild_id'] );
@@ -351,7 +338,7 @@ class Leaderboard {
 					}
 				}
 				break;
-				
+
 			default:
 				$leaderboard = $this->get_global_leaderboard( $atts['limit'] );
 		}
@@ -472,6 +459,7 @@ class Leaderboard {
 			'show_next_rank' => 'true',
 			'title' => 'Your Progress',
 		], $atts );
+
 
 		$user_id = $atts['user_id'];
 		if ( ! $user_id ) {

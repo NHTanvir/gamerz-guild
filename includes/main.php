@@ -55,45 +55,32 @@ class Main {
 	 * @uses psr-4
 	 */
 	private function include() {
-		// Load classes
-		if ( file_exists( dirname( __FILE__ ) . '/classes/Guild.php' ) ) {
-			require_once( dirname( __FILE__ ) . '/classes/Guild.php' );
-		}
-		if ( file_exists( dirname( __FILE__ ) . '/classes/Guild_Member.php' ) ) {
-			require_once( dirname( __FILE__ ) . '/classes/Guild_Member.php' );
-		}
-		if ( file_exists( dirname( __FILE__ ) . '/classes/Guild_Activity.php' ) ) {
-			require_once( dirname( __FILE__ ) . '/classes/Guild_Activity.php' );
-		}
-		if ( file_exists( dirname( __FILE__ ) . '/classes/XP_System.php' ) ) {
-			require_once( dirname( __FILE__ ) . '/classes/XP_System.php' );
-		}
-		if ( file_exists( dirname( __FILE__ ) . '/classes/Rank_System.php' ) ) {
-			require_once( dirname( __FILE__ ) . '/classes/Rank_System.php' );
-		}
-		if ( file_exists( dirname( __FILE__ ) . '/classes/Badge_System.php' ) ) {
-			require_once( dirname( __FILE__ ) . '/classes/Badge_System.php' );
-		}
-		if ( file_exists( dirname( __FILE__ ) . '/classes/Redemption_System.php' ) ) {
-			require_once( dirname( __FILE__ ) . '/classes/Redemption_System.php' );
-		}
-		if ( file_exists( dirname( __FILE__ ) . '/classes/Leaderboard.php' ) ) {
-			require_once( dirname( __FILE__ ) . '/classes/Leaderboard.php' );
-		}
-		if ( file_exists( dirname( __FILE__ ) . '/classes/Challenges.php' ) ) {
-			require_once( dirname( __FILE__ ) . '/classes/Challenges.php' );
-		}
-		if ( file_exists( dirname( __FILE__ ) . '/classes/Discord_Integration.php' ) ) {
-			require_once( dirname( __FILE__ ) . '/classes/Discord_Integration.php' );
-		}
-		if ( file_exists( dirname( __FILE__ ) . '/classes/Forum_Integration.php' ) ) {
-			require_once( dirname( __FILE__ ) . '/classes/Forum_Integration.php' );
-		}
-		if ( file_exists( dirname( __FILE__ ) . '/classes/Event_Integration.php' ) ) {
-			require_once( dirname( __FILE__ ) . '/classes/Event_Integration.php' );
-		}
-		if ( file_exists( dirname( __FILE__ ) . '/classes/Visual_Enhancements.php' ) ) {
-			require_once( dirname( __FILE__ ) . '/classes/Visual_Enhancements.php' );
+		$classes_dir = dirname( __FILE__ ) . '/classes/';
+
+		// Load classes and log if files exist
+		$classes_to_load = [
+			'Guild.php',
+			'Guild_Member.php',
+			'Guild_Activity.php',
+			'XP_System.php',
+			'Rank_System.php',
+			'Badge_System.php',
+			'Redemption_System.php',
+			'Leaderboard.php',
+			'Challenges.php',
+			'Discord_Integration.php',
+			'Forum_Integration.php',
+			'Event_Integration.php',
+			'Visual_Enhancements.php'
+		];
+
+		foreach ( $classes_to_load as $class_file ) {
+			$file_path = $classes_dir . $class_file;
+			if ( file_exists( $file_path ) ) {
+				require_once( $file_path );
+			} else {
+				error_log( "Gamerz Guild: Missing class file - " . $file_path );
+			}
 		}
 	}
 
@@ -105,12 +92,13 @@ class Main {
 	 * Executes main plugin features
 	 */
 	private function hook() {
-		// Initialize all systems
+		error_log( "Gamerz Guild: Plugin initialized" );
+		// Initialize all systems - always initialize basic functionality
 		add_action( 'init', [ $this, 'initialize_systems' ] );
-		
+
 		// Add our custom post types and taxonomies
 		add_action( 'init', [ $this, 'register_post_types' ] );
-		
+
 		// Add admin menu
 		add_action( 'admin_menu', [ $this, 'add_admin_menu' ] );
 	}
@@ -119,34 +107,104 @@ class Main {
 	 * Initialize all systems
 	 */
 	public function initialize_systems() {
-		// Initialize systems only if their dependencies exist
-		if ( class_exists( 'myCRED' ) ) {
-			new Classes\XP_System();
-			new Classes\Rank_System();
-			new Classes\Badge_System();
-			new Classes\Redemption_System();
+		// Initialize systems - always initialize core functionality (including shortcodes)
+		try {
 			new Classes\Leaderboard();
+			error_log( "Gamerz Guild: Leaderboard initialized" );
+		} catch (Exception $e) {
+			error_log( "Gamerz Guild: Error initializing Leaderboard - " . $e->getMessage() );
+		}
+		try {
 			new Classes\Challenges();
+			error_log( "Gamerz Guild: Challenges initialized" );
+		} catch (Exception $e) {
+			error_log( "Gamerz Guild: Error initializing Challenges - " . $e->getMessage() );
+		}
+
+		// Initialize systems that require myCRED only if myCRED is active
+		if ( class_exists( 'myCRED' ) ) {
+			error_log( "Gamerz Guild: Initializing myCRED-dependent systems" );
+			try {
+				new Classes\XP_System();
+				error_log( "Gamerz Guild: XP_System initialized" );
+			} catch (Exception $e) {
+				error_log( "Gamerz Guild: Error initializing XP_System - " . $e->getMessage() );
+			}
+			try {
+				new Classes\Rank_System();
+				error_log( "Gamerz Guild: Rank_System initialized" );
+			} catch (Exception $e) {
+				error_log( "Gamerz Guild: Error initializing Rank_System - " . $e->getMessage() );
+			}
+			try {
+				new Classes\Badge_System();
+				error_log( "Gamerz Guild: Badge_System initialized" );
+			} catch (Exception $e) {
+				error_log( "Gamerz Guild: Error initializing Badge_System - " . $e->getMessage() );
+			}
+			try {
+				new Classes\Redemption_System();
+				error_log( "Gamerz Guild: Redemption_System initialized" );
+			} catch (Exception $e) {
+				error_log( "Gamerz Guild: Error initializing Redemption_System - " . $e->getMessage() );
+			}
+		} else {
+			error_log( "Gamerz Guild: myCRED not active, skipping dependent systems" );
 		}
 
 		if ( class_exists( 'bbPress' ) ) {
-			new Classes\Forum_Integration();
+			try {
+				new Classes\Forum_Integration();
+				error_log( "Gamerz Guild: Forum_Integration initialized" );
+			} catch (Exception $e) {
+				error_log( "Gamerz Guild: Error initializing Forum_Integration - " . $e->getMessage() );
+			}
 		}
 
 		if ( class_exists( 'Tribe__Events__Main' ) ) {
-			new Classes\Event_Integration();
+			try {
+				new Classes\Event_Integration();
+				error_log( "Gamerz Guild: Event_Integration initialized" );
+			} catch (Exception $e) {
+				error_log( "Gamerz Guild: Error initializing Event_Integration - " . $e->getMessage() );
+			}
 		}
 
 		// Initialize core guild functionality
-		new Classes\Guild();
-		new Classes\Guild_Member();
-		new Classes\Guild_Activity();
-		
+		try {
+			new Classes\Guild();
+			error_log( "Gamerz Guild: Guild initialized" );
+		} catch (Exception $e) {
+			error_log( "Gamerz Guild: Error initializing Guild - " . $e->getMessage() );
+		}
+		try {
+			new Classes\Guild_Member();
+			error_log( "Gamerz Guild: Guild_Member initialized" );
+		} catch (Exception $e) {
+			error_log( "Gamerz Guild: Error initializing Guild_Member - " . $e->getMessage() );
+		}
+		try {
+			new Classes\Guild_Activity();
+			error_log( "Gamerz Guild: Guild_Activity initialized" );
+		} catch (Exception $e) {
+			error_log( "Gamerz Guild: Error initializing Guild_Activity - " . $e->getMessage() );
+		}
+
 		// Initialize visual enhancements
-		new Classes\Visual_Enhancements();
-		
+		try {
+			new Classes\Visual_Enhancements();
+			error_log( "Gamerz Guild: Visual_Enhancements initialized" );
+		} catch (Exception $e) {
+			error_log( "Gamerz Guild: Error initializing Visual_Enhancements - " . $e->getMessage() );
+		}
+
 		// Initialize Discord integration (if configured)
-		new Classes\Discord_Integration();
+		try {
+			new Classes\Discord_Integration();
+			error_log( "Gamerz Guild: Discord_Integration initialized" );
+		} catch (Exception $e) {
+			error_log( "Gamerz Guild: Error initializing Discord_Integration - " . $e->getMessage() );
+		}
 	}
 
 	/**

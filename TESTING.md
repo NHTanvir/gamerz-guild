@@ -9,6 +9,35 @@ This guide provides detailed, line-by-line testing instructions for the complete
 - Optional plugins: Youzify, WooCommerce (for redemption), Uncanny Automator (for Discord)
 - Test user accounts created
 
+## Required Pages Setup
+Before testing, create the following pages and add the specified shortcodes:
+
+### 1. Leaderboard Page
+- Create a new page titled "Leaderboard"
+- Add shortcode: [gamerz_leaderboard] to display the XP leaderboard
+- Add shortcode: [gamerz_xp_progress] to show individual XP progress
+- This page will show global and guild-specific leaderboards
+
+### 2. Weekly Challenges Page
+- Create a new page titled "Weekly Challenges"
+- Add shortcode: [gamerz_weekly_challenges] to display current week's challenges
+- This page will show 3 rotating challenges each week with descriptions and rewards
+
+### 3. My Challenges Page
+- Create a new page titled "My Challenges"
+- Add shortcode: [gamerz_my_challenges] to display user's personal challenge progress
+- This page will show challenges the user has completed or is currently working on
+
+### 4. Guild Pages
+- Guild-related pages will be automatically created through the custom post type
+- Guild creation form and management will be accessible through the BuddyPress navigation
+- No manual page creation required for guilds (handled via custom post type)
+
+### 5. XP Redemption Store (if using WooCommerce)
+- If using WooCommerce for XP redemption, ensure your shop page is configured
+- Redemption items will appear as virtual products that can be purchased with XP
+- Configure WooCommerce product pages to handle XP-based transactions
+
 ## Comprehensive Feature Testing Guide
 
 ### 1. Guild Management System Testing

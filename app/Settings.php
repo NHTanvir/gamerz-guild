@@ -14,6 +14,9 @@ use Codexpert\Plugin\Settings as Settings_API;
 class Settings extends Base {
 
 	public $plugin;
+	public $slug;
+	public $name;
+	public $version;
 
 	/**
 	 * Constructor function

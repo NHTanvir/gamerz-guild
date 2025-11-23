@@ -20,6 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Front extends Base {
 
 	public $plugin;
+	public $slug;
+	public $name;
+	public $version;
 
 	/**
 	 * Constructor function

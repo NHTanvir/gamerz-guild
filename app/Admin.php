@@ -21,6 +21,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Admin extends Base {
 
 	public $plugin;
+	public $slug;
+	public $name;
+	public $server;
+	public $version;
 
 	/**
 	 * Constructor function

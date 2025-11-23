@@ -167,6 +167,10 @@ final class Plugin {
 			 */
 			$shortcode = new App\Shortcode( $this->plugin );
 			$shortcode->register( 'my_shortcode', 'my_shortcode' );
+			$shortcode->register( 'gamerz_weekly_challenges', 'render_weekly_challenges_shortcode' );
+			$shortcode->register( 'gamerz_my_challenges', 'render_my_challenges_shortcode' );
+			$shortcode->register( 'gamerz_leaderboard', 'render_leaderboard_shortcode' );
+			$shortcode->register( 'gamerz_xp_progress', 'render_xp_progress_shortcode' );
 
 		endif;
 
