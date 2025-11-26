@@ -57,6 +57,12 @@ class AJAX extends Base {
 		$this->action( 'wp_ajax_nopriv_guild_demote_member', 'handle_not_logged_in' );
 		$this->action( 'wp_ajax_nopriv_guild_create', 'handle_not_logged_in' );
 		$this->action( 'wp_ajax_nopriv_get_guild_members', 'handle_not_logged_in' );
+
+		// Guild edit actions
+		$this->action( 'wp_ajax_get_guild_details', 'handle_get_guild_details' );
+		$this->action( 'wp_ajax_update_guild', 'handle_update_guild' );
+		$this->action( 'wp_ajax_nopriv_get_guild_details', 'handle_not_logged_in' );
+		$this->action( 'wp_ajax_nopriv_update_guild', 'handle_not_logged_in' );
 	}
 
 	/**
@@ -113,6 +119,22 @@ class AJAX extends Base {
 	public function handle_get_guild_members() {
 		$guild_member = new \Codexpert\Gamerz_Guild\Classes\Guild_Member();
 		$guild_member->handle_get_guild_members();
+	}
+
+	/**
+	 * Handle get guild details (proxy to Guild_Member class)
+	 */
+	public function handle_get_guild_details() {
+		$guild_member = new \Codexpert\Gamerz_Guild\Classes\Guild_Member();
+		$guild_member->get_guild_details();
+	}
+
+	/**
+	 * Handle update guild (proxy to Guild_Member class)
+	 */
+	public function handle_update_guild() {
+		$guild_member = new \Codexpert\Gamerz_Guild\Classes\Guild_Member();
+		$guild_member->update_guild();
 	}
 
 	/**

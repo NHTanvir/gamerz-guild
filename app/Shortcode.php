@@ -891,6 +891,37 @@ class Shortcode extends Base {
                     <div id="gamerz-guild-members-list"></div>
                 </div>
             </div>
+
+            <!-- Edit Guild Modal -->
+            <div id="gamerz-guild-edit-modal" class="gamerz-modal" style="display: none;">
+                <div class="gamerz-modal-content">
+                    <span class="gamerz-modal-close">&times;</span>
+                    <h3>Edit Guild Details</h3>
+                    <form id="gamerz-edit-guild-form">
+                        <input type="hidden" id="guild_edit_id" name="guild_edit_id" value="" />
+                        <p>
+                            <label for="guild_edit_title">Guild Name *</label>
+                            <input type="text" id="guild_edit_title" name="guild_edit_title" required />
+                        </p>
+                        <p>
+                            <label for="guild_edit_description">Description</label>
+                            <textarea id="guild_edit_description" name="guild_edit_description"></textarea>
+                        </p>
+                        <p>
+                            <label for="guild_edit_tagline">Tagline</label>
+                            <input type="text" id="guild_edit_tagline" name="guild_edit_tagline" />
+                        </p>
+                        <p>
+                            <label for="guild_edit_max_members">Max Members (5-100)</label>
+                            <input type="number" id="guild_edit_max_members" name="guild_edit_max_members" min="5" max="100" value="20" />
+                        </p>
+                        <p>
+                            <button type="submit" class="button button-primary">Update Guild</button>
+                            <button type="button" class="button button-secondary gamerz-guild-edit-cancel">Cancel</button>
+                        </p>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <script>
@@ -978,9 +1009,77 @@ class Shortcode extends Base {
                 $('#gamerz-guild-member-management-modal').show();
             });
 
+            // Guild Edit Button - Show edit form
+            $(document).on('click', '.gamerz-guild-edit-btn', function() {
+                var guildId = $(this).data('guild-id');
+
+                // Get current guild data via AJAX
+                $.post(ajaxurl, {
+                    action: 'get_guild_details',
+                    guild_id: guildId,
+                    nonce: '<?php echo wp_create_nonce( 'guild_details_nonce' ); ?>'
+                }, function(response) {
+                    if (response.success) {
+                        var guild = response.data;
+
+                        // Populate the edit form
+                        $('#guild_edit_id').val(guild.ID);
+                        $('#guild_edit_title').val(guild.post_title);
+                        $('#guild_edit_description').val(guild.post_content || '');
+                        $('#guild_edit_tagline').val(guild.meta ? (guild.meta._guild_tagline || '') : '');
+                        $('#guild_edit_max_members').val(guild.meta ? (guild.meta._guild_max_members || 20) : 20);
+
+                        // Show the edit modal
+                        $('#gamerz-guild-edit-modal').show();
+                    } else {
+                        alert('Error: ' + response.data.message);
+                    }
+                }).fail(function() {
+                    alert('Connection error. Please try again.');
+                });
+            });
+
+            // Submit guild edit
+            $('#gamerz-edit-guild-form').on('submit', function(e) {
+                e.preventDefault();
+
+                var formData = {
+                    action: 'update_guild',
+                    guild_id: $('#guild_edit_id').val(),
+                    title: $('#guild_edit_title').val(),
+                    description: $('#guild_edit_description').val(),
+                    tagline: $('#guild_edit_tagline').val(),
+                    max_members: $('#guild_edit_max_members').val(),
+                    nonce: '<?php echo wp_create_nonce( 'guild_update_nonce' ); ?>'
+                };
+
+                if (!formData.title) {
+                    alert('Guild name is required.');
+                    return;
+                }
+
+                $.post(ajaxurl, formData, function(response) {
+                    if (response.success) {
+                        alert(response.data.message);
+                        location.reload(); // Refresh to show updated guild
+                    } else {
+                        alert('Error: ' + response.data.message);
+                    }
+                }).fail(function() {
+                    alert('Connection error. Please try again.');
+                });
+            });
+
+            // Cancel edit guild
+            $(document).on('click', '.gamerz-guild-edit-cancel', function(e) {
+                e.preventDefault();
+                $('#gamerz-guild-edit-modal').hide();
+            });
+
             // Modal Close
             $(document).on('click', '.gamerz-modal-close', function() {
                 $('#gamerz-guild-member-management-modal').hide();
+                $('#gamerz-guild-edit-modal').hide();
             });
 
             $(document).on('click', function(e) {

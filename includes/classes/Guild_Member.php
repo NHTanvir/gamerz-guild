@@ -415,6 +415,119 @@ class Guild_Member {
 	}
 
 	/**
+	 * Get guild details
+	 */
+	public function get_guild_details() {
+		if ( ! wp_verify_nonce( $_POST['nonce'], 'guild_details_nonce' ) ) {
+			wp_die( __( 'Security check failed', 'gamerz-guild' ) );
+		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_die( __( 'You must be logged in to manage guilds', 'gamerz-guild' ) );
+		}
+
+		$guild_id = intval( $_POST['guild_id'] );
+		$user_id = get_current_user_id();
+		$guild = new Guild();
+
+		// Check if user is the guild leader (only leader can edit guild details)
+		$user_role = $guild->get_user_role( $guild_id, $user_id );
+		if ( $user_role !== 'leader' ) {
+			wp_die( __( 'Only the guild leader can edit guild details', 'gamerz-guild' ) );
+		}
+
+		$guild_post = get_post( $guild_id );
+		if ( ! $guild_post ) {
+			wp_die( __( 'Guild not found', 'gamerz-guild' ) );
+		}
+
+		// Get guild meta
+		$meta = [
+			'_guild_tagline' => get_post_meta( $guild_id, '_guild_tagline', true ),
+			'_guild_description' => get_post_meta( $guild_id, '_guild_description', true ),
+			'_guild_max_members' => get_post_meta( $guild_id, '_guild_max_members', true ),
+			'_guild_creator_id' => get_post_meta( $guild_id, '_guild_creator_id', true ),
+			'_guild_status' => get_post_meta( $guild_id, '_guild_status', true ),
+		];
+
+		// Prepare guild data
+		$guild_data = [
+			'ID' => $guild_post->ID,
+			'post_title' => $guild_post->post_title,
+			'post_content' => $guild_post->post_content,
+			'post_status' => $guild_post->post_status,
+			'meta' => $meta,
+		];
+
+		wp_send_json_success( $guild_data );
+	}
+
+	/**
+	 * Update guild details
+	 */
+	public function update_guild() {
+		if ( ! wp_verify_nonce( $_POST['nonce'], 'guild_update_nonce' ) ) {
+			wp_die( __( 'Security check failed', 'gamerz-guild' ) );
+		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_die( __( 'You must be logged in to manage guilds', 'gamerz-guild' ) );
+		}
+
+		$guild_id = intval( $_POST['guild_id'] );
+		$user_id = get_current_user_id();
+		$guild = new Guild();
+
+		// Check if user is the guild leader (only leader can update guild details)
+		$user_role = $guild->get_user_role( $guild_id, $user_id );
+		if ( $user_role !== 'leader' ) {
+			wp_die( __( 'Only the guild leader can update guild details', 'gamerz-guild' ) );
+		}
+
+		// Sanitize input data
+		$update_data = [
+			'ID' => $guild_id,
+			'post_title' => sanitize_text_field( $_POST['title'] ),
+			'post_content' => wp_kses_post( $_POST['description'] ),
+		];
+
+		// Validate required fields
+		if ( empty( $update_data['post_title'] ) ) {
+			wp_die( __( 'Guild name is required', 'gamerz-guild' ) );
+		}
+
+		// Update the post
+		$updated = wp_update_post( $update_data );
+
+		if ( is_wp_error( $updated ) ) {
+			wp_die( $updated->get_error_message() );
+		}
+
+		// Update meta fields
+		if ( isset( $_POST['tagline'] ) ) {
+			update_post_meta( $guild_id, '_guild_tagline', sanitize_text_field( $_POST['tagline'] ) );
+		}
+
+		if ( isset( $_POST['description'] ) ) {
+			update_post_meta( $guild_id, '_guild_description', wp_kses_post( $_POST['description'] ) );
+		}
+
+		if ( isset( $_POST['max_members'] ) ) {
+			$max_members = absint( $_POST['max_members'] );
+			// Validate max_members range
+			if ( $max_members < 5 || $max_members > 100 ) {
+				$max_members = 20; // Default
+			}
+			update_post_meta( $guild_id, '_guild_max_members', $max_members );
+		}
+
+		wp_send_json_success( [
+			'message' => __( 'Guild updated successfully!', 'gamerz-guild' ),
+			'guild_id' => $guild_id
+		] );
+	}
+
+	/**
 	 * Handle requests from non-logged-in users
 	 */
 	public function handle_not_logged_in() {
