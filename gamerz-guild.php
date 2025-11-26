@@ -171,6 +171,7 @@ final class Plugin {
 			$shortcode->register( 'gamerz_my_challenges', 'render_my_challenges_shortcode' );
 			$shortcode->register( 'gamerz_leaderboard', 'render_leaderboard_shortcode' );
 			$shortcode->register( 'gamerz_xp_progress', 'render_xp_progress_shortcode' );
+			$shortcode->register( 'gamerz_guild_management', 'render_guild_management_shortcode' );
 
 		endif;
 

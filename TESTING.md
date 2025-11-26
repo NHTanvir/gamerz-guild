@@ -1,336 +1,345 @@
-# Gamerz Guild Plugin - Complete Testing Guide
+# Gamerz Guild Plugin - Testing Guide
 
 ## Overview
-This guide provides detailed, line-by-line testing instructions for the complete Gamerz Guild gamification system with all requested features implemented.
+This document outlines comprehensive testing procedures for the Gamerz Guild gamification system. All features must be thoroughly tested before the system can be considered production-ready.
 
 ## Prerequisites
-- WordPress installation with plugin active
-- Required plugins: myCred, BuddyPress, bbPress, The Events Calendar
-- Optional plugins: Youzify, WooCommerce (for redemption), Uncanny Automator (for Discord)
-- Test user accounts created
+- WordPress 5.0+
+- myCRED plugin installed and active
+- BuddyPress installed and active
+- bbPress installed and active (for forum integration)
+- The Events Calendar (for event integration) - optional
+- WooCommerce (for redemption system) - optional
 
-## Required Pages Setup
-Before testing, create the following pages and add the specified shortcodes:
+## Test Environment Setup
 
-### 1. Leaderboard Page
-- Create a new page titled "Leaderboard"
-- Add shortcode: [gamerz_leaderboard] to display the XP leaderboard
-- Add shortcode: [gamerz_xp_progress] to show individual XP progress
-- This page will show global and guild-specific leaderboards
+### 1. Install Required Plugins
+```bash
+# Ensure these plugins are active
+- myCRED (version 2.9.0+)
+- BuddyPress (version 10.0+)
+- bbPress (version 2.6+)
+- The Events Calendar (version 6.0+) - optional
+- WooCommerce (version 7.0+) - optional
+```
 
-### 2. Weekly Challenges Page
-- Create a new page titled "Weekly Challenges"
-- Add shortcode: [gamerz_weekly_challenges] to display current week's challenges
-- This page will show 3 rotating challenges each week with descriptions and rewards
+### 2. Configure myCRED
+- Set up a point type called "Gamerz XP" or similar
+- Ensure myCRED hooks are enabled for the actions you want to test
 
-### 3. My Challenges Page
-- Create a new page titled "My Challenges"
-- Add shortcode: [gamerz_my_challenges] to display user's personal challenge progress
-- This page will show challenges the user has completed or is currently working on
+### 3. Create Test Users
+Create several test users with different permission levels:
+- Admin user
+- Regular member (new user)
+- High-ranking member (simulated high XP)
 
-### 4. Guild Pages
-- Guild-related pages will be automatically created through the custom post type
-- Guild creation form and management will be accessible through the BuddyPress navigation
-- No manual page creation required for guilds (handled via custom post type)
+## Feature Tests
 
-### 5. XP Redemption Store (if using WooCommerce)
-- If using WooCommerce for XP redemption, ensure your shop page is configured
-- Redemption items will appear as virtual products that can be purchased with XP
-- Configure WooCommerce product pages to handle XP-based transactions
+### 1. XP Earning System
+**Test daily login XP:**
+1. Log in as test user
+2. Verify 5 XP is awarded for first login of the day
+3. Check myCRED log for daily login entry
+4. Verify XP is not awarded on second visit to same day
 
-## Comprehensive Feature Testing Guide
+**Test forum XP:**
+1. Navigate to bbPress forums
+2. Create a new topic
+3. Verify 8 XP is awarded to topic author
+4. Reply to an existing topic
+5. Verify 5 XP is awarded for reply
+6. Check that XP appears in user profile
 
-### 1. Guild Management System Testing
+**Test event XP:**
+1. If The Events Calendar is active, attend an event
+2. Verify 15 XP is awarded for event participation
+3. Check myCRED log for event participation entry
 
-#### Test 1.1: Create Guild Functionality
-1. Navigate to: Guild Creation Page (URL depends on your setup)
-2. Click "Create New Guild" button
-3. Fill in required fields:
-   - Guild Name: Enter "Test Guild"
-   - Description: Enter "This is a test guild"
-   - Tagline: Enter "Testing purposes"
-   - Max Members: Enter "20" (default)
-4. Click "Create Guild" button
-5. Expected Result: Guild appears in your guild list with status "Active"
-6. Admin Check: Visit WP Admin → Guilds → Verify guild exists with proper details
-7. XP Check: Verify creator received 50 XP (Guild Creation reward)
+**Test guild creation/join XP:**
+1. Create a new guild
+2. Verify 50 XP is awarded for guild creation
+3. Join an existing guild
+4. Verify 10 XP is awarded for guild joining
 
-#### Test 1.2: Join Guild Functionality
-1. Log in as different user (not guild creator)
-2. Navigate to: Browse Guilds page
-3. Find "Test Guild" in list
-4. Click "Join Guild" button
-5. Expected Result: User is added to guild member list
-6. Admin Check: Visit WP Admin → Guilds → Click guild → Check member list
-7. XP Check: Verify joining user received 10 XP (Guild Join reward)
+### 2. Rank Progression System
+**Test rank advancement:**
+1. Manually adjust user XP to cross rank thresholds
+2. Verify rank changes automatically
+3. Check that user receives correct rank name in profile
+4. Verify rank privileges are enabled (e.g., ability to create topics at rank 3)
 
-#### Test 1.3: Leave Guild Functionality
-1. Log in as guild member (not leader)
-2. Navigate to: Guild Dashboard
-3. Click "Leave Guild" button
-4. Confirm in popup if shown
-5. Expected Result: User is removed from guild member list
-6. Admin Check: Visit WP Admin → Guilds → Verify user removed
-7. Check: User should no longer see guild in their guild list
+**Test rank visualization:**
+1. View user profile in BuddyPress
+2. Verify rank is displayed prominently
+3. Check that forum posts show user rank
+4. Verify progress bar displays correctly on profile
 
-#### Test 1.4: Guild Member Management
-1. Log in as Guild Leader
-2. Navigate to: Guild Management page
-3. Test Promote: Click "Promote" next to a member → Confirm role changes to "Officer"
-4. Test Demote: Click "Demote" → Confirm role changes back to "Member"  
-5. Test Kick: Click "Kick" → Confirm member is removed
-6. Expected Results: All role changes reflected immediately in member list
+### 3. Badge System
+**Test automatic badge awarding:**
+1. Perform first forum post
+2. Verify "Forum Newbie" badge is awarded
+3. Perform first guild creation
+4. Verify relevant guild badge is awarded
+5. Check that badges appear on user profile
 
-### 2. Guild Forums Integration Testing
+**Test manual badge awarding:**
+1. Navigate to user profile as admin
+2. Manually award a badge (like "Good Samaritan")
+3. Verify badge appears on user profile
+4. Check that user receives notification
 
-#### Test 2.1: Forum Access for Guild Members
-1. As guild member, navigate to guild forum (if separate)
-2. Verify you can create new topics and replies
-3. As non-guild member, try accessing guild-specific areas
-4. Expected Result: Non-members restricted from guild-specific forum areas
+### 4. Guild System
+**Test guild creation:**
+1. Navigate to guild creation page (or admin panel)
+2. Create a new guild with valid details
+3. Verify guild is created successfully
+4. Check that creator is assigned as guild leader
+5. Verify 50 XP is awarded to creator
+6. Confirm guild appears in guild listings
 
-#### Test 2.2: Rank Display in Forums
-1. Navigate to any forum topic
-2. Check user avatars/usernames for:
-   - Rank badge displayed under username
-   - XP amount shown (e.g., "+1250 XP")
-   - Rank level indicator (e.g., "Scrub Strategist")
-3. Expected Result: Ranks displayed consistently across all forum posts
+**Test guild joining:**
+1. Browse available guilds as regular user
+2. Find "Join Guild" button for an existing guild
+3. Click the join button and confirm action
+4. Verify user is added to guild members
+5. Confirm 10 XP is awarded for joining
+6. Check that guild membership appears on user profile
 
-#### Test 2.3: XP Rewards from Forums
-1. Create a new forum topic
-2. Check myCred log: Should show +8 XP for new topic
-3. Create a forum reply
-4. Check myCred log: Should show +5 XP for reply
-5. Expected Result: All forum activities properly award XP
+**Test guild leaving:**
+1. Visit guild page as a member (not leader)
+2. Find "Leave Guild" button
+3. Click and confirm leaving guild
+4. Verify user is removed from guild
+5. Confirm guild no longer appears on user profile
 
-### 3. Guild Events Integration Testing
+**Test guild member management:**
+1. As guild leader, access member management
+2. Test promoting members to officer role
+3. Test demoting officers back to member
+4. Test kicking members from guild
+5. Verify role changes are reflected in guild
 
-#### Test 3.1: Guild-Specific Events
-1. Create a new event using The Events Calendar
-2. In event creation, link to your test guild
-3. Save the event
-4. Expected Result: Event appears in guild event list
-5. Admin Check: WP Admin → Events → Verify event has guild association via custom field
+**Test guild activity feed:**
+1. Perform guild-related actions (join, leave, etc.)
+2. Verify activities appear in guild activity feed
+3. Check that timestamps and descriptions are correct
 
-#### Test 3.2: XP Rewards from Events  
-1. Attend a guild event
-2. After event completion, check XP log
-3. Expected Result: Should receive +15 XP for event participation
-4. For event victory, check if +50 XP was awarded
+### 5. Forum Integration
+**Test rank display in forums:**
+1. Navigate to bbPress forum
+2. Verify user ranks appear under usernames
+3. Check that rank badges show in post author info
+4. Confirm XP progress info appears in user profile view
 
-### 4. Guild Activity Feed Testing
+**Test forum XP awards:**
+1. Create new topic in forum
+2. Verify XP is awarded to topic creator
+3. Reply to existing topic
+4. Confirm XP is awarded for reply
+5. Check myCRED logs for accuracy
 
-#### Test 4.1: Activity Logging
-1. Perform guild actions: join, leave, get promoted
-2. Navigate to: Guild Activity Feed page
-3. Expected Results: Each action should appear as a chronological entry:
-   - "User X joined the guild" 
-   - "User Y was promoted to Officer"
-   - "User Z left the guild"
+### 6. Events Integration
+**Test guild events:**
+1. Create a guild event using the system
+2. Verify event is created in The Events Calendar
+3. Register for the guild event
+4. Confirm XP is awarded upon attendance
+5. Check that event appears linked to guild
 
-#### Test 4.2: Real-time Updates
-1. Have another user perform guild action while viewing feed
-2. Refresh activity feed
-3. Expected Result: New activities appear in chronological order
+### 7. Redemption System
+**Test redemption shop:**
+1. Navigate to XP redemption area
+2. Verify available items are listed with XP costs
+3. Check that user XP balance is displayed
+4. Confirm user can only access items with sufficient XP
 
-### 5. XP Earning System Testing
+**Test item redemption:**
+1. Select an available redemption item
+2. Confirm redemption process completes
+3. Verify XP is deducted from user balance
+4. Check that reward is properly granted (coupon, cosmetic, etc.)
 
-#### Test 5.1: Daily Actions
-1. Log in on first day → Check for +5 XP (daily login)
-2. Return tomorrow → Check for another +5 XP
-3. Expected Result: Daily login bonus awarded once per 24-hour period
+### 8. Leaderboards
+**Test global leaderboard:**
+1. Access global leaderboard page
+2. Verify users are ranked by XP correctly
+3. Check that top users display properly
+4. Confirm all fields (rank, name, XP, rank name) are accurate
 
-#### Test 5.2: Social Actions
-1. Like another user's post → Should earn +1 XP
-2. Make a friend connection → Should earn +2 XP  
-3. Add comment → Should earn +1 XP
-4. Expected Result: Social actions award configured XP amounts
+**Test guild leaderboard:**
+1. Access a specific guild's leaderboard
+2. Verify only guild members are shown
+3. Check that ranking is correct within guild
+4. Confirm the display matches global leaderboard styling
 
-#### Test 5.3: Creative Actions
-1. Submit content (blog post, media, etc.) → Should earn +20 XP
-2. Write a forum guide (>300 words) → Should earn +15 XP
-3. Expected Result: Creative contributions award higher XP values
+### 9. Weekly Challenges
+**Test challenge visibility:**
+1. Access weekly challenges page/shortcode
+2. Verify current challenges are displayed
+3. Check that challenge descriptions and rewards are shown
+4. Confirm completion status updates correctly
 
-#### Test 5.4: Anti-Abuse Mechanisms
-1. Make 10 forum replies rapidly → First 5 should get full XP, rest should get 0
-2. Like 50 posts in a day → After first 10, no more XP earned
-3. Expected Result: Daily caps and per-action limits prevent abuse
+**Test challenge completion:**
+1. Complete a challenge through the required action
+2. Verify challenge marked as completed
+3. Confirm XP reward is awarded
+4. Check that badge is awarded if applicable
 
-### 6. Rank Progression System Testing
+### 10. Discord Integration
+**Test role assignment:**
+1. Have user rank up in the system
+2. Verify corresponding Discord role is assigned
+3. Check that old role is removed if applicable
+4. Confirm Discord name color updates with rank
 
-#### Test 6.1: Rank Advancement
-1. Start as Rank 1 (Scrubling) with 0 XP
-2. Earn 50 XP through activities
-3. Expected Result: Should automatically advance to Rank 2 (Scrub Recruit)
-4. Check profile → Rank should show as "Scrub Recruit"
+**Test Discord announcements:**
+1. Perform a rank-up action
+2. Check that announcement appears in Discord channel
+3. Verify badge awards are announced
+4. Confirm guild creation/activities are announced
 
-#### Test 6.2: Rank Privileges
-1. Reach Rank 2 → Verify custom avatar upload is unlocked
-2. Reach Rank 3 → Verify topic creation is unlocked  
-3. Reach Rank 5 → Verify event creation ability activates
-4. Expected Result: Each rank unlocks appropriate privileges
+### 11. Visual Enhancements
+**Test rank visualization:**
+1. View user profiles across the site
+2. Verify ranks are displayed consistently
+3. Check that progress bars function properly
+4. Confirm avatar rank indicators appear
 
-#### Test 6.3: Progress Tracking
-1. Visit profile page
-2. Check XP progress bar → Shows percentage to next rank
-3. View detailed XP → Shows current total and needed for next rank
-4. Expected Result: Progress visually represented accurately
-
-### 7. Badge Achievement System Testing
-
-#### Test 7.1: Automatic Badges
-1. Make first forum post → "Forum Newbie" badge should auto-award
-2. Add 5 friends → "Social Butterfly" badge should auto-award
-3. Login for 30 consecutive days → "Daily Grinder" badge should auto-award
-4. Expected Result: Auto-badges trigger based on specified criteria
-
-#### Test 7.2: Manual Badges
-1. As admin, go to user profile
-2. Award "Helpful Scrub" manual badge
-3. Expected Result: User receives badge and XP notification
-
-#### Test 7.3: Badge Display
-1. Visit user profile with earned badges
-2. Check badge gallery → All earned badges should display
-3. Hover over badge → Description tooltip should appear
-4. Expected Result: Badges properly displayed and accessible
-
-### 8. XP Redemption System Testing
-
-#### Test 8.1: Redemption Store Access
-1. Navigate to: XP Redemption Store
-2. Check available items → Should see items matching user's rank and XP
-3. Expected Result: Items filtered by user's privileges and affordability
-
-#### Test 8.2: Merchandise Redemption
-1. Select "$5 Merch Discount" (costs 1000 XP)
-2. Click "Redeem" button
-3. Expected Result: 1000 XP deducted, WooCommerce coupon generated
-
-#### Test 8.3: Digital Rewards Redemption
-1. Select "Custom Avatar Frame" (costs 500 XP)  
-2. Click "Redeem" button
-3. Expected Result: 500 XP deducted, cosmetic effect applied to profile
-
-#### Test 8.4: Access Rewards Redemption
-1. Select "VIP Voice Access" (costs 1000 XP)
-2. Click "Redeem" button  
-3. Expected Result: 1000 XP deducted, Discord role access granted
-
-### 9. Leaderboard and Visibility Testing
-
-#### Test 9.1: Global Leaderboard
-1. Use shortcode [gamerz_leaderboard] or visit leaderboard page
-2. Check ranking order → Top XP earners at top
-3. Expected Result: Users ranked by total XP descending
-
-#### Test 9.2: Guild-Specific Leaderboard
-1. Use shortcode [gamerz_leaderboard type="guild" guild_id="X"] 
-2. Check ranking order → Only guild members shown ranked by XP
-3. Expected Result: Guild leaderboard shows only member rankings
-
-#### Test 9.3: User Position Tracking
-1. Visit leaderboard → Find your position
-2. Earn XP → Reload leaderboard
-3. Expected Result: Position should improve with increased XP
-
-### 10. Weekly Challenges System Testing
-
-#### Test 10.1: Challenge Visibility
-1. Navigate to: Weekly Challenges page
-2. Check current challenges → Should show 3 rotating challenges
-3. Expected Result: New challenges appear each Monday
-
-#### Test 10.2: Challenge Completion
-1. Complete "Squad Up with Newbie" challenge
-2. Click "Mark Complete" button
-3. Expected Result: +50 XP awarded, challenge marked as completed
-
-#### Test 10.3: Challenge Proof Submission
-1. For challenges requiring proof, click "Submit Proof"
-2. Enter proof details in modal
-3. Submit for admin review
-4. Expected Result: Proof submitted for manual verification
-
-### 11. Discord Integration Testing
-
-#### Test 11.1: Rank-Up Announcements
-1. Level up to a new rank
-2. Check Discord server → Should see rank-up announcement
-3. Expected Result: Automated message posted to configured channel
-
-#### Test 11.2: Role Assignment  
-1. Reach rank threshold (e.g., 300 XP = Rank 5 = Scrub Strategist)
-2. Check Discord → Should have appropriate role assigned
-3. Expected Result: Discord role matches website rank
-
-#### Test 11.3: Achievement Notifications
-1. Earn a notable badge
-2. Check Discord → Should see achievement unlock notification
-3. Expected Result: Badge earned announced in Discord
-
-### 12. Visual Enhancements Testing
-
-#### Test 12.1: XP Progress Bar
-1. Navigate site → Check bottom-left corner
-2. Expected Result: Animated XP progress bar visible with current XP
-
-#### Test 12.2: Badge Animations
-1. Earn a badge → Check for confetti animation
-2. Expected Result: Confetti effect and achievement notification
-
-#### Test 12.3: Rank Indicators
-1. View any user profile/forum post
-2. Expected Result: Rank name and level clearly displayed
-
-#### Test 12.4: HUD Elements
+**Test XP bar visibility:**
 1. Navigate site as logged-in user
-2. Expected Result: Game-like HUD elements visible throughout interface
+2. Verify XP progress bar appears
+3. Check that it updates in real-time with XP gains
+4. Confirm it's visible across different pages
 
-## Troubleshooting Common Issues
+## Common Issues to Test
 
-If testing reveals issues:
-1. Check WP Admin → Tools → Error Log for PHP errors
-2. Verify all required plugins are active
-3. Confirm myCred point types are properly set up
-4. Check Discord webhook URL validity
-5. Ensure Cron jobs are running (for weekly challenges reset)
+### 1. Missing Join/Leave Buttons
+**Issue**: Guild join/leave buttons not visible
+**Test**: 
+- Verify user is logged in
+- Check if user is already in a guild (join button should be disabled)
+- Confirm guild has space for new members
+- Test with different user roles and statuses
 
-## Performance Testing
+### 2. XP Not Awarded
+**Issue**: XP not being awarded for actions
+**Test**:
+- Verify myCRED is properly configured
+- Check that required plugins are active
+- Confirm user is logged in
+- Review myCRED logs for errors
 
-1. Load time verification: All pages should load in <3 seconds
-2. Concurrency test: 10 users performing actions simultaneously
-3. Database efficiency: Leaderboard queries should execute in <500ms
-4. Memory usage: Plugin should not exceed 16MB additional memory
+### 3. Rank Progression Not Working
+**Issue**: Ranks don't update automatically
+**Test**:
+- Manually adjust XP to cross thresholds
+- Check if rank updates immediately
+- Verify rank privileges are applied
+- Test with different user accounts
 
-## Final Verification Checklist
+### 4. Badge Awards Not Functioning
+**Issue**: Badges not being awarded automatically
+**Test**:
+- Perform badge-earning actions
+- Check if badges appear in profile
+- Verify myCRED logs show badge entries
+- Test manual badge awarding
 
-Complete each test item and check off:
+### 5. Discord Integration Issues
+**Issue**: Discord roles/announcements not working
+**Test**:
+- Verify Discord webhook is properly configured
+- Check bot token permissions
+- Confirm user Discord IDs are stored
+- Test announcements with debugging enabled
 
-- [ ] Guild creation, joining, leaving functionality works
-- [ ] Guild member management works (promote/demote/kick)
-- [ ] Guild forums integrate properly with bbPress
-- [ ] Guild events link to The Events Calendar
-- [ ] Guild activity feed logs all actions properly
-- [ ] XP system awards points for all actions
-- [ ] Rank progression advances correctly
-- [ ] Badges award automatically and manually
-- [ ] Redemption system processes XP exchanges
-- [ ] Leaderboards update in real-time
-- [ ] Weekly challenges rotate properly
-- [ ] Discord integration posts announcements
-- [ ] Visual elements display properly
-- [ ] All anti-abuse measures function correctly
-- [ ] Mobile responsiveness verified
-- [ ] Admin controls work properly
+## Troubleshooting Common Problems
 
-## Admin Testing
+### Guild System Not Working
+**Check these points:**
+- Ensure BuddyPress is active and functional
+- Verify custom post type "guild" is registered
+- Check that user permissions allow guild creation
+- Confirm AJAX requests are working (check browser console)
+- Verify guild-related shortcodes are properly implemented
 
-As administrator, verify:
-- [ ] Dashboard shows accurate statistics
-- [ ] Guild management interface functional
-- [ ] User XP can be manually adjusted
-- [ ] Badges can be manually awarded
-- [ ] Settings page saves configurations
-- [ ] Challenge creation works properly
+### XP Not Being Awarded
+**Check these points:**
+- myCRED plugin is active and configured
+- Point type matches system expectations
+- User is logged in when performing actions
+- myCRED hooks are enabled for the actions
+- No PHP errors in logs during XP awarding
+
+### Badges Not Displaying
+**Check these points:**
+- myCRED badges addon is active
+- User has earned and saved badges
+- Template files are properly calling badge functions
+- User meta for badges is correctly stored
+
+## Testing Checklist
+
+### Basic Functionality
+- [ ] XP earning for daily login works
+- [ ] Forum XP awards function correctly
+- [ ] Guild creation awards 50 XP
+- [ ] Guild joining awards 10 XP
+- [ ] Rank progression works based on XP
+- [ ] Badges award automatically when criteria met
+
+### Guild Features
+- [ ] Guild creation interface functional
+- [ ] Join guild button visible and works
+- [ ] Leave guild button visible and works
+- [ ] Guild member management works
+- [ ] Guild activity feed displays properly
+- [ ] Guild forums integrate with main forum system
+
+### User Interface
+- [ ] Rank displays on user profiles
+- [ ] XP bars show correctly
+- [ ] Badges appear on profiles
+- [ ] Leaderboards display properly
+- [ ] Weekly challenges show correctly
+
+### Integration Features
+- [ ] Discord integration works (roles and announcements)
+- [ ] WooCommerce redemption functional
+- [ ] Event integration works if The Events Calendar active
+- [ ] Forum integration displays ranks/badges
+
+### Performance
+- [ ] System handles multiple users without performance issues
+- [ ] Database queries are optimized
+- [ ] AJAX requests respond quickly
+- [ ] No memory leaks or excessive resource usage
+
+## Known Issues to Address
+
+1. **Missing guild join/leave buttons**: Verify AJAX handlers and front-end display logic
+2. **XP not awarded from front-end**: Check myCRED integration hooks
+3. **Guild data not saving properly**: Verify custom post type and meta handling
+4. **No Discord integration working**: Check webhook configuration and bot permissions
+5. **Badge display issues**: Confirm badge storage and retrieval from user meta
+6. **Rank progression not triggering**: Verify myCRED hook for rank checks
+
+## Post-Testing Verification
+
+After completing all tests:
+
+1. Verify all features work together cohesively
+2. Test with multiple concurrent users
+3. Check system performance under load
+4. Verify data integrity and proper cleanup
+5. Confirm no security vulnerabilities exist
+6. Document any remaining issues or improvements needed
+
+## Reporting Issues
+
+When logging issues found during testing:
+- Include steps to reproduce
+- Provide expected vs actual behavior
+- Note plugin versions and WordPress version
+- Include relevant error messages or console output
+- Screenshot any visual issues

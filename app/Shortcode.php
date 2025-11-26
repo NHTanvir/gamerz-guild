@@ -733,6 +733,574 @@ class Shortcode extends Base {
         return ob_get_clean();
     }
 
+    /**
+     * Render guild management shortcode
+     */
+    public function render_guild_management_shortcode( $atts ) {
+        $atts = shortcode_atts( [
+            'title' => 'Guild Management',
+            'show_list' => 'true',
+            'show_create' => 'true',
+        ], $atts );
+
+        $user_id = get_current_user_id();
+        if ( ! $user_id ) {
+            return __( 'Please log in to manage guilds.', 'gamerz-guild' );
+        }
+
+        $guild_class = new Guild();
+        $user_guilds = $guild_class->get_user_guilds( $user_id );
+        $current_guild = ! empty( $user_guilds ) ? $user_guilds[0] : null;
+
+        ob_start();
+        ?>
+        <div class="gamerz-guild-management-container">
+            <h3 class="gamerz-guild-management-title"><?php echo esc_html( $atts['title'] ); ?></h3>
+
+            <?php if ( $current_guild ) : ?>
+                <!-- Current Guild Information -->
+                <div class="gamerz-current-guild-section">
+                    <h4>Current Guild: <?php echo esc_html( $current_guild->post_title ); ?></h4>
+                    <div class="gamerz-guild-details">
+                        <p><strong>Description:</strong> <?php echo esc_html( $current_guild->post_content ?: 'No description' ); ?></p>
+                        <p><strong>Tagline:</strong> <?php echo esc_html( get_post_meta( $current_guild->ID, '_guild_tagline', true ) ?: 'No tagline' ); ?></p>
+                        <p><strong>Members:</strong> <?php echo count( $guild_class->get_members( $current_guild->ID ) ); ?>/<?php echo get_post_meta( $current_guild->ID, '_guild_max_members', true ) ?: 20; ?></p>
+                        <p><strong>Status:</strong> <?php echo esc_html( get_post_meta( $current_guild->ID, '_guild_status', true ) ?: 'active' ); ?></p>
+                    </div>
+
+                    <?php
+                    $user_role = $guild_class->get_user_role( $current_guild->ID, $user_id );
+                    $can_manage = $user_role === 'leader';
+                    ?>
+
+                    <?php if ( $can_manage ) : ?>
+                        <div class="gamerz-guild-admin-actions">
+                            <h5>Guild Administration</h5>
+                            <button class="gamerz-guild-edit-btn" data-guild-id="<?php echo $current_guild->ID; ?>">
+                                <span class="dashicons dashicons-edit"></span> Edit Guild
+                            </button>
+                            <button class="gamerz-guild-member-management-btn" data-guild-id="<?php echo $current_guild->ID; ?>">
+                                <span class="dashicons dashicons-groups"></span> Manage Members
+                            </button>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="gamerz-guild-member-actions">
+                        <?php if ( $user_role === 'leader' && count( $guild_class->get_members( $current_guild->ID ) ) > 1 ) : ?>
+                            <p>Transfer leadership before leaving.</p>
+                        <?php else : ?>
+                            <button class="gamerz-guild-leave-btn" data-guild-id="<?php echo $current_guild->ID; ?>" data-nonce="<?php echo wp_create_nonce( 'guild_leave_nonce' ); ?>">
+                                <span class="dashicons dashicons-exit"></span> Leave Guild
+                            </button>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php else : ?>
+                <!-- Guild Options -->
+                <div class="gamerz-guild-options">
+                    <?php if ( $atts['show_create'] === 'true' ) : ?>
+                        <div class="gamerz-create-guild-section">
+                            <h4>Create New Guild</h4>
+                            <form id="gamerz-create-guild-form">
+                                <p>
+                                    <label for="guild_title">Guild Name *</label>
+                                    <input type="text" id="guild_title" name="guild_title" required />
+                                </p>
+                                <p>
+                                    <label for="guild_description">Description</label>
+                                    <textarea id="guild_description" name="guild_description"></textarea>
+                                </p>
+                                <p>
+                                    <label for="guild_tagline">Tagline</label>
+                                    <input type="text" id="guild_tagline" name="guild_tagline" />
+                                </p>
+                                <p>
+                                    <label for="guild_max_members">Max Members (5-100)</label>
+                                    <input type="number" id="guild_max_members" name="guild_max_members" min="5" max="100" value="20" />
+                                </p>
+                                <button type="submit">
+                                    <span class="dashicons dashicons-plus"></span> Create Guild
+                                </button>
+                            </form>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ( $atts['show_list'] === 'true' ) : ?>
+                        <div class="gamerz-guild-list-section">
+                            <h4>Available Guilds</h4>
+                            <div id="gamerz-guild-list">
+                                <?php
+                                $all_guilds = get_posts( [
+                                    'post_type' => 'guild',
+                                    'post_status' => 'publish',
+                                    'posts_per_page' => 10,
+                                ] );
+
+                                if ( ! empty( $all_guilds ) ) :
+                                ?>
+                                    <table class="gamerz-guild-list-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Description</th>
+                                                <th>Members</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ( $all_guilds as $guild ) : ?>
+                                                <?php
+                                                $members = $guild_class->get_members( $guild->ID );
+                                                $is_member = in_array( $user_id, $members );
+                                                ?>
+                                                <tr>
+                                                    <td><?php echo esc_html( $guild->post_title ); ?></td>
+                                                    <td><?php echo wp_trim_words( wp_strip_all_tags( $guild->post_content ), 10 ); ?></td>
+                                                    <td><?php echo count( $members ); ?>/<?php echo get_post_meta( $guild->ID, '_guild_max_members', true ) ?: 20; ?></td>
+                                                    <td><?php echo esc_html( get_post_meta( $guild->ID, '_guild_status', true ) ?: 'active' ); ?></td>
+                                                    <td>
+                                                        <?php if ( ! $is_member && count( $members ) < ( get_post_meta( $guild->ID, '_guild_max_members', true ) ?: 20 ) ) : ?>
+                                                            <button class="gamerz-guild-join-btn" data-guild-id="<?php echo $guild->ID; ?>" data-nonce="<?php echo wp_create_nonce( 'guild_join_nonce' ); ?>">
+                                                                Join
+                                                            </button>
+                                                        <?php elseif ( $is_member ) : ?>
+                                                            <span class="gamerz-already-member">Already Member</span>
+                                                        <?php else : ?>
+                                                            <span class="gamerz-guild-full">Guild Full</span>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                <?php else : ?>
+                                    <p>No guilds available.</p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+
+            <!-- Modals -->
+            <div id="gamerz-guild-member-management-modal" class="gamerz-modal" style="display: none;">
+                <div class="gamerz-modal-content">
+                    <span class="gamerz-modal-close">&times;</span>
+                    <h3>Manage Guild Members</h3>
+                    <div id="gamerz-guild-members-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        jQuery(document).ready(function($) {
+            // Guild Join Button
+            $(document).on('click', '.gamerz-guild-join-btn', function(e) {
+                e.preventDefault();
+                var guildId = $(this).data('guild-id');
+                var nonce = $(this).data('nonce');
+
+                $.post(ajaxurl, {
+                    action: 'guild_join',
+                    guild_id: guildId,
+                    nonce: nonce
+                }, function(response) {
+                    if (response.success) {
+                        alert(response.data.message);
+                        location.reload(); // Refresh to show new guild status
+                    } else {
+                        alert('Error: ' + response.data.message);
+                    }
+                }).fail(function() {
+                    alert('Connection error. Please try again.');
+                });
+            });
+
+            // Guild Leave Button
+            $(document).on('click', '.gamerz-guild-leave-btn', function(e) {
+                e.preventDefault();
+                var guildId = $(this).data('guild-id');
+                var nonce = $(this).data('nonce');
+
+                if (confirm('Are you sure you want to leave this guild?')) {
+                    $.post(ajaxurl, {
+                        action: 'guild_leave',
+                        guild_id: guildId,
+                        nonce: nonce
+                    }, function(response) {
+                        if (response.success) {
+                            alert(response.data.message);
+                            location.reload(); // Refresh to show updated status
+                        } else {
+                            alert('Error: ' + response.data.message);
+                        }
+                    }).fail(function() {
+                        alert('Connection error. Please try again.');
+                    });
+                }
+            });
+
+            // Guild Create Form
+            $('#gamerz-create-guild-form').on('submit', function(e) {
+                e.preventDefault();
+
+                var formData = {
+                    action: 'guild_create',
+                    title: $('#guild_title').val(),
+                    description: $('#guild_description').val(),
+                    tagline: $('#guild_tagline').val(),
+                    max_members: $('#guild_max_members').val(),
+                    nonce: '<?php echo wp_create_nonce( 'guild_create_nonce' ); ?>'
+                };
+
+                if (!formData.title) {
+                    alert('Guild name is required.');
+                    return;
+                }
+
+                $.post(ajaxurl, formData, function(response) {
+                    if (response.success) {
+                        alert(response.data.message);
+                        location.reload(); // Refresh to show new guild
+                    } else {
+                        alert('Error: ' + response.data.message);
+                    }
+                }).fail(function() {
+                    alert('Connection error. Please try again.');
+                });
+            });
+
+            // Member Management Button
+            $(document).on('click', '.gamerz-guild-member-management-btn', function() {
+                var guildId = $(this).data('guild-id');
+                loadGuildMembers(guildId);
+                $('#gamerz-guild-member-management-modal').show();
+            });
+
+            // Modal Close
+            $(document).on('click', '.gamerz-modal-close', function() {
+                $('#gamerz-guild-member-management-modal').hide();
+            });
+
+            $(document).on('click', function(e) {
+                if (e.target.id === 'gamerz-guild-member-management-modal') {
+                    $('#gamerz-guild-member-management-modal').hide();
+                }
+            });
+
+            // Load guild members function
+            function loadGuildMembers(guildId) {
+                $.post(ajaxurl, {
+                    action: 'get_guild_members',
+                    guild_id: guildId,
+                    nonce: '<?php echo wp_create_nonce( 'guild_members_nonce' ); ?>'
+                }, function(response) {
+                    if (response.success) {
+                        var membersHtml = '<ul class="gamerz-guild-members-list">';
+                        $.each(response.data, function(index, member) {
+                            membersHtml += '<li class="gamerz-guild-member-item">' +
+                                          '<strong>' + member.display_name + '</strong> ' +
+                                          '<span class="gamerz-member-role">(' + member.role + ')</span>';
+
+                            if (member.role !== 'leader') {
+                                membersHtml += ' <button class="gamerz-kick-member-btn button button-secondary button-small" data-guild-id="' + guildId + '" data-member-id="' + member.id + '" data-nonce="<?php echo wp_create_nonce( 'guild_kick_nonce' ); ?>">Kick</button>';
+
+                                if (member.role === 'member') {
+                                    membersHtml += ' <button class="gamerz-promote-member-btn button button-primary button-small" data-guild-id="' + guildId + '" data-member-id="' + member.id + '" data-nonce="<?php echo wp_create_nonce( 'guild_promote_nonce' ); ?>">Promote</button>';
+                                } else if (member.role === 'officer') {
+                                    membersHtml += ' <button class="gamerz-demote-member-btn button button-secondary button-small" data-guild-id="' + guildId + '" data-member-id="' + member.id + '" data-nonce="<?php echo wp_create_nonce( 'guild_demote_nonce' ); ?>">Demote</button>';
+                                }
+                            }
+                            membersHtml += '</li>';
+                        });
+                        membersHtml += '</ul>';
+                        $('#gamerz-guild-members-list').html(membersHtml);
+                    } else {
+                        $('#gamerz-guild-members-list').html('<p class="error">Error loading members: ' + response.data.message + '</p>');
+                    }
+                }).fail(function() {
+                    $('#gamerz-guild-members-list').html('<p class="error">Connection error. Please try again.</p>');
+                });
+            }
+
+            // Member management actions
+            $(document).on('click', '.gamerz-kick-member-btn', function() {
+                var guildId = $(this).data('guild-id');
+                var memberId = $(this).data('member-id');
+                var nonce = $(this).data('nonce');
+
+                if (confirm('Are you sure you want to kick this member?')) {
+                    $.post(ajaxurl, {
+                        action: 'guild_kick_member',
+                        guild_id: guildId,
+                        member_id: memberId,
+                        nonce: nonce
+                    }, function(response) {
+                        if (response.success) {
+                            alert(response.data.message);
+                            loadGuildMembers(guildId);
+                        } else {
+                            alert('Error: ' + response.data.message);
+                        }
+                    }).fail(function() {
+                        alert('Connection error. Please try again.');
+                    });
+                }
+            });
+
+            $(document).on('click', '.gamerz-promote-member-btn', function() {
+                var guildId = $(this).data('guild-id');
+                var memberId = $(this).data('member-id');
+                var nonce = $(this).data('nonce');
+
+                $.post(ajaxurl, {
+                    action: 'guild_promote_member',
+                    guild_id: guildId,
+                    member_id: memberId,
+                    nonce: nonce
+                }, function(response) {
+                    if (response.success) {
+                        alert(response.data.message);
+                        loadGuildMembers(guildId);
+                    } else {
+                        alert('Error: ' + response.data.message);
+                    }
+                }).fail(function() {
+                    alert('Connection error. Please try again.');
+                });
+            });
+
+            $(document).on('click', '.gamerz-demote-member-btn', function() {
+                var guildId = $(this).data('guild-id');
+                var memberId = $(this).data('member-id');
+                var nonce = $(this).data('nonce');
+
+                $.post(ajaxurl, {
+                    action: 'guild_demote_member',
+                    guild_id: guildId,
+                    member_id: memberId,
+                    nonce: nonce
+                }, function(response) {
+                    if (response.success) {
+                        alert(response.data.message);
+                        loadGuildMembers(guildId);
+                    } else {
+                        alert('Error: ' + response.data.message);
+                    }
+                }).fail(function() {
+                    alert('Connection error. Please try again.');
+                });
+            });
+        });
+        </script>
+
+        <style>
+        .gamerz-guild-management-container {
+            background: #fff;
+            border: 1px solid #ccd0d4;
+            border-radius: 4px;
+            padding: 25px;
+            margin: 20px 0;
+            clear: both;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .gamerz-guild-management-container *,
+        .gamerz-guild-management-container *:before,
+        .gamerz-guild-management-container *:after {
+            box-sizing: inherit;
+        }
+        .gamerz-guild-management-title {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .gamerz-guild-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        #gamerz-create-guild-form {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        #gamerz-create-guild-form p {
+            margin-bottom: 15px;
+        }
+        #gamerz-create-guild-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        #gamerz-create-guild-form input,
+        #gamerz-create-guild-form textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        #gamerz-create-guild-form button {
+            background: #0073aa;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #gamerz-create-guild-form button:hover {
+            background: #005a87;
+        }
+        .gamerz-guild-list-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .gamerz-guild-list-table th,
+        .gamerz-guild-list-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .gamerz-guild-list-table th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+        .gamerz-guild-join-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .gamerz-guild-leave-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .gamerz-already-member,
+        .gamerz-guild-full {
+            color: #666;
+            font-style: italic;
+        }
+        .gamerz-current-guild-section {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .gamerz-guild-admin-actions {
+            margin: 15px 0;
+            padding: 15px;
+            background: #e7f3ff;
+            border-radius: 5px;
+        }
+        .gamerz-guild-member-actions {
+            margin-top: 15px;
+            text-align: right;
+        }
+        .gamerz-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .gamerz-modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 5px;
+            position: relative;
+        }
+        .gamerz-modal-close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 15px;
+            top: 10px;
+        }
+        .gamerz-modal-close:hover {
+            color: #000;
+        }
+
+        /* Theme compatibility improvements */
+        .gamerz-guild-management-container input[type="text"],
+        .gamerz-guild-management-container input[type="number"],
+        .gamerz-guild-management-container textarea {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        .gamerz-guild-management-container button,
+        .gamerz-guild-management-container input[type="submit"],
+        .gamerz-guild-management-container input[type="button"] {
+            font-size: 14px;
+            line-height: 1.4;
+            padding: 6px 12px;
+            border: 1px solid transparent;
+        }
+
+        .gamerz-guild-management-container table {
+            width: 100%;
+            max-width: 100%;
+            margin: 10px 0;
+        }
+
+        .gamerz-guild-management-container table th,
+        .gamerz-guild-management-container table td {
+            word-break: break-word;
+            padding: 8px;
+        }
+
+        .gamerz-guild-management-container ul,
+        .gamerz-guild-management-container ol {
+            padding-left: 20px;
+        }
+
+        /* Clean up potential conflicts with theme styles */
+        .gamerz-guild-management-container h1,
+        .gamerz-guild-management-container h2,
+        .gamerz-guild-management-container h3,
+        .gamerz-guild-management-container h4,
+        .gamerz-guild-management-container h5,
+        .gamerz-guild-management-container h6 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .gamerz-guild-management-container p {
+            margin: 10px 0;
+        }
+
+        .gamerz-guild-management-container img {
+            max-width: 100%;
+            height: auto;
+        }
+        </style>
+        <?php
+
+        return ob_get_clean();
+    }
+
     public function my_shortcode() {
         return __( 'My Shortcode', 'gamerz-guild' );
     }

@@ -31,19 +31,7 @@ class Guild_Member {
 	 * Initialize the guild member system
 	 */
 	public function init() {
-		add_action( 'init', [ $this, 'setup_hooks' ] );
-	}
-
-	/**
-	 * Setup hooks
-	 */
-	public function setup_hooks() {
-		// Handle guild joining/leaving
-		add_action( 'wp_ajax_guild_join', [ $this, 'handle_join_guild' ] );
-		add_action( 'wp_ajax_guild_leave', [ $this, 'handle_leave_guild' ] );
-		add_action( 'wp_ajax_guild_kick_member', [ $this, 'handle_kick_member' ] );
-		add_action( 'wp_ajax_guild_promote_member', [ $this, 'handle_promote_member' ] );
-		add_action( 'wp_ajax_guild_demote_member', [ $this, 'handle_demote_member' ] );
+		// Hooks are now handled in the AJAX class according to the plugin framework
 	}
 
 	/**
@@ -339,5 +327,97 @@ class Guild_Member {
 		];
 
 		return isset( $roles[ $role ] ) ? $roles[ $role ] : $role;
+	}
+
+	/**
+	 * Handle guild creation request
+	 */
+	public function handle_guild_creation() {
+		if ( ! wp_verify_nonce( $_POST['nonce'], 'guild_create_nonce' ) ) {
+			wp_die( __( 'Security check failed', 'gamerz-guild' ) );
+		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_die( __( 'You must be logged in to create a guild', 'gamerz-guild' ) );
+		}
+
+		$user_id = get_current_user_id();
+		$guild = new Guild();
+
+		// Check if user is already in a guild
+		$user_guilds = $guild->get_user_guilds( $user_id );
+		if ( ! empty( $user_guilds ) ) {
+			wp_die( __( 'You are already in a guild', 'gamerz-guild' ) );
+		}
+
+		$args = [
+			'title' => sanitize_text_field( $_POST['title'] ),
+			'description' => wp_kses_post( $_POST['description'] ),
+			'tagline' => sanitize_text_field( $_POST['tagline'] ),
+			'max_members' => absint( $_POST['max_members'] ),
+			'creator_id' => $user_id,
+			'status' => 'active'
+		];
+
+		// Validate required fields
+		if ( empty( $args['title'] ) ) {
+			wp_die( __( 'Guild name is required', 'gamerz-guild' ) );
+		}
+
+		// Validate max members range
+		if ( $args['max_members'] < 5 || $args['max_members'] > 100 ) {
+			wp_die( __( 'Maximum members must be between 5 and 100', 'gamerz-guild' ) );
+		}
+
+		$guild_id = $guild->create_guild( $args );
+
+		if ( is_wp_error( $guild_id ) ) {
+			wp_die( $guild_id->get_error_message() );
+		}
+
+		// Award XP for creating guild
+		if ( class_exists( 'Codexpert\Gamerz_Guild\Classes\XP_System' ) ) {
+			$xp_system = new \Codexpert\Gamerz_Guild\Classes\XP_System();
+			$xp_system->award_guild_creation( $guild_id, $args );
+		}
+
+		wp_send_json_success( [
+			'message' => __( 'Guild created successfully!', 'gamerz-guild' ),
+			'guild_id' => $guild_id
+		] );
+	}
+
+	/**
+	 * Handle get guild members request
+	 */
+	public function handle_get_guild_members() {
+		if ( ! wp_verify_nonce( $_POST['nonce'], 'guild_members_nonce' ) ) {
+			wp_die( __( 'Security check failed', 'gamerz-guild' ) );
+		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_die( __( 'You must be logged in to manage guild members', 'gamerz-guild' ) );
+		}
+
+		$guild_id = intval( $_POST['guild_id'] );
+		$user_id = get_current_user_id();
+		$guild = new Guild();
+
+		// Check if user has permission to manage members (must be leader)
+		$user_role = $guild->get_user_role( $guild_id, $user_id );
+		if ( $user_role !== 'leader' ) {
+			wp_die( __( 'Only the guild leader can manage members', 'gamerz-guild' ) );
+		}
+
+		$members = $this->get_guild_members_with_roles( $guild_id );
+
+		wp_send_json_success( $members );
+	}
+
+	/**
+	 * Handle requests from non-logged-in users
+	 */
+	public function handle_not_logged_in() {
+		wp_die( __( 'You must be logged in to perform this action.', 'gamerz-guild' ) );
 	}
 }
