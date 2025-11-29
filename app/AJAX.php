@@ -34,6 +34,7 @@ class AJAX extends Base {
 		$this->name		= $this->plugin['Name'];
 		$this->version	= $this->plugin['Version'];
 
+		
 		$this->setup_hooks();
 	}
 
