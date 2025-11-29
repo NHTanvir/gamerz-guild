@@ -6,6 +6,7 @@ namespace Codexpert\Gamerz_Guild\App;
 use Codexpert\Plugin\Base;
 
 /**
+ * 
  * if accessed directly, exit.
  */
 if ( ! defined( 'ABSPATH' ) ) {
