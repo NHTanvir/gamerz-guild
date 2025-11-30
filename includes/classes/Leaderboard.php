@@ -22,17 +22,7 @@ class Leaderboard {
 	 * Constructor function
 	 */
 	public function __construct() {
-		add_action( 'init', [ $this, 'setup_hooks' ] );
-	}
-
-	/**
-	 * Setup hooks
-	 */
-	public function setup_hooks() {
-		// AJAX for updating leaderboards (only if myCRED is active)
-		if ( class_exists( 'myCRED' ) ) {
-			add_action( 'wp_ajax_update_leaderboard', [ $this, 'update_leaderboard_ajax' ] );
-		}
+		// Hooks have been moved to app/Leaderboard_Hooks.php
 	}
 
 	/**

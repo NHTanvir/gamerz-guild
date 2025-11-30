@@ -29,34 +29,7 @@ class Visual_Enhancements {
 	 * Initialize the visual enhancements
 	 */
 	public function init() {
-		add_action( 'init', [ $this, 'setup_hooks' ] );
-	}
-
-	/**
-	 * Setup hooks
-	 */
-	public function setup_hooks() {
-		// Enqueue CSS and JS
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_styles' ] );
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_styles' ] );
-		
-		// Add visual elements to BuddyPress profiles
-		add_action( 'bp_before_member_header_meta', [ $this, 'add_profile_xp_display' ] );
-		
-		// Add visual elements to Youzify profiles if available
-		if ( class_exists( 'Youzify' ) ) {
-			add_action( 'youzify_profile_header_top', [ $this, 'add_youzify_profile_xp_display' ] );
-		}
-		
-		// Add XP bar to site header
-		add_action( 'wp_head', [ $this, 'add_xp_bar_to_header' ] );
-		
-		// Add animations for level ups and achievements
-		add_action( 'wp_footer', [ $this, 'add_achievement_animations' ] );
-		
-		// Filter avatars to add rank indicators if available
-		add_filter( 'get_avatar', [ $this, 'add_rank_avatar_indicator' ], 10, 6 );
+		// Hooks have been moved to app/Visual_Hooks.php
 	}
 
 	/**
@@ -549,7 +522,7 @@ class Visual_Enhancements {
 	/**
 	 * Get color based on rank level
 	 */
-	private function get_rank_color( $rank_level ) {
+	public function get_rank_color( $rank_level ) {
 		$colors = [
 			1 => '#808080',  // Gray for Scrubling
 			2 => '#A9A9A9',  // Dark Gray for Scrub Recruit

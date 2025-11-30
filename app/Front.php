@@ -34,7 +34,33 @@ class Front extends Base {
 		$this->version	= $this->plugin['Version'];
 	}
 
-	public function head() {}
+	public function head() {
+	
+//     $mycred = \mycred();
+    
+//     // Additional safety check
+//     if ( $mycred && is_object( $mycred ) ) {
+//         // Award 50 XP for creating a guild
+//         $xp_amount = apply_filters( 'gamerz_guild_creation_xp', 50 );
+//         $reference = 'guild_creation';
+//         $entry = apply_filters( 
+//             'gamerz_guild_creation_log_entry', 
+//             sprintf( __( 'Created guild "%s"', 'gamerz-guild' ), $args['title'] ), 
+//             7952, 
+//             $args 
+//         );
+//         		$user_id = get_current_user_id();
+//         $mycred->add_creds( 
+//             $reference, 
+//             $user_id, // creator_id
+//             $xp_amount, 
+//             $entry, 
+//             7952, // ref_id
+//             [], // data
+//             'gamerz_xp' // point type
+//         );
+// }
+	}
 	
 	/**
 	 * Enqueue JavaScripts and stylesheets

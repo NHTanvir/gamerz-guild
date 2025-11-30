@@ -34,21 +34,7 @@ class Event_Integration {
 			return;
 		}
 
-		add_action( 'init', [ $this, 'setup_hooks' ] );
-	}
-
-	/**
-	 * Setup hooks
-	 */
-	public function setup_hooks() {
-		// Hook into event attendance
-		add_action( 'tribe_events_attendee_created', [ $this, 'handle_event_attendance' ], 10, 2 );
-		
-		// Hook into event creation by guild members
-		add_action( 'tribe_events_new_event', [ $this, 'handle_event_creation' ], 10, 1 );
-		
-		// Add XP for event participation and victories
-		add_action( 'transition_post_status', [ $this, 'handle_event_status_change' ], 10, 3 );
+		// Hooks have been moved to app/Event_Hooks.php
 	}
 
 	/**

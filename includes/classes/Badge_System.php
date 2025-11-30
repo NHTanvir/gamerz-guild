@@ -233,21 +233,7 @@ class Badge_System {
 	 * Initialize the badge system
 	 */
 	public function init() {
-		add_action( 'init', [ $this, 'setup_hooks' ] );
-	}
-
-	/**
-	 * Setup hooks
-	 */
-	public function setup_hooks() {
-		// Hook into various activities to check for badge eligibility
-		add_action( 'bbp_new_topic', [ $this, 'check_forum_newbie' ], 20, 2 );
-		add_action( 'bbp_new_reply', [ $this, 'check_forum_newbie' ], 20, 2 );
-		add_action( 'friends_add_friendship', [ $this, 'check_social_butterfly' ], 20, 2 );
-		add_action( 'youzify_activity_liked', [ $this, 'check_social_butterfly' ], 20, 2 );
-		add_action( 'gamerz_guild_member_added', [ $this, 'check_squad_up' ], 20, 3 );
-		add_action( 'tribe_events_attendee_created', [ $this, 'check_event_enthusiast' ], 20, 2 );
-		add_action( 'gamerz_xp_content_submission', [ $this, 'check_content_creator' ], 20, 1 );
+		// Hooks have been moved to app/Badge_Hooks.php
 	}
 
 	/**

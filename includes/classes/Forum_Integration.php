@@ -34,27 +34,7 @@ class Forum_Integration {
 			return;
 		}
 
-		add_action( 'init', [ $this, 'setup_hooks' ] );
-	}
-
-	/**
-	 * Setup hooks
-	 */
-	public function setup_hooks() {
-		// Show rank in forum posts
-		add_filter( 'bbp_get_reply_author_display_name', [ $this, 'display_rank_with_username' ], 10, 2 );
-		add_filter( 'bbp_get_topic_author_display_name', [ $this, 'display_rank_with_username' ], 10, 2 );
-		
-		// Add rank display below avatar
-		add_action( 'bbp_theme_before_reply_author_details', [ $this, 'display_rank_details' ] );
-		add_action( 'bbp_theme_before_topic_author_details', [ $this, 'display_rank_details' ] );
-		
-		// Add XP info to user profiles in forums
-		add_action( 'bbp_template_before_user_profile', [ $this, 'add_xp_to_profile' ] );
-		
-		// Handle XP for forum activity
-		add_action( 'bbp_new_topic', [ $this, 'award_xp_for_new_topic' ], 10, 2 );
-		add_action( 'bbp_new_reply', [ $this, 'award_xp_for_new_reply' ], 10, 2 );
+		// Hooks have been moved to app/Forum_Hooks.php
 	}
 
 	/**

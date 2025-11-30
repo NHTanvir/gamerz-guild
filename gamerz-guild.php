@@ -193,6 +193,22 @@ final class Plugin {
 		 * AJAX related hooks
 		 */
 		$ajax = new App\AJAX( $this->plugin );
+
+		/**
+		 * Initialize the new hook classes that replace hooks from includes/classes/
+		 */
+		new App\Badge_Hooks( $this->plugin );
+		new App\Challenges_Hooks( $this->plugin );
+		new App\Discord_Hooks( $this->plugin );
+		new App\Event_Hooks( $this->plugin );
+		new App\Forum_Hooks( $this->plugin );
+		new App\Guild_Hooks( $this->plugin );
+		new App\Guild_Activity_Hooks( $this->plugin );
+		new App\Leaderboard_Hooks( $this->plugin );
+		new App\Rank_Hooks( $this->plugin );
+		new App\Redemption_Hooks( $this->plugin );
+		new App\Visual_Hooks( $this->plugin );
+		new App\XP_Hooks( $this->plugin );
 	}
 
 	/**

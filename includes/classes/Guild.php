@@ -33,11 +33,7 @@ class Guild {
 	 * Initialize the guild system
 	 */
 	public function init() {
-		// Add guild meta fields and Gutenberg support directly
-		add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
-		add_action( 'save_post', [ $this, 'save_meta_box' ] );
-		// Use higher priority to ensure it runs after core Gutenberg scripts are loaded
-		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_gutenberg_assets' ], 20 );
+		// Hooks have been moved to app/Guild_Hooks.php
 	}
 
 	/**

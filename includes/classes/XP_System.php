@@ -36,28 +36,7 @@ class XP_System {
 			return;
 		}
 
-		add_action( 'init', [ $this, 'setup_hooks' ] );
-	}
-
-	/**
-	 * Setup hooks
-	 */
-	public function setup_hooks() {
-		// Add XP for various actions
-		add_action( 'wp_login', [ $this, 'award_daily_login' ], 10, 2 );
-		add_action( 'bbp_new_topic', [ $this, 'award_new_topic' ], 10, 2 );
-		add_action( 'bbp_new_reply', [ $this, 'award_new_reply' ], 10, 2 );
-		add_action( 'friends_add_friendship', [ $this, 'award_new_friend' ], 10, 2 );
-		
-		// Award XP for custom actions
-		add_action( 'gamerz_guild_created', [ $this, 'award_guild_creation' ], 10, 2 );
-		add_action( 'gamerz_guild_member_added', [ $this, 'award_guild_join' ], 10, 3 );
-		
-		// Handle reactions/likes (using Youzify or other plugins)
-		if ( class_exists( 'Youzify' ) ) {
-			add_action( 'youzify_activity_liked', [ $this, 'award_activity_like' ], 10, 2 );
-			add_action( 'youzify_comment_liked', [ $this, 'award_comment_like' ], 10, 2 );
-		}
+		// Hooks have been moved to app/XP_Hooks.php
 	}
 
 	/**

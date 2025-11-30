@@ -48,31 +48,7 @@ class Discord_Integration {
 			return;
 		}
 
-		add_action( 'init', [ $this, 'setup_hooks' ] );
-	}
-
-	/**
-	 * Setup hooks
-	 */
-	public function setup_hooks() {
-		// Hook into rank up events
-		add_action( 'gamerz_rank_up', [ $this, 'announce_rank_up' ], 10, 3 );
-		
-		// Hook into badge awards
-		add_action( 'gamerz_badge_awarded', [ $this, 'announce_badge_award' ], 10, 2 );
-		
-		// Hook into guild events
-		add_action( 'gamerz_guild_created', [ $this, 'announce_guild_creation' ], 10, 2 );
-		add_action( 'gamerz_guild_member_added', [ $this, 'announce_guild_join' ], 10, 3 );
-		
-		// Hook into challenge completions
-		add_action( 'gamerz_badge_manually_awarded', [ $this, 'announce_challenge_completion' ], 10, 3 );
-		
-		// Add Discord connection field to user profiles
-		add_action( 'show_user_profile', [ $this, 'add_discord_field' ] );
-		add_action( 'edit_user_profile', [ $this, 'add_discord_field' ] );
-		add_action( 'personal_options_update', [ $this, 'save_discord_field' ] );
-		add_action( 'edit_user_profile_update', [ $this, 'save_discord_field' ] );
+		// Hooks have been moved to app/Discord_Hooks.php
 	}
 
 	/**

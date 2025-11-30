@@ -376,9 +376,28 @@ class Guild_Member {
 		}
 
 		// Award XP for creating guild
-		if ( class_exists( 'Codexpert\Gamerz_Guild\Classes\XP_System' ) ) {
-			$xp_system = new \Codexpert\Gamerz_Guild\Classes\XP_System();
-			$xp_system->award_guild_creation( $guild_id, $args );
+		if ( class_exists( 'myCRED' ) ) {
+			$mycred = mycred();
+
+			// Award 50 XP for creating a guild
+			$xp_amount = apply_filters( 'gamerz_guild_creation_xp', 50 );
+			$reference = 'guild_creation';
+			$entry = apply_filters(
+				'gamerz_guild_creation_log_entry',
+				sprintf( __( 'Created guild "%s"', 'gamerz-guild' ), $args['title'] ),
+				$guild_id,
+				$args
+			);
+
+			$mycred->add_creds(
+				$reference,
+				$user_id, // creator_id
+				$xp_amount,
+				$entry,
+				$guild_id, // ref_id
+				[], // data
+				'gamerz_xp' // point type
+			);
 		}
 
 		wp_send_json_success( [

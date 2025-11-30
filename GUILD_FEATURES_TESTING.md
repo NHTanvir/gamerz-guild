@@ -80,11 +80,20 @@ Before beginning tests, ensure the following:
 **Expected Results:**
 - Guild post is created with post type 'guild' in WordPress admin
 - You are assigned as guild leader
-- You receive 50 XP (check by viewing your profile or myCRED logs)
+- You receive 50 XP for creating a guild
 - Guild appears in guild listings on the management page
 - Guild activity feed shows creation event
 - Page automatically refreshes to show your new guild details
 - You can access guild management features as leader
+
+**How to Check XP Received:**
+- **View on Profile**: Visit your user profile page (usually at `yoursite.com/members/yourusername/` if using BuddyPress) to see your current XP and rank
+- **View on Leaderboard**: Check the `[gamerz_xp_progress]` or `[gamerz_leaderboard]` shortcode page to see your XP and rank
+- **Check myCRED Logs**:
+  - If you have admin access, go to `myCRED` → `Log` in WordPress admin
+  - Filter by your username to see all XP transactions
+  - Look for log entry with "Created a guild" in the reference column
+  - You can also check your points directly at the top of your admin area if using myCRED
 
 **Backend Verification:**
 - Check in WordPress admin under `Gamerz Guild` → `Guilds` that your guild exists
@@ -142,11 +151,20 @@ Before beginning tests, ensure the following:
 
 **Expected Results:**
 - You are added to the selected guild member list
-- You receive 10 XP for joining (check your XP on the updated page or myCRED logs)
+- You receive 10 XP for joining the guild
 - Guild activity feed records the new member event
 - You can access guild-specific features
 - The join button changes to "Already Member" for your user
 - Page automatically refreshes to show your current guild information
+
+**How to Check XP Received:**
+- **View on Profile**: Visit your user profile page (usually at `yoursite.com/members/yourusername/` if using BuddyPress) to see your current XP and rank
+- **View on Leaderboard**: Check the `[gamerz_xp_progress]` or `[gamerz_leaderboard]` shortcode page to see your XP and rank
+- **Check myCRED Logs**:
+  - If you have admin access, go to `myCRED` → `Log` in WordPress admin
+  - Filter by your username to see all XP transactions
+  - Look for log entry with "Joined a guild" in the reference column
+  - You can also check your points directly at the top of your admin area if using myCRED
 
 **Backend Verification:**
 - Check wp_postmeta table: your user ID is in the guild's `_guild_members` array
@@ -755,6 +773,7 @@ Before beginning tests, ensure the following:
 ### Success Criteria
 - All guild functionality works as expected on frontend
 - XP system properly integrates with guild actions (50 XP for creation, 10 XP for joining)
+- XP awards are properly visible to users (check via user profiles, leaderboards, or admin logs)
 - Security restrictions are properly enforced (nonces, user roles, permissions)
 - Data is properly stored and retrieved from database
 - User experience is smooth and intuitive

@@ -29,19 +29,7 @@ class Guild_Activity {
 	 * Initialize the guild activity system
 	 */
 	public function init() {
-		add_action( 'init', [ $this, 'setup_hooks' ] );
-	}
-
-	/**
-	 * Setup hooks
-	 */
-	public function setup_hooks() {
-		// Trigger guild activities
-		add_action( 'gamerz_guild_created', [ $this, 'activity_guild_created' ], 10, 2 );
-		add_action( 'gamerz_guild_member_added', [ $this, 'activity_member_joined' ], 10, 3 );
-		add_action( 'gamerz_guild_member_removed', [ $this, 'activity_member_left' ], 10, 2 );
-		add_action( 'gamerz_guild_member_promoted', [ $this, 'activity_member_promoted' ], 10, 3 );
-		add_action( 'gamerz_guild_member_demoted', [ $this, 'activity_member_demoted' ], 10, 3 );
+		// Hooks have been moved to app/Guild_Activity_Hooks.php
 	}
 
 	/**

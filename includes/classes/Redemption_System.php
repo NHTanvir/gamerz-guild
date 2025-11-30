@@ -157,28 +157,13 @@ class Redemption_System {
 			return;
 		}
 
-		add_action( 'init', [ $this, 'setup_hooks' ] );
-	}
-
-	/**
-	 * Setup hooks
-	 */
-	public function setup_hooks() {
-		// Create WooCommerce products for redemption items if needed
-		add_action( 'init', [ $this, 'create_redemption_products' ] );
-		
-		// Handle redemption requests
-		add_action( 'wp_ajax_redeem_xp_item', [ $this, 'handle_redemption_request' ] );
-		add_action( 'wp_ajax_nopriv_redeem_xp_item', [ $this, 'handle_redemption_request' ] );
-		
-		// Apply user-specific styles for cosmetics
-		add_action( 'wp_head', [ $this, 'apply_user_cosmetics' ] );
+		// Hooks have been moved to app/Redemption_Hooks.php
 	}
 
 	/**
 	 * Create WooCommerce products for redemption items
 	 */
-	private function create_redemption_products() {
+	public function create_redemption_products() {
 		// Only create products if they don't exist
 		foreach ( $this->redemption_items as $item_id => $item ) {
 			if ( $item['type'] === 'discount' || $item['type'] === 'cosmetic' ) {
@@ -190,7 +175,7 @@ class Redemption_System {
 	/**
 	 * Create a virtual WooCommerce product for redemption
 	 */
-	private function create_virtual_product( $item_id, $item ) {
+	public function create_virtual_product( $item_id, $item ) {
 		// Check if product already exists
 		$existing_product = $this->get_redemption_product_by_item_id( $item_id );
 		if ( $existing_product ) {
@@ -220,7 +205,7 @@ class Redemption_System {
 	/**
 	 * Get redemption product by item ID
 	 */
-	private function get_redemption_product_by_item_id( $item_id ) {
+	public function get_redemption_product_by_item_id( $item_id ) {
 		$products = get_posts([
 			'post_type' => 'product',
 			'post_status' => 'any',

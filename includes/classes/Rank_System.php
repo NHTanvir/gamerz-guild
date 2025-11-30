@@ -428,15 +428,7 @@ class Rank_System {
 	 * Initialize the rank system
 	 */
 	public function init() {
-		add_action( 'init', [ $this, 'setup_hooks' ] );
-	}
-
-	/**
-	 * Setup hooks
-	 */
-	public function setup_hooks() {
-		// Hook to check rank progression when XP is updated
-		add_action( 'mycred_post_balance_update', [ $this, 'check_rank_progression' ], 10, 3 );
+		// Hooks have been moved to app/Rank_Hooks.php
 	}
 
 	/**
