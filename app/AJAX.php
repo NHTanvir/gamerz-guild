@@ -1,4 +1,4 @@
-<?php
+<?php 
 /**
  * All AJAX related functions
  */
@@ -6,6 +6,7 @@ namespace Codexpert\Gamerz_Guild\App;
 use Codexpert\Plugin\Base;
 
 /**
+ * 
  * if accessed directly, exit.
  */
 if ( ! defined( 'ABSPATH' ) ) {
@@ -33,6 +34,7 @@ class AJAX extends Base {
 		$this->name		= $this->plugin['Name'];
 		$this->version	= $this->plugin['Version'];
 
+		
 		$this->setup_hooks();
 	}
 
