@@ -54,7 +54,7 @@ class Discord_Hooks extends Base {
 		$this->setup_hooks();
 	}
 
-	/**
+	/***
 	 * Setup hooks
 	 */
 	public function setup_hooks() {
@@ -63,16 +63,15 @@ class Discord_Hooks extends Base {
 
 		// Hook into badge awards
 		add_action( 'gamerz_badge_awarded', [ new Discord_Class(), 'announce_badge_award' ], 10, 2 );
+		add_action( 'gamerz_badge_manually_awarded', [ new Discord_Class(), 'announce_badge_award' ], 10, 2 );
+
+		// Hook into Discord role updates
+		add_action( 'gamerz_update_discord_role', [ new Discord_Class(), 'update_discord_role' ], 10, 2 );
 
 		// Hook into guild events
 		add_action( 'gamerz_guild_created', [ new Discord_Class(), 'announce_guild_creation' ], 10, 2 );
 		add_action( 'gamerz_guild_member_added', [ new Discord_Class(), 'announce_guild_join' ], 10, 3 );
-		add_action( 'gamerz_badge_manually_awarded', [ new Discord_Class(), 'announce_challenge_completion' ], 10, 3 );
-
-		// Hook for Discord profile fields
-		add_action( 'show_user_profile', [ new Discord_Class(), 'add_discord_field' ] );
-		add_action( 'edit_user_profile', [ new Discord_Class(), 'add_discord_field' ] );
-		add_action( 'personal_options_update', [ new Discord_Class(), 'save_discord_field' ] );
-		add_action( 'edit_user_profile_update', [ new Discord_Class(), 'save_discord_field' ] );
+		add_action( 'gamerz_guild_member_promoted', [ new Discord_Class(), 'announce_guild_member_promoted' ], 10, 3 );
+		add_action( 'gamerz_guild_member_demoted', [ new Discord_Class(), 'announce_guild_member_demoted' ], 10, 3 );
 	}
 }

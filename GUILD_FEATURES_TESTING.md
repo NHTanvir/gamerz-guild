@@ -274,7 +274,7 @@ Before beginning tests, ensure the following:
 ---
 
 ## Guild Member Management Testing
-
+ 
 ### Test 7: Member Role Management
 **Objective:** Verify guild leader can manage member roles
 

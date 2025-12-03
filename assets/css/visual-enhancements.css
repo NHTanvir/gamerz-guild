@@ -1,5 +1,5 @@
 /* Visual Enhancements CSS for Gamerz Guild */
-/* Neon/cyberpunk theme styles */
+/* Enhanced Neon/cyberpunk theme styles */
 
 /* Base gamified styles */
 .gamerz-gamified-element {
@@ -11,6 +11,8 @@
     color: white;
     position: relative;
     overflow: hidden;
+    border: 1px solid rgba(0, 115, 170, 0.3);
+    transition: all 0.3s ease;
 }
 
 .gamerz-gamified-element::before {
@@ -33,6 +35,12 @@
     100% { background-position: 0% 50%; }
 }
 
+/* Enhanced hover effect */
+.gamerz-gamified-element:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 115, 170, 0.4);
+}
+
 /* Progress bars */
 .gamerz-progress-bar {
     height: 20px;
@@ -41,6 +49,7 @@
     overflow: hidden;
     margin: 10px 0;
     position: relative;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .gamerz-progress-fill {
@@ -50,6 +59,7 @@
     transition: width 0.5s ease;
     position: relative;
     overflow: hidden;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .gamerz-progress-fill::after {
@@ -90,12 +100,13 @@
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .gamerz-badge-capsule:hover {
     background: rgba(255,255,255,0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 115, 170, 0.4);
 }
 
 .gamerz-badge-capsule::before {
@@ -108,7 +119,7 @@
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.2),
+        rgba(255, 255, 255, 0.3),
         transparent
     );
     transition: 0.5s;
@@ -128,17 +139,51 @@
     text-transform: uppercase;
     text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     border: 1px solid rgba(255,255,255,0.3);
+    background: linear-gradient(45deg, #0073aa, #00a0d2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.gamerz-rank-chip::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.3), 
+        transparent);
+    transform: rotate(30deg);
+    transition: all 0.5s;
+}
+
+.gamerz-rank-chip:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(0, 115, 170, 0.5);
+}
+
+.gamerz-rank-chip:hover::before {
+    transform: rotate(30deg) translate(20%, 20%);
 }
 
 /* Animated elements */
 .gamerz-level-up {
-    animation: levelUpAnimation 0.5s ease;
+    animation: levelUpAnimation 0.5s ease, neonGlow 1s ease;
 }
 
 @keyframes levelUpAnimation {
     0% { transform: scale(1); }
     50% { transform: scale(1.1); }
     100% { transform: scale(1); }
+}
+
+@keyframes neonGlow {
+    0% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(0, 255, 255, 1), 0 0 30px rgba(0, 255, 255, 0.8); }
+    100% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
 }
 
 /* Tooltip for badges */
@@ -164,6 +209,8 @@
     transition: opacity 0.3s;
     border: 1px solid #00ffff;
     box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    font-family: 'Courier New', monospace;
+    font-size: 0.8em;
 }
 
 .gamerz-badge-tooltip:hover .gamerz-tooltip-text {
@@ -178,14 +225,15 @@
     box-shadow: 0 0 15px currentColor;
     animation: glow-pulse 2s infinite alternate;
     color: #00ffff;
+    text-shadow: 0 0 5px #00ffff;
 }
 
 @keyframes glow-pulse {
     from {
-        box-shadow: 0 0 15px currentColor;
+        box-shadow: 0 0 15px currentColor, 0 0 5px currentColor inset;
     }
     to {
-        box-shadow: 0 0 25px currentColor, 0 0 35px currentColor;
+        box-shadow: 0 0 25px currentColor, 0 0 35px currentColor, 0 0 5px currentColor inset;
     }
 }
 
@@ -217,7 +265,7 @@
     100% { top: 100%; }
 }
 
-/* Achievement animations */
+/* Enhanced Achievement animations */
 .gamerz-achievement-notification {
     position: fixed;
     top: 20px;
@@ -229,7 +277,28 @@
     z-index: 10000;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     animation: achievementSlideIn 0.5s ease-out, achievementSlideOut 0.5s ease-out 4.5s forwards;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
+}
+
+.gamerz-achievement-title {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.gamerz-achievement-name {
+    font-size: 0.9em;
+    font-weight: normal;
+}
+
+.gamerz-achievement-desc {
+    font-size: 0.8em;
+    opacity: 0.8;
+    margin-top: 3px;
 }
 
 @keyframes achievementSlideIn {
@@ -240,6 +309,28 @@
 @keyframes achievementSlideOut {
     from { transform: translateX(0); opacity: 1; }
     to { transform: translateX(100%); opacity: 0; }
+}
+
+/* Enhanced XP notification */
+.gamerz-xp-notification {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #0073aa, #00a0d2);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    z-index: 10000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    font-weight: bold;
+    animation: xpNotification 2s ease-out forwards;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@keyframes xpNotification {
+    0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+    100% { transform: translateX(-50%) translateY(-50px); opacity: 0; }
 }
 
 /* XP header bar */
@@ -258,6 +349,12 @@
     backdrop-filter: blur(5px);
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     border: 1px solid #0073aa;
+    transition: all 0.3s ease;
+}
+
+#gamerz-xp-header-bar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 115, 170, 0.5);
 }
 
 .gamerz-xp-bar {
@@ -266,12 +363,36 @@
     border-radius: 4px;
     overflow: hidden;
     position: relative;
+    flex: 1;
+    max-width: 150px;
 }
 
 .gamerz-xp-fill {
     background: linear-gradient(to right, #0073aa, #00a0d2);
     height: 100%;
     transition: width 0.5s ease;
+    position: relative;
+}
+
+.gamerz-xp-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, .2) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, .2) 50%,
+        rgba(255, 255, 255, .2) 75%,
+        transparent 75%,
+        transparent
+    );
+    background-size: 30px 30px;
+    animation: progress-shine 1s infinite;
 }
 
 /* Guild elements */
@@ -284,11 +405,12 @@
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
 }
 
 .gamerz-guild-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 255, 255, 0.3);
+    box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3);
 }
 
 .gamerz-guild-card::before {
@@ -309,7 +431,7 @@
     100% { background-position: 0% 50%; }
 }
 
-/* Button styles */
+/* Enhanced Button styles */
 .gamerz-btn {
     background: linear-gradient(135deg, #0073aa, #00a0d2);
     color: white;
@@ -324,15 +446,16 @@
     position: relative;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 115, 170, 0.3);
 }
 
 .gamerz-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 115, 170, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 115, 170, 0.4);
 }
 
 .gamerz-btn:active {
-    transform: translateY(0);
+    transform: translateY(1px);
 }
 
 .gamerz-btn::before {
@@ -345,7 +468,7 @@
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.2),
+        rgba(255, 255, 255, 0.4),
         transparent
     );
     transition: 0.5s;
@@ -353,6 +476,91 @@
 
 .gamerz-btn:hover::before {
     left: 100%;
+}
+
+/* Ripple effect for buttons */
+.gamerz-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Cyberpunk text effect */
+.gamerz-cyber-text {
+    color: #00ffff;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+    animation: cyber-flicker 2s infinite alternate;
+}
+
+@keyframes cyber-flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        text-shadow: 
+            0 0 5px #00ffff,
+            0 0 10px #00ffff,
+            0 0 15px #00ffff,
+            0 0 20px #00ffff;
+        opacity: 1;
+    }
+    20%, 24%, 55% {
+        text-shadow: none;
+        opacity: 0.8;
+    }
+}
+
+/* Pulse animation for active elements */
+.gamerz-pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 115, 170, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 115, 170, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 115, 170, 0);
+    }
+}
+
+/* Matrix rain effect (for special containers) */
+.gamerz-matrix-rain {
+    position: relative;
+    overflow: hidden;
+}
+
+.gamerz-matrix-rain::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
+    background-size: 100% 4px;
+    z-index: -1;
+    animation: matrix-rain 1s linear infinite;
+}
+
+@keyframes matrix-rain {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100%);
+    }
 }
 
 /* Responsive adjustments */
@@ -394,6 +602,11 @@
     padding: 20px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.gamerz-dashboard-card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
 }
 
 .gamerz-dashboard-card h3 {
@@ -410,6 +623,12 @@
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     padding: 20px;
     margin: 20px 0;
+    border: 1px solid rgba(0, 115, 170, 0.1);
+    transition: all 0.3s ease;
+}
+
+.gamerz-leaderboard-container:hover {
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
 }
 
 .gamerz-leaderboard-title {
@@ -417,6 +636,7 @@
     color: #333;
     margin-top: 0;
     margin-bottom: 15px;
+    font-weight: bold;
 }
 
 .gamerz-leaderboard {
@@ -438,6 +658,11 @@
     padding: 10px;
     border-bottom: 1px solid #eee;
     align-items: center;
+    transition: all 0.2s ease;
+}
+
+.gamerz-leaderboard-item:hover {
+    background-color: #f9f9f9;
 }
 
 .gamerz-leaderboard-item:last-child {
@@ -459,6 +684,11 @@
 .gamerz-player-avatar {
     border-radius: 50%;
     vertical-align: middle;
+    transition: transform 0.3s ease;
+}
+
+.gamerz-player-avatar:hover {
+    transform: scale(1.1);
 }
 
 .gamerz-leaderboard-xp {
@@ -477,4 +707,30 @@
     text-align: center;
     padding: 30px;
     color: #888;
+}
+
+/* Additional animation classes */
+.gamerz-progress-shine::after {
+    animation: progress-shine 0.5s ease;
+}
+
+.gamerz-screen-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    opacity: 0.7;
+    z-index: 99998;
+}
+
+.gamerz-loading {
+    display: inline-block;
+    animation: cyber-flicker 1s infinite alternate;
+}
+
+.gamerz-btn-pressed {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }

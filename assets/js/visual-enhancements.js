@@ -71,18 +71,8 @@ jQuery(document).ready(function($) {
             $(this).animate({ width: newWidth + '%' }, 500);
         });
         
-        // Show XP notification
-        showXpNotification(xp_amount);
-        
-        // Trigger level up animation if applicable
-        if (typeof new_total_xp !== 'undefined') {
-            maybeTriggerLevelUp(new_total_xp);
-        }
-    });
-
-    // Display XP gain notification
-    function showXpNotification(xpAmount) {
-        const notification = $(`<div class="gamerz-xp-notification">+${xpAmount} XP</div>`);
+        // Show XP notification with enhanced effects
+        const notification = $(`<div class="gamerz-xp-notification">+${xp_amount} XP</div>`);
         notification.css({
             position: 'fixed',
             bottom: '80px',
@@ -100,41 +90,58 @@ jQuery(document).ready(function($) {
         
         $('body').append(notification);
         
+        // Add floating animation effect
+        let pos = 0;
+        const floatInterval = setInterval(() => {
+            pos -= 1;
+            notification.css('bottom', (80 + pos) + 'px');
+            if (pos < -50) clearInterval(floatInterval);
+        }, 30);
+        
         setTimeout(() => {
             notification.fadeOut(300, () => {
                 notification.remove();
             });
         }, 2000);
-    }
-
-    // Check if user leveled up and trigger animation
-    function maybeTriggerLevelUp(newXp) {
-        // This would typically check against rank thresholds
-        // For demo, we'll just trigger sometimes
-        if (Math.random() > 0.7) { // Random chance for demo purposes
-            triggerLevelUpAnimation();
-        }
-    }
-
-    // Trigger level up animation
-    function triggerLevelUpAnimation() {
-        // Add class to elements to trigger animation
-        $('.gamerz-rank-chip, .gamerz-badge-capsule, .gamerz-progress-bar').addClass('gamerz-level-up');
         
-        // Remove class after animation
-        setTimeout(() => {
-            $('.gamerz-rank-chip, .gamerz-badge-capsule, .gamerz-progress-bar').removeClass('gamerz-level-up');
-        }, 500);
-    }
+        // Trigger level up animation if applicable
+        if (typeof new_total_xp !== 'undefined') {
+            // Check if user reached a new level threshold (simplified)
+            if (Math.random() > 0.7) { // Random chance for demo purposes
+                // Add enhanced animation to elements
+                $('.gamerz-rank-chip, .gamerz-badge-capsule, .gamerz-progress-bar').addClass('gamerz-level-up');
+                
+                // Remove class after animation
+                setTimeout(() => {
+                    $('.gamerz-rank-chip, .gamerz-badge-capsule, .gamerz-progress-bar').removeClass('gamerz-level-up');
+                }, 500);
+                
+                // Add screen flash effect for level up
+                $('body').append('<div class="gamerz-screen-flash"></div>');
+                $('.gamerz-screen-flash').css({
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    background: 'white',
+                    opacity: 0.7,
+                    zIndex: 99998
+                }).animate({ opacity: 0 }, 500, function() {
+                    $(this).remove();
+                });
+            }
+        }
+    });
 
-    // Handle achievement unlock
+    // Enhanced achievement unlock with cyberpunk effects
     $(document).on('gamerz_achievement_unlocked', function(e, badgeName, badgeDetails) {
-        // Create achievement notification
+        // Create enhanced achievement notification
         const achievement = $(`
             <div class="gamerz-achievement-notification">
                 <div class="gamerz-achievement-title">Achievement Unlocked!</div>
                 <div class="gamerz-achievement-name">${badgeName}</div>
-                ${badgeDetails ? `<div class="gamerz-achievement-desc">${badgeDetails}</div>` : ''}
+                ${badgeDetails ? '<div class="gamerz-achievement-desc">' + badgeDetails + '</div>' : ''}
             </div>
         `);
         
@@ -151,7 +158,8 @@ jQuery(document).ready(function($) {
             fontWeight: 'bold',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'flex-start'
+            alignItems: 'flex-start',
+            animation: 'achievementSlideIn 0.5s ease-out, achievementSlideOut 0.5s ease-out 4.5s forwards'
         });
         
         achievement.find('.gamerz-achievement-title').css({
@@ -172,14 +180,41 @@ jQuery(document).ready(function($) {
         
         $('body').append(achievement);
         
-        // Trigger confetti
+        // Trigger enhanced confetti
         createConfetti();
         
-        // Remove after 5 seconds
+        // Add screen flash effect
+        $('body').append('<div class="gamerz-screen-flash"></div>');
+        $('.gamerz-screen-flash').css({
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'white',
+            opacity: 0.7,
+            zIndex: 99998
+        }).animate({ opacity: 0 }, 500, function() {
+            $(this).remove();
+        });
+        
+        // Add pulsing effect to achievement
+        const achievementFlashInterval = setInterval(() => {
+            achievement.css('box-shadow', '0 0 20px #00ffff');
+            setTimeout(() => {
+                achievement.css('box-shadow', '0 4px 15px rgba(0,0,0,0.3)');
+            }, 200);
+        }, 1000);
+        
         setTimeout(() => {
-            achievement.fadeOut(300, () => {
-                achievement.remove();
+            clearInterval(achievementFlashInterval);
+            achievement.css({
+                animation: 'achievementSlideOut 0.5s ease-out forwards'
             });
+            
+            setTimeout(() => {
+                achievement.remove();
+            }, 500);
         }, 5000);
     });
 
@@ -306,8 +341,96 @@ jQuery(document).ready(function($) {
         });
     }
     
-    // Run badge animation
-    setTimeout(animateBadgeCollection, 1000);
+    // Enhanced progress bars animation on load and scroll
+    function animateProgressBars() {
+        $('.gamerz-progress-bar').each(function() {
+            const fill = $(this).find('.gamerz-progress-fill');
+            const targetWidth = fill.attr('data-width') || fill.css('width');
+            
+            // Reset width to 0 then animate to target with enhanced effect
+            const currentWidth = fill.width();
+            fill.width(0);
+            fill.animate({ width: targetWidth }, 1500, 'swing', function() {
+                // Add shine effect after animation
+                $(this).addClass('gamerz-progress-shine');
+                setTimeout(() => {
+                    $(this).removeClass('gamerz-progress-shine');
+                }, 1000);
+            });
+        });
+    }
+    
+    // Run animation when document is ready and on scroll
+    animateProgressBars();
+    
+    $(window).on('scroll', function() {
+        if ($(window).scrollTop() > 100) {
+            animateProgressBars();
+        }
+    });
+
+    // Enhanced guild join/leave animations
+    $(document).on('click', '.gamerz-guild-join-btn, .gamerz-guild-leave-btn', function(e) {
+        const btn = $(this);
+        const originalText = btn.html();
+        btn.html('<span class="gamerz-loading">Processing...</span>');
+        btn.prop('disabled', true);
+        
+        // Add a cyberpunk loading animation
+        btn.addClass('gamerz-cyber-text');
+        
+        setTimeout(() => {
+            btn.html(originalText);
+            btn.prop('disabled', false);
+            btn.removeClass('gamerz-cyber-text');
+        }, 1000);
+    });
+
+    // Enhanced badge collection animation
+    function animateBadgeCollection() {
+        $('.gamerz-badge-capsule').each(function(index) {
+            const badge = $(this);
+            const originalOpacity = badge.css('opacity');
+            
+            // Staggered animation
+            setTimeout(() => {
+                badge.css('opacity', '0').animate({ opacity: 1 }, 300, function() {
+                    badge.addClass('gamerz-level-up');
+                    
+                    setTimeout(() => {
+                        badge.removeClass('gamerz-level-up');
+                    }, 300);
+                });
+            }, index * 150);
+        });
+    }
+    
+    // Run badge animation after page load
+    setTimeout(animateBadgeCollection, 1500);
+    
+    // Add matrix rain effect to special containers
+    $('.gamerz-matrix-rain').addClass('gamerz-matrix-rain');
+    
+    // Add cyber text effect to special elements
+    $('.gamerz-cyber-text').each(function() {
+        $(this).addClass('gamerz-cyber-text');
+    });
+    
+    // Add hover enhancement to player avatars
+    $(document).on('mouseenter', '.gamerz-player-avatar', function() {
+        $(this).css({
+            transform: 'scale(1.1)',
+            transition: 'transform 0.3s ease',
+            boxShadow: '0 0 10px rgba(0, 115, 170, 0.5)'
+        });
+    });
+    
+    $(document).on('mouseleave', '.gamerz-player-avatar', function() {
+        $(this).css({
+            transform: 'scale(1)',
+            boxShadow: 'none'
+        });
+    });
 });
 
 // Global functions for other scripts to use
@@ -318,3 +441,31 @@ window.gamerzTriggerAchievement = function(title, description) {
 window.gamerzUpdateUserXp = function(xpAmount, newTotalXp) {
     jQuery(document).trigger('gamerz_xp_gained', [xpAmount, newTotalXp]);
 };
+
+// Add special effect when page loads
+window.addEventListener('load', function() {
+    // Add a subtle glow effect to the entire page on load
+    const pageGlow = document.createElement('div');
+    pageGlow.className = 'gamerz-page-glow';
+    pageGlow.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, transparent 20%, #0073aa 100%);
+        opacity: 0.1;
+        z-index: -1;
+        pointer-events: none;
+    `;
+    document.body.appendChild(pageGlow);
+    
+    // Fade out the glow effect
+    setTimeout(() => {
+        pageGlow.style.transition = 'opacity 2s ease';
+        pageGlow.style.opacity = '0';
+        setTimeout(() => {
+            document.body.removeChild(pageGlow);
+        }, 2000);
+    }, 1000);
+});

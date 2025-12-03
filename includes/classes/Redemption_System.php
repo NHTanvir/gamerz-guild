@@ -611,10 +611,10 @@ class Redemption_System {
 		return false;
 	}
 
-	/**
+	/***
 	 * Deactivate expired cosmetics
 	 */
-	private function deactivate_expired_cosmetics( $user_id ) {
+	public function deactivate_expired_cosmetics( $user_id ) {
 		$cosmetics = get_user_meta( $user_id, '_gamerz_cosmetics', true );
 		if ( ! is_array( $cosmetics ) ) {
 			return;

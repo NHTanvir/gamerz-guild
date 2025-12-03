@@ -348,7 +348,7 @@ class Visual_Enhancements {
 		<?php
 	}
 
-	/**
+	/***
 	 * Add achievement animations to footer
 	 */
 	public function add_achievement_animations() {
@@ -357,70 +357,171 @@ class Visual_Enhancements {
 		jQuery(document).ready(function($) {
 			// Confetti effect for achievements
 			function gamerzConfetti() {
-				// This would require a confetti library, simplified version:
-				// In a real implementation, you'd use a library like canvas-confetti
-				var particles = 50;
-				var container = $('body');
+				const confettiCount = 150;
+				const container = document.body;
 				
-				for (var i = 0; i < particles; i++) {
-					var particle = $('<div class="gamerz-confetti"></div>');
-					particle.css({
+				for (let i = 0; i < confettiCount; i++) {
+					const confetti = document.createElement('div');
+					confetti.className = 'gamerz-confetti-piece';
+					
+					// Random properties
+					const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff', '#ffcc00', '#ff6600', '#ff3366'];
+					const shapes = ['circle', 'square', 'diamond'];
+					
+					const size = Math.random() * 10 + 5;
+					const color = colors[Math.floor(Math.random() * colors.length)];
+					const shape = shapes[Math.floor(Math.random() * shapes.length)];
+					
+					Object.assign(confetti.style, {
 						position: 'fixed',
+						width: `${size}px`,
+						height: `${size}px`,
+						backgroundColor: color,
+						borderRadius: shape === 'circle' ? '50%' : shape === 'diamond' ? '0' : '0',
 						top: '0',
-						left: Math.random() * 100 + 'vw',
-						width: '8px',
-						height: '8px',
-						background: '#f0f0f0',
-						borderRadius: '50%',
-						zIndex: 99999,
-						opacity: 0.8
+						left: `${Math.random() * 100}vw`,
+						zIndex: '99999',
+						opacity: '0.8',
+						transform: `rotate(${Math.random() * 360}deg)`,
+						animation: `confetti-fall ${Math.random() * 3 + 2}s linear forwards`
 					});
 					
-					container.append(particle);
+					// Create diamond shape with CSS
+					if (shape === 'diamond') {
+						confetti.style.transform = `rotate(45deg) rotate(${Math.random() * 360}deg)`;
+					}
 					
-					// Animate
-					particle.animate({
-						top: '100vh',
-						left: (parseFloat(particle.css('left')) + (Math.random() * 100 - 50)) + 'px',
-						opacity: 0
-					}, 2000, 'linear', function() {
-						$(this).remove();
-					});
+					document.body.appendChild(confetti);
+					
+					// Remove after animation
+					setTimeout(() => {
+						confetti.remove();
+					}, 5000);
 				}
 			}
 			
-			// Listen for achievement unlock
-			$(document).on('gamerz_achievement_unlocked', function(e, badgeName) {
-				// Show achievement notification
-				var achievement = $('<div class="gamerz-achievement-notification">Achievement Unlocked: ' + badgeName + '!</div>');
+			// Enhanced achievement unlock
+			$(document).on('gamerz_achievement_unlocked', function(e, badgeName, badgeDetails) {
+				// Create achievement notification
+				const achievement = $(`
+					<div class="gamerz-achievement-notification">
+						<div class="gamerz-achievement-title">Achievement Unlocked!</div>
+						<div class="gamerz-achievement-name">${badgeName}</div>
+						${badgeDetails ? '<div class="gamerz-achievement-desc">' + badgeDetails + '</div>' : ''}
+					</div>
+				`);
+				
 				achievement.css({
-					'position': 'fixed',
-					'top': '20px',
-					'right': '20px',
-					'background': 'linear-gradient(135deg, #0073aa, #00a0d2)',
-					'color': 'white',
-					'padding': '15px 25px',
-					'border-radius': '8px',
-					'z-index': '10000',
-					'box-shadow': '0 4px 15px rgba(0,0,0,0.3)',
-					'font-weight': 'bold',
-					'animation': 'achievementSlideIn 0.5s ease-out, achievementSlideOut 0.5s ease-out 4.5s forwards'
+					position: 'fixed',
+					top: '20px',
+					right: '20px',
+					background: 'linear-gradient(135deg, #0073aa, #00a0d2)',
+					color: 'white',
+					padding: '15px 25px',
+					borderRadius: '8px',
+					zIndex: '10000',
+					boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+					fontWeight: 'bold',
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'flex-start',
+					animation: 'achievementSlideIn 0.5s ease-out, achievementSlideOut 0.5s ease-out 4.5s forwards'
+				});
+				
+				achievement.find('.gamerz-achievement-title').css({
+					fontSize: '1.1em',
+					marginBottom: '5px'
+				});
+				
+				achievement.find('.gamerz-achievement-name').css({
+					fontSize: '0.9em',
+					fontWeight: 'normal'
+				});
+				
+				achievement.find('.gamerz-achievement-desc').css({
+					fontSize: '0.8em',
+					opacity: '0.8',
+					marginTop: '3px'
 				});
 				
 				$('body').append(achievement);
 				
-				// Trigger confetti
+				// Trigger enhanced confetti
 				gamerzConfetti();
+				
+				// Add screen flash effect
+				$('body').append('<div class="gamerz-screen-flash"></div>');
+				$('.gamerz-screen-flash').css({
+					position: 'fixed',
+					top: 0,
+					left: 0,
+					width: '100%',
+					height: '100%',
+					background: 'white',
+					opacity: 0.7,
+					zIndex: 99998
+				}).animate({ opacity: 0 }, 500, function() {
+					$(this).remove();
+				});
 				
 				setTimeout(function() {
 					achievement.css({
-						'animation': 'achievementSlideOut 0.5s ease-out forwards'
+						animation: 'achievementSlideOut 0.5s ease-out forwards'
 					});
 					
 					setTimeout(function() {
 						achievement.remove();
 					}, 500);
 				}, 5000);
+			});
+			
+			// XP gain animation
+			$(document).on('gamerz_xp_gained', function(e, xp_amount, new_total_xp) {
+				// Animate XP bars
+				$('.gamerz-xp-fill').each(function() {
+					const currentWidth = parseFloat($(this).css('width'));
+					const newWidth = Math.min(100, currentWidth + 5); // Example: increase by 5%
+					$(this).animate({ width: newWidth + '%' }, 500);
+				});
+				
+				// Show XP notification
+				const notification = $('<div class="gamerz-xp-notification">+' + xp_amount + ' XP</div>');
+				notification.css({
+					position: 'fixed',
+					bottom: '80px',
+					left: '50%',
+					transform: 'translateX(-50%)',
+					background: 'linear-gradient(135deg, #0073aa, #00a0d2)',
+					color: 'white',
+					padding: '10px 20px',
+					borderRadius: '20px',
+					zIndex: '10000',
+					fontWeight: 'bold',
+					boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+					animation: 'xpNotification 2s ease-out forwards'
+				});
+				
+				$('body').append(notification);
+				
+				setTimeout(function() {
+					notification.fadeOut(300, function() {
+						notification.remove();
+					});
+				}, 2000);
+				
+				// Trigger level up animation if applicable
+				if (typeof new_total_xp !== 'undefined') {
+					// Check if user reached a new level threshold (simplified)
+					if (Math.random() > 0.7) { // Random chance for demo purposes
+						// Add class to elements to trigger animation
+						$('.gamerz-rank-chip, .gamerz-badge-capsule, .gamerz-progress-bar').addClass('gamerz-level-up');
+						
+						// Remove class after animation
+						setTimeout(() => {
+							$('.gamerz-rank-chip, .gamerz-badge-capsule, .gamerz-progress-bar').removeClass('gamerz-level-up');
+						}, 500);
+					}
+				}
 			});
 		});
 		</script>
@@ -434,12 +535,19 @@ class Visual_Enhancements {
 			from { transform: translateX(0); opacity: 1; }
 			to { transform: translateX(100%); opacity: 0; }
 		}
-		.gamerz-confetti {
-			position: fixed;
-			width: 10px;
-			height: 10px;
-			border-radius: 50%;
-			background: #ffd700;
+		@keyframes confetti-fall {
+			0% { transform: translateY(0) rotate(0deg) translateX(0); }
+			100% { 
+				transform: translateY(100vh) rotate(720deg) translateX(${(Math.random() - 0.5) * 200}px);
+				opacity: 0;
+			}
+		}
+		@keyframes xpNotification {
+			0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+			100% { transform: translateX(-50%) translateY(-50px); opacity: 0; }
+		}
+		.gamerz-confetti-piece {
+			pointer-events: none;
 		}
 		.gamerz-achievement-notification {
 			position: fixed;
@@ -449,6 +557,35 @@ class Visual_Enhancements {
 			color: white;
 			padding: 15px 25px;
 			border-radius: 8px;
+			z-index: 10000;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+			font-weight: bold;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+		}
+		.gamerz-achievement-title {
+			font-size: 1.1em;
+			margin-bottom: 5px;
+		}
+		.gamerz-achievement-name {
+			font-size: 0.9em;
+			font-weight: normal;
+		}
+		.gamerz-achievement-desc {
+			font-size: 0.8em;
+			opacity: 0.8;
+			margin-top: 3px;
+		}
+		.gamerz-xp-notification {
+			position: fixed;
+			bottom: 80px;
+			left: 50%;
+			transform: translateX(-50%);
+			background: linear-gradient(135deg, #0073aa, #00a0d2);
+			color: white;
+			padding: 10px 20px;
+			border-radius: 20px;
 			z-index: 10000;
 			box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 			font-weight: bold;

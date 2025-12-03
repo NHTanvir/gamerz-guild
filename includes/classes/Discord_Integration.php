@@ -202,7 +202,7 @@ class Discord_Integration {
 		$this->send_discord_message( $message );
 	}
 
-	/**
+	/***
 	 * Announce guild join to Discord
 	 */
 	public function announce_guild_join( $guild_id, $user_id, $role ) {
@@ -231,6 +231,85 @@ class Discord_Integration {
 		];
 
 		$this->send_discord_message( $message );
+	}
+
+	/***
+	 * Announce guild member promotion to Discord
+	 */
+	public function announce_guild_member_promoted( $guild_id, $user_id, $new_role ) {
+		$guild = get_post( $guild_id );
+		$user = get_user_by( 'ID', $user_id );
+		
+		if ( ! $guild || ! $user ) {
+			return;
+		}
+
+		$discord_username = get_user_meta( $user_id, '_gamerz_discord_username', true );
+		$discord_id = get_user_meta( $user_id, '_gamerz_discord_id', true );
+
+		$role_display_name = $this->get_guild_role_display_name( $new_role );
+
+		$message = [
+			'embeds' => [
+				[
+					'title' => ':arrow_up: Guild Promotion!',
+					'description' => "<@" . ($discord_id ?: $user->user_login) . "> has been promoted to **{$role_display_name}** in **{$guild->post_title}**!",
+					'color' => 16777045, // Gold color
+					'timestamp' => date( 'c' ),
+					'footer' => [
+						'text' => 'Congratulations on your promotion!'
+					]
+				]
+			]
+		];
+
+		$this->send_discord_message( $message );
+	}
+
+	/***
+	 * Announce guild member demotion to Discord
+	 */
+	public function announce_guild_member_demoted( $guild_id, $user_id, $new_role ) {
+		$guild = get_post( $guild_id );
+		$user = get_user_by( 'ID', $user_id );
+		
+		if ( ! $guild || ! $user ) {
+			return;
+		}
+
+		$discord_username = get_user_meta( $user_id, '_gamerz_discord_username', true );
+		$discord_id = get_user_meta( $user_id, '_gamerz_discord_id', true );
+
+		$role_display_name = $this->get_guild_role_display_name( $new_role );
+
+		$message = [
+			'embeds' => [
+				[
+					'title' => ':arrow_down: Guild Role Change',
+					'description' => "<@" . ($discord_id ?: $user->user_login) . "> has been changed to **{$role_display_name}** in **{$guild->post_title}**.",
+					'color' => 16711680, // Red color
+					'timestamp' => date( 'c' ),
+					'footer' => [
+						'text' => 'Every role serves the guild!'
+					]
+				]
+			]
+		];
+
+		$this->send_discord_message( $message );
+	}
+
+	/***
+	 * Get guild role display name
+	 */
+	private function get_guild_role_display_name( $role ) {
+		$roles = [
+			'leader' => 'Guild Leader',
+			'officer' => 'Guild Officer',
+			'member' => 'Guild Member',
+		];
+
+		return isset( $roles[ $role ] ) ? $roles[ $role ] : $role;
 	}
 
 	/**
