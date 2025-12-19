@@ -3,29 +3,26 @@
  * Verification script for Gamerz Guild Discord Integration
  */
 
-// Make sure we're in WordPress context
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Function to verify the Discord integration settings
 function verify_gamerz_discord_setup() {
-    // Check if the Discord settings exist in options
-    $webhook_url = get_option( 'gamerz_discord_webhook_url', '' );
-    $bot_token = get_option( 'gamerz_discord_bot_token', '' );
-    $guild_id = get_option( 'gamerz_discord_guild_id', '' );
+    $webhook_url  = get_option( 'gamerz_discord_webhook_url', '' );
+    $bot_token    = get_option( 'gamerz_discord_bot_token', '' );
+    $guild_id     = get_option( 'gamerz_discord_guild_id', '' );
     $role_mapping = get_option( 'gamerz_discord_role_mapping', [] );
     
     $verification_results = [
-        'webhook_url_set' => !empty($webhook_url),
-        'bot_token_set' => !empty($bot_token),
-        'guild_id_set' => !empty($guild_id),
-        'role_mapping_set' => !empty($role_mapping),
+        'webhook_url_set'       => !empty($webhook_url),
+        'bot_token_set'         => !empty($bot_token),
+        'guild_id_set'          => !empty($guild_id),
+        'role_mapping_set'      => !empty($role_mapping),
         'specific_roles_mapped' => false,
-        'webhook_url' => $webhook_url,
-        'bot_token_exists' => !empty($bot_token), // Don't return actual token for security
-        'guild_id' => $guild_id,
-        'role_mapping_count' => count($role_mapping)
+        'webhook_url'           => $webhook_url,
+        'bot_token_exists'      => !empty($bot_token), 
+        'guild_id'              => $guild_id,
+        'role_mapping_count'    => count($role_mapping)
     ];
     
     // Check if the specific role mappings we set up are present
@@ -51,7 +48,7 @@ function verify_gamerz_discord_setup() {
     return $verification_results;
 }
 
-// Function to display verification results
+
 function display_gamerz_discord_verification() {
     $results = verify_gamerz_discord_setup();
     
@@ -75,7 +72,6 @@ function display_gamerz_discord_verification() {
     echo '</div>';
 }
 
-// Add verification to admin dashboard
 add_action('admin_notices', function() {
     $screen = get_current_screen();
     if ($screen->id === 'plugins' || strpos($screen->id, 'gamerz-guild') !== false) {
