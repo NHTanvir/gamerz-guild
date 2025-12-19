@@ -3,23 +3,17 @@
  * Set up Discord integration settings for Gamerz Guild plugin
  */
 
-// Make sure we're in WordPress context
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Function to set up the Discord integration settings
 function setup_gamerz_discord_integration() {
-    // Set the Discord webhook URL
     update_option( 'gamerz_discord_webhook_url', 'https://discord.com/api/webhooks/1443615355024179221/u5J7zMlnZL8HuK5Ux57_bz9GkjWuTWJ5oso3wuzRdPZlEJL3lktLw3rM4y_SdGfiw_3Z' );
     
-    // Set the Discord bot token
     update_option( 'gamerz_discord_bot_token', 'MTQ0MzYxNzE5MTQyMDIzNTk3MA.Gak63V.mOqcuCIxwl1Z2u0-u1cZLmF3qthcZJkqzXKj5k' );
     
-    // Set the Discord guild ID
     update_option( 'gamerz_discord_guild_id', '1045083738754789386' );
     
-    // Set up the role mappings based on rank levels
     $role_mappings = [
         'Scrubling' => [
             'role_id' => '',
@@ -83,11 +77,9 @@ function setup_gamerz_discord_integration() {
         ],
     ];
     
-    // Update the role mappings option
     update_option( 'gamerz_discord_role_mapping', $role_mappings );
     
     return true;
 }
 
-// Hook this function to run during plugin initialization
 add_action( 'init', 'setup_gamerz_discord_integration' );
