@@ -145,5 +145,4 @@ class AJAX extends Base {
 	public function handle_not_logged_in() {
 		wp_die( __( 'You must be logged in to perform this action.', 'gamerz-guild' ) );
 	}
-
 }
