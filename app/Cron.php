@@ -42,10 +42,7 @@ class Cron extends Base {
 	 * Setup hooks
 	 */
 	public function setup_hooks() {
-		// Hook the weekly leaderboard announcement to Discord
 		add_action( 'gamerz_weekly_leaderboard_discord', [ $this, 'send_weekly_leaderboard_to_discord' ] );
-		
-		// Hook for cleaning up expired cosmetics and access levels
 		add_action( 'gamerz_cleanup_expired_items', [ $this, 'cleanup_expired_items' ] );
 	}
 
@@ -53,15 +50,13 @@ class Cron extends Base {
 	 * Send weekly leaderboard to Discord
 	 */
 	public function send_weekly_leaderboard_to_discord() {
-		// Only send if Discord is properly configured
-		$webhook_url = get_option( 'gamerz_discord_webhook_url', '' );
-		$bot_token = get_option( 'gamerz_discord_bot_token', '' );
+		$webhook_url  = get_option( 'gamerz_discord_webhook_url', '' );
+		$bot_token    = get_option( 'gamerz_discord_bot_token', '' );
 		
 		if ( ! $webhook_url && ! $bot_token ) {
-			return; // Don't run if Discord isn't configured
+			return;
 		}
-		
-		// Send leaderboard to Discord
+
 		if ( class_exists( '\Codexpert\Gamerz_Guild\Classes\Discord_Integration' ) ) {
 			$discord = new \Codexpert\Gamerz_Guild\Classes\Discord_Integration();
 			$discord->send_leaderboard_to_discord();
@@ -78,12 +73,10 @@ class Cron extends Base {
 		foreach ( $users as $user ) {
 			$user_id = $user->ID;
 			
-			// Clean up expired cosmetics
 			if ( class_exists( '\Codexpert\Gamerz_Guild\Classes\Redemption_System' ) ) {
 				$redemption = new \Codexpert\Gamerz_Guild\Classes\Redemption_System();
 				$redemption->deactivate_expired_cosmetics( $user_id );
 				
-				// Also clean up expired access levels
 				$this->cleanup_expired_access_levels( $user_id );
 			}
 		}
@@ -157,10 +150,9 @@ class Cron extends Base {
 		$pages_created = get_option( 'gamerz_guild_pages_created', false );
 
 		if ( $pages_created ) {
-			return; // Pages already created
+			return;
 		}
 
-		// Create Leaderboard Page
 		$leaderboard_page = get_page_by_path( 'leaderboard', OBJECT, 'page' );
 		if ( ! $leaderboard_page ) {
 			$leaderboard_page_id = wp_insert_post( array(
@@ -173,14 +165,12 @@ class Cron extends Base {
 			) );
 		} else {
 			$leaderboard_page_id = $leaderboard_page->ID;
-			// Update the content to ensure it has the required shortcodes
 			wp_update_post( array(
 				'ID'           => $leaderboard_page_id,
 				'post_content' => '[gamerz_leaderboard]<br>[gamerz_xp_progress]',
 			) );
 		}
 
-		// Create Weekly Challenges Page
 		$challenges_page = get_page_by_path( 'weekly-challenges', OBJECT, 'page' );
 		if ( ! $challenges_page ) {
 			$challenges_page_id = wp_insert_post( array(
@@ -193,14 +183,12 @@ class Cron extends Base {
 			) );
 		} else {
 			$challenges_page_id = $challenges_page->ID;
-			// Update the content to ensure it has the required shortcode
 			wp_update_post( array(
 				'ID'           => $challenges_page_id,
 				'post_content' => '[gamerz_weekly_challenges]',
 			) );
 		}
 
-		// Create My Challenges Page
 		$my_challenges_page = get_page_by_path( 'my-challenges', OBJECT, 'page' );
 		if ( ! $my_challenges_page ) {
 			$my_challenges_page_id = wp_insert_post( array(
@@ -213,14 +201,12 @@ class Cron extends Base {
 			) );
 		} else {
 			$my_challenges_page_id = $my_challenges_page->ID;
-			// Update the content to ensure it has the required shortcode
 			wp_update_post( array(
 				'ID'           => $my_challenges_page_id,
 				'post_content' => '[gamerz_my_challenges]',
 			) );
 		}
 
-		// Mark that pages have been created to prevent duplicates
 		update_option( 'gamerz_guild_pages_created', true );
 	}
 
@@ -236,6 +222,6 @@ class Cron extends Base {
 		wp_clear_scheduled_hook( 'tanvir-daily' );
 		wp_clear_scheduled_hook( 'gamerz_weekly_leaderboard_discord' );
 		wp_clear_scheduled_hook( 'gamerz_cleanup_expired_items' );
-		wp_clear_scheduled_hook( 'gamerz_reset_weekly_challenges' ); // This is scheduled in Challenges_Hooks but need to clear here too
+		wp_clear_scheduled_hook( 'gamerz_reset_weekly_challenges' );
 	}
 }
