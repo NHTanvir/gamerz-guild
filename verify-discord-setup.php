@@ -26,7 +26,7 @@ function verify_gamerz_discord_setup() {
     ];
     
     // Check if the specific role mappings we set up are present
-    if ( ! empty( $role_mapping) ) {
+    if ( ! empty( $role_mapping ) ) {
         $target_roles = [
             '1443626808929943595', // Rookie Scrub
             '1443626957228216340', // Casual Scrub
@@ -36,13 +36,13 @@ function verify_gamerz_discord_setup() {
         ];
         
         $found_roles = 0;
-        foreach ($role_mapping as $role_data) {
-            if (in_array($role_data['role_id'], $target_roles)) {
+        foreach ( $role_mapping as $role_data ) {
+            if ( in_array( $role_data['role_id'], $target_roles ) ) {
                 $found_roles++;
             }
         }
         
-        $verification_results['specific_roles_mapped'] = $found_roles >= 3; // At least 3 of our mapped roles
+        $verification_results['specific_roles_mapped'] = $found_roles >= 3; 
     }
     
     return $verification_results;
@@ -56,14 +56,14 @@ function display_gamerz_discord_verification() {
     echo '<h3 style="margin-top: 0;">Gamerz Guild Discord Integration Verification</h3>';
     
     echo '<ul style="list-style-type: none; padding-left: 0;">';
-    echo '<li style="margin: 5px 0;"><strong>✓ Webhook URL:</strong> ' . ($results['webhook_url_set'] ? 'SET' : 'NOT SET') . '</li>';
-    echo '<li style="margin: 5px 0;"><strong>✓ Bot Token:</strong> ' . ($results['bot_token_set'] ? 'SET' : 'NOT SET') . '</li>';
-    echo '<li style="margin: 5px 0;"><strong>✓ Guild ID:</strong> ' . ($results['guild_id_set'] ? $results['guild_id'] : 'NOT SET') . '</li>';
-    echo '<li style="margin: 5px 0;"><strong>✓ Role Mapping:</strong> ' . ($results['role_mapping_set'] ? 'SET (' . $results['role_mapping_count'] . ' roles)' : 'NOT SET') . '</li>';
-    echo '<li style="margin: 5px 0;"><strong>✓ Specific Roles:</strong> ' . ($results['specific_roles_mapped'] ? 'VERIFIED' : 'NOT VERIFIED') . '</li>';
+    echo '<li style="margin: 5px 0;"><strong>✓ Webhook URL:</strong> ' . ( $results['webhook_url_set'] ? 'SET' : 'NOT SET' ) . '</li>';
+    echo '<li style="margin: 5px 0;"><strong>✓ Bot Token:</strong> ' . ( $results['bot_token_set'] ? 'SET' : 'NOT SET' ) . '</li>';
+    echo '<li style="margin: 5px 0;"><strong>✓ Guild ID:</strong> ' . ( $results['guild_id_set'] ? $results['guild_id'] : 'NOT SET' ) . '</li>';
+    echo '<li style="margin: 5px 0;"><strong>✓ Role Mapping:</strong> ' . ( $results['role_mapping_set'] ? 'SET (' . $results['role_mapping_count'] . ' roles)' : 'NOT SET' ) . '</li>';
+    echo '<li style="margin: 5px 0;"><strong>✓ Specific Roles:</strong> ' . ( $results['specific_roles_mapped'] ? 'VERIFIED' : 'NOT VERIFIED' ) . '</li>';
     echo '</ul>';
     
-    if ($results['webhook_url_set'] && $results['bot_token_set'] && $results['guild_id_set'] && $results['specific_roles_mapped']) {
+    if ( $results['webhook_url_set'] && $results['bot_token_set'] && $results['guild_id_set'] && $results['specific_roles_mapped'] ) {
         echo '<p style="color: #28a745; font-weight: bold;">✅ Discord integration is fully configured and ready to use!</p>';
     } else {
         echo '<p style="color: #dc3545; font-weight: bold;">❌ Discord integration needs attention - some settings are missing.</p>';
@@ -74,7 +74,7 @@ function display_gamerz_discord_verification() {
 
 add_action('admin_notices', function() {
     $screen = get_current_screen();
-    if ($screen->id === 'plugins' || strpos($screen->id, 'gamerz-guild') !== false) {
+    if ( $screen->id === 'plugins' || strpos( $screen->id, 'gamerz-guild' ) !== false ) {
         display_gamerz_discord_verification();
     }
 });
