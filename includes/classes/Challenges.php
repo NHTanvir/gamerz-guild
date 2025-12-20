@@ -27,102 +27,110 @@ class Challenges {
 	 * Constructor function
 	 */
 	public function __construct() {
-		// Hooks have been moved to app/Challenges_Hooks.php
 	}
 
 	/**
-	 * Register challenge post type
+	 * Register challenge post type.
 	 */
 	public function register_challenge_post_type() {
-		$args = [
-			'labels' => [
-				'name' => __( 'Challenges', 'gamerz-guild' ),
-				'singular_name' => __( 'Challenge', 'gamerz-guild' ),
-				'add_new' => __( 'Add New', 'gamerz-guild' ),
-				'add_new_item' => __( 'Add New Challenge', 'gamerz-guild' ),
-				'edit_item' => __( 'Edit Challenge', 'gamerz-guild' ),
-				'new_item' => __( 'New Challenge', 'gamerz-guild' ),
-				'view_item' => __( 'View Challenge', 'gamerz-guild' ),
-				'search_items' => __( 'Search Challenges', 'gamerz-guild' ),
-				'not_found' => __( 'No challenges found', 'gamerz-guild' ),
+		$args = array(
+			'labels' => array(
+				'name'               => __( 'Challenges', 'gamerz-guild' ),
+				'singular_name'      => __( 'Challenge', 'gamerz-guild' ),
+				'add_new'            => __( 'Add New', 'gamerz-guild' ),
+				'add_new_item'       => __( 'Add New Challenge', 'gamerz-guild' ),
+				'edit_item'          => __( 'Edit Challenge', 'gamerz-guild' ),
+				'new_item'           => __( 'New Challenge', 'gamerz-guild' ),
+				'view_item'          => __( 'View Challenge', 'gamerz-guild' ),
+				'search_items'       => __( 'Search Challenges', 'gamerz-guild' ),
+				'not_found'          => __( 'No challenges found', 'gamerz-guild' ),
 				'not_found_in_trash' => __( 'No challenges found in trash', 'gamerz-guild' ),
-			],
-			'public' => true,
-			'publicly_queryable' => true,
-			'show_ui' => true,
-			'show_in_menu' => 'gamerz-guild-dashboard',
-			'query_var' => true,
-			'rewrite' => [ 'slug' => 'challenge' ],
-			'capability_type' => 'post',
-			'has_archive' => true,
-			'hierarchical' => false,
-			'menu_position' => null,
-			'menu_icon' => 'dashicons-awards',
-			'supports' => [ 'title', 'editor', 'custom-fields' ],
-		];
+			),
+			'public'              => true,
+			'publicly_queryable'  => true,
+			'show_ui'             => true,
+			'show_in_menu'        => 'gamerz-guild-dashboard',
+			'query_var'           => true,
+			'rewrite'             => array(
+				'slug' => 'challenge',
+			),
+			'capability_type'     => 'post',
+			'has_archive'         => true,
+			'hierarchical'        => false,
+			'menu_position'       => null,
+			'menu_icon'           => 'dashicons-awards',
+			'supports'            => array(
+				'title',
+				'editor',
+				'custom-fields',
+			),
+		);
 
 		register_post_type( 'gamerz_challenge', $args );
 	}
 
 	/**
-	 * Set up weekly challenges
+	 * Set up weekly challenges.
+	 *
+	 * @param array $challenges Weekly challenge definitions.
 	 */
-	public function setup_weekly_challenges( $challenges = [] ) {
+	public function setup_weekly_challenges( $challenges = array() ) {
 		if ( empty( $challenges ) ) {
-			// Default weekly challenges
-			$challenges = [
-				[
-					'title' => 'Squad Up with a Newbie',
+			// Default weekly challenges.
+			$challenges = array(
+				array(
+					'title'       => 'Squad Up with a Newbie',
 					'description' => 'Play at least one match this week teamed with a Scrub Gamerz member rank 1-3 (a newer member).',
-					'reward_xp' => 50,
-					'badge_id' => 'buddy_system',
-					'type' => 'social',
-					'target' => 1,
-					'meta' => [
-						'for_rank_range' => [1, 3],
-					]
-				],
-				[
-					'title' => 'Post a Build Guide',
+					'reward_xp'   => 50,
+					'badge_id'    => 'buddy_system',
+					'type'        => 'social',
+					'target'      => 1,
+					'meta'        => array(
+						'for_rank_range' => array( 1, 3 ),
+					),
+				),
+				array(
+					'title'       => 'Post a Build Guide',
 					'description' => 'Write a detailed guide or strategy post in the forums (at least 300 words) for your favorite game.',
-					'reward_xp' => 100,
-					'badge_id' => 'guide_guru_bonus',
-					'type' => 'creative',
-					'target' => 1,
-					'meta' => [
+					'reward_xp'   => 100,
+					'badge_id'    => 'guide_guru_bonus',
+					'type'        => 'creative',
+					'target'      => 1,
+					'meta'        => array(
 						'min_content_length' => 300,
-					]
-				],
-				[
-					'title' => 'Clip Contest – Trickshot',
+					),
+				),
+				array(
+					'title'       => 'Clip Contest – Trickshot',
 					'description' => 'Submit a video clip of your best trickshot or epic play. Community votes on the best clip.',
-					'reward_xp' => 100,
-					'badge_id' => 'trickshot_master',
-					'type' => 'competitive',
-					'target' => 1,
-					'meta' => [
+					'reward_xp'   => 100,
+					'badge_id'    => 'trickshot_master',
+					'type'        => 'competitive',
+					'target'      => 1,
+					'meta'        => array(
 						'submission_type' => 'video_clip',
-					]
-				]
-			];
+					),
+				),
+			);
 		}
 
-		// Get current week
+		// Get current week.
 		$week_number = date( 'W' );
-		$year = date( 'Y' );
+		$year        = date( 'Y' );
 
-		// Save challenges
-		foreach ( $challenges as $index => $challenge ) {
-			$post_id = wp_insert_post( [
-				'post_title' => $challenge['title'],
-				'post_content' => $challenge['description'],
-				'post_status' => 'publish',
-				'post_type' => 'gamerz_challenge',
-				'post_date' => current_time( 'mysql' ),
-			] );
+		// Save challenges.
+		foreach ( $challenges as $challenge ) {
+			$post_id = wp_insert_post(
+				array(
+					'post_title'   => $challenge['title'],
+					'post_content' => $challenge['description'],
+					'post_status'  => 'publish',
+					'post_type'    => 'gamerz_challenge',
+					'post_date'    => current_time( 'mysql' ),
+				)
+			);
 
 			if ( ! is_wp_error( $post_id ) ) {
-				// Add challenge meta
 				update_post_meta( $post_id, '_challenge_reward_xp', $challenge['reward_xp'] );
 				update_post_meta( $post_id, '_challenge_badge_id', $challenge['badge_id'] );
 				update_post_meta( $post_id, '_challenge_type', $challenge['type'] );
@@ -133,7 +141,7 @@ class Challenges {
 			}
 		}
 
-		// Store for current use
+		// Store for current use.
 		$this->current_challenges = $challenges;
 	}
 
