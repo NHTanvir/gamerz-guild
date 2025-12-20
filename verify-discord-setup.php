@@ -14,19 +14,19 @@ function verify_gamerz_discord_setup() {
     $role_mapping = get_option( 'gamerz_discord_role_mapping', [] );
     
     $verification_results = [
-        'webhook_url_set'       => !empty($webhook_url),
-        'bot_token_set'         => !empty($bot_token),
-        'guild_id_set'          => !empty($guild_id),
-        'role_mapping_set'      => !empty($role_mapping),
+        'webhook_url_set'       =>  ! empty( $webhook_url ),
+        'bot_token_set'         =>  ! empty( $bot_token ),
+        'guild_id_set'          =>  ! empty( $guild_id ),
+        'role_mapping_set'      =>  ! empty( $role_mapping ),
         'specific_roles_mapped' => false,
         'webhook_url'           => $webhook_url,
-        'bot_token_exists'      => !empty($bot_token), 
+        'bot_token_exists'      =>  ! empty( $bot_token ) , 
         'guild_id'              => $guild_id,
-        'role_mapping_count'    => count($role_mapping)
+        'role_mapping_count'    => count( $role_mapping )
     ];
     
     // Check if the specific role mappings we set up are present
-    if (!empty($role_mapping)) {
+    if ( ! empty( $role_mapping) ) {
         $target_roles = [
             '1443626808929943595', // Rookie Scrub
             '1443626957228216340', // Casual Scrub
