@@ -19,99 +19,110 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Badge_System {
 
 	/**
-	 * Badge structure: id, name, description, icon, criteria, type
+	 * Badge structure:
+	 * id, name, description, icon, criteria, type, trigger_action
 	 */
-	public $badges = [
-		'forum_newbie' => [
-			'id' => 'forum_newbie',
-			'name' => 'Forum Newbie',
-			'description' => 'Every legend begins with a single forum post. Congrats on speaking up in the Scrub forums for the first time!',
-			'icon' => 'dashicons dashicons-format-chat',
-			'criteria' => 'first_forum_post',
-			'type' => 'auto',
+	public $badges = array(
+		'forum_newbie' => array(
+			'id'             => 'forum_newbie',
+			'name'           => 'Forum Newbie',
+			'description'    => 'Every legend begins with a single forum post. Congrats on speaking up in the Scrub forums for the first time!',
+			'icon'           => 'dashicons dashicons-format-chat',
+			'criteria'       => 'first_forum_post',
+			'type'           => 'auto',
 			'trigger_action' => 'bbp_new_topic,bbp_new_reply',
-		],
-		'social_butterfly' => [
-			'id' => 'social_butterfly',
-			'name' => 'Social Butterfly',
-			'description' => 'Out of your cocoon and into the chatter – you\'re connecting with the community!',
-			'icon' => 'dashicons dashicons-groups',
-			'criteria' => 'social_activity',
-			'type' => 'auto',
+		),
+
+		'social_butterfly' => array(
+			'id'             => 'social_butterfly',
+			'name'           => 'Social Butterfly',
+			'description'    => 'Out of your cocoon and into the chatter – you\'re connecting with the community!',
+			'icon'           => 'dashicons dashicons-groups',
+			'criteria'       => 'social_activity',
+			'type'           => 'auto',
 			'trigger_action' => 'friends_add_friendship,activity_like',
-		],
-		'daily_grinder' => [
-			'id' => 'daily_grinder',
-			'name' => 'Daily Grinder',
-			'description' => 'As reliable as a daily quest – you never miss a day. The grind never stops for this Scrub!',
-			'icon' => 'dashicons dashicons-clock',
-			'criteria' => 'login_streak_30',
-			'type' => 'auto',
+		),
+
+		'daily_grinder' => array(
+			'id'             => 'daily_grinder',
+			'name'           => 'Daily Grinder',
+			'description'    => 'As reliable as a daily quest – you never miss a day. The grind never stops for this Scrub!',
+			'icon'           => 'dashicons dashicons-clock',
+			'criteria'       => 'login_streak_30',
+			'type'           => 'auto',
 			'trigger_action' => 'wp_login',
-		],
-		'helpful_scrub' => [
-			'id' => 'helpful_scrub',
-			'name' => 'Helpful Scrub',
-			'description' => 'Always ready to help a fellow scrub – your guidance lights others\' way.',
-			'icon' => 'dashicons dashicons-star-filled',
-			'criteria' => 'helpful_activity',
-			'type' => 'manual',
+		),
+
+		'helpful_scrub' => array(
+			'id'             => 'helpful_scrub',
+			'name'           => 'Helpful Scrub',
+			'description'    => 'Always ready to help a fellow scrub – your guidance lights others\' way.',
+			'icon'           => 'dashicons dashicons-star-filled',
+			'criteria'       => 'helpful_activity',
+			'type'           => 'manual',
 			'trigger_action' => '',
-		],
-		'content_creator' => [
-			'id' => 'content_creator',
-			'name' => 'Content Creator',
-			'description' => 'You\'ve added your own mark to the Scrub Gamerz saga (via video or art). Keep the content coming!',
-			'icon' => 'dashicons dashicons-format-image',
-			'criteria' => 'first_content_submission',
-			'type' => 'auto',
+		),
+
+		'content_creator' => array(
+			'id'             => 'content_creator',
+			'name'           => 'Content Creator',
+			'description'    => 'You\'ve added your own mark to the Scrub Gamerz saga (via video or art). Keep the content coming!',
+			'icon'           => 'dashicons dashicons-format-image',
+			'criteria'       => 'first_content_submission',
+			'type'           => 'auto',
 			'trigger_action' => 'content_submission',
-		],
-		'guide_guru' => [
-			'id' => 'guide_guru',
-			'name' => 'Guide Guru',
-			'description' => 'Part storyteller, part strategist – you penned a guide to help fellow scrubs level up their game.',
-			'icon' => 'dashicons dashicons-education',
-			'criteria' => 'guide_posts_3',
-			'type' => 'auto',
+		),
+
+		'guide_guru' => array(
+			'id'             => 'guide_guru',
+			'name'           => 'Guide Guru',
+			'description'    => 'Part storyteller, part strategist – you penned a guide to help fellow scrubs level up their game.',
+			'icon'           => 'dashicons dashicons-education',
+			'criteria'       => 'guide_posts_3',
+			'type'           => 'auto',
 			'trigger_action' => 'post_published',
-		],
-		'meme_master' => [
-			'id' => 'meme_master',
-			'name' => 'Meme Master',
-			'description' => 'Your meme game is strong – laughter echoes through the Scrub halls thanks to you.',
-			'icon' => 'dashicons dashicons-smiley',
-			'criteria' => 'popular_meme',
-			'type' => 'auto',
+		),
+
+		'meme_master' => array(
+			'id'             => 'meme_master',
+			'name'           => 'Meme Master',
+			'description'    => 'Your meme game is strong – laughter echoes through the Scrub halls thanks to you.',
+			'icon'           => 'dashicons dashicons-smiley',
+			'criteria'       => 'popular_meme',
+			'type'           => 'auto',
 			'trigger_action' => 'post_reaction',
-		],
-		'bug_squisher' => [
-			'id' => 'bug_squisher',
-			'name' => 'Bug Squisher',
-			'description' => 'Found a glitch in the Scrub Matrix and helped fix it. Thanks for making the site better!',
-			'icon' => 'dashicons dashicons-tag',
-			'criteria' => 'bug_report_fixed',
-			'type' => 'manual',
+		),
+
+		'bug_squisher' => array(
+			'id'             => 'bug_squisher',
+			'name'           => 'Bug Squisher',
+			'description'    => 'Found a glitch in the Scrub Matrix and helped fix it. Thanks for making the site better!',
+			'icon'           => 'dashicons dashicons-tag',
+			'criteria'       => 'bug_report_fixed',
+			'type'           => 'manual',
 			'trigger_action' => '',
-		],
-		'squad_up' => [
-			'id' => 'squad_up',
-			'name' => 'Squad Up',
-			'description' => 'Games are better with friends – you formed a squad with a fellow Scrub and ventured forth together.',
-			'icon' => 'dashicons dashicons-universal-access',
-			'criteria' => 'team_up_with_member',
-			'type' => 'auto',
+		),
+
+		'squad_up' => array(
+			'id'             => 'squad_up',
+			'name'           => 'Squad Up',
+			'description'    => 'Games are better with friends – you formed a squad with a fellow Scrub and ventured forth together.',
+			'icon'           => 'dashicons dashicons-universal-access',
+			'criteria'       => 'team_up_with_member',
+			'type'           => 'auto',
 			'trigger_action' => 'guild_member_added',
-		],
-		'event_enthusiast' => [
-			'id' => 'event_enthusiast',
-			'name' => 'Event Enthusiast',
-			'description' => 'You\'re a regular at Scrub events – always there for the party, popcorn in hand!',
-			'icon' => 'dashicons dashicons-calendar-alt',
-			'criteria' => 'attend_5_events',
-			'type' => 'auto',
+		),
+
+		'event_enthusiast' => array(
+			'id'             => 'event_enthusiast',
+			'name'           => 'Event Enthusiast',
+			'description'    => 'You\'re a regular at Scrub events – always there for the party, popcorn in hand!',
+			'icon'           => 'dashicons dashicons-calendar-alt',
+			'criteria'       => 'attend_5_events',
+			'type'           => 'auto',
 			'trigger_action' => 'tribe_events_attendee_created',
-		],
+		),
+
 		'tournament_champion' => [
 			'id' => 'tournament_champion',
 			'name' => 'Tournament Champion',
