@@ -280,24 +280,20 @@ class Badge_System {
 	 * Check if user earned Social Butterfly badge
 	 */
 	public function check_social_butterfly( $item_id, $user_id = null ) {
-		// This badge is earned by either making 5 friends or getting 20 likes on posts
-		$follower_count = 0;
-		$like_count = 0;
 
-		// Check friend count if on a BuddyPress site
+		$follower_count = 0;
+		$like_count     = 0;
+
 		if ( function_exists( 'friends_check_is_friend' ) ) {
-			// Get friend count for the user
-			$friend_ids = \BP_Friends_Friendship::get_friends( $user_id, 'all', 'DESC', 0, 0, true );
-			$follower_count = count( $friend_ids );
+			$friend_ids      = \BP_Friends_Friendship::get_friends( $user_id, 'all', 'DESC', 0, 0, true );
+			$follower_count  = count( $friend_ids );
 		}
 
-		// Check like count (this is a simplified check - would need more complex logic in practice)
 		$like_count = get_user_meta( $user_id, '_gamerz_like_count', true );
 		if ( ! $like_count ) {
 			$like_count = 0;
 		}
 
-		// If user has 5 friends OR 20 likes, award badge
 		if ( $follower_count >= 5 || $like_count >= 20 ) {
 			if ( ! $this->user_has_badge( $user_id, 'social_butterfly' ) ) {
 				$this->award_badge( $user_id, 'social_butterfly' );
