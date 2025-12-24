@@ -255,14 +255,12 @@ class Badge_System {
 	 * Initialize the badge system
 	 */
 	public function init() {
-		// Hooks have been moved to app/Badge_Hooks.php
 	}
 
 	/**
 	 * Check if user earned Forum Newbie badge
 	 */
 	public function check_forum_newbie( $post_id, $user_id = null ) {
-		// For bbp_new_reply, the second param is topic_id, so we need to get user differently
 		if ( ! $user_id ) {
 			if ( function_exists( 'bbp_get_reply_author_id' ) && get_post_type( $post_id ) === 'reply' ) {
 				$user_id = bbp_get_reply_author_id( $post_id );
@@ -271,12 +269,10 @@ class Badge_System {
 			}
 		}
 
-		// Check if user already has this badge
 		if ( $this->user_has_badge( $user_id, 'forum_newbie' ) ) {
 			return;
 		}
 
-		// Award the badge
 		$this->award_badge( $user_id, 'forum_newbie' );
 	}
 
