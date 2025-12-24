@@ -305,16 +305,11 @@ class Badge_System {
 	 * Check if user earned Squad Up badge
 	 */
 	public function check_squad_up( $guild_id, $user_id, $role ) {
-		// For this badge, we need to track when a user groups with another Scrub gamer
-		// This could be tracked via guild joining, events, etc.
-		// Simplified implementation:
-		
-		// Check if user already has this badge
+
 		if ( $this->user_has_badge( $user_id, 'squad_up' ) ) {
 			return;
 		}
 
-		// Award the badge
 		$this->award_badge( $user_id, 'squad_up' );
 	}
 
@@ -327,10 +322,8 @@ class Badge_System {
 			return;
 		}
 
-		// Get event attendance count
 		$attendance_count = $this->get_event_attendance_count( $user_id );
-		
-		// Award badge if attended 5 events
+
 		if ( $attendance_count >= 5 && ! $this->user_has_badge( $user_id, 'event_enthusiast' ) ) {
 			$this->award_badge( $user_id, 'event_enthusiast' );
 		}
@@ -340,10 +333,10 @@ class Badge_System {
 	 * Get event attendance count for a user
 	 */
 	private function get_event_attendance_count( $user_id ) {
-		// This is a simplified approach - in reality, you'd query The Events Calendar data
+
 		$count = get_user_meta( $user_id, '_gamerz_event_attendance_count', true );
 		if ( ! $count ) {
-			$count = 1; // First event
+			$count = 1;
 		} else {
 			$count = intval( $count ) + 1;
 		}
@@ -357,12 +350,10 @@ class Badge_System {
 	public function check_content_creator( $post_id ) {
 		$user_id = get_post_field( 'post_author', $post_id );
 		
-		// Check if user already has this badge
 		if ( $this->user_has_badge( $user_id, 'content_creator' ) ) {
 			return;
 		}
 
-		// Award the badge
 		$this->award_badge( $user_id, 'content_creator' );
 	}
 
