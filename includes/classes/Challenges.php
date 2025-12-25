@@ -76,7 +76,6 @@ class Challenges {
 	 */
 	public function setup_weekly_challenges( $challenges = array() ) {
 		if ( empty( $challenges ) ) {
-			// Default weekly challenges.
 			$challenges = array(
 				array(
 					'title'       => 'Squad Up with a Newbie',
@@ -114,7 +113,6 @@ class Challenges {
 			);
 		}
 
-		// Get current week.
 		$week_number = date( 'W' );
 		$year        = date( 'Y' );
 
@@ -141,7 +139,6 @@ class Challenges {
 			}
 		}
 
-		// Store for current use.
 		$this->current_challenges = $challenges;
 	}
 
@@ -150,31 +147,32 @@ class Challenges {
 	 */
 	public function get_current_challenges() {
 		$week_number = date( 'W' );
-		$year = date( 'Y' );
+		$year        = date( 'Y' );
 
-		// Check if we already have the challenges cached
 		if ( ! empty( $this->current_challenges ) ) {
 			return $this->current_challenges;
 		}
 
-		// Query for challenges from current week
-		$challenges = get_posts( [
-			'post_type' => 'gamerz_challenge',
-			'post_status' => 'publish',
-			'numberposts' => 10,
-			'meta_query' => [
-				[
-					'key' => '_challenge_week',
-					'value' => $week_number,
-					'compare' => '='
-				],
-				[
-					'key' => '_challenge_year',
-					'value' => $year,
-					'compare' => '='
-				]
-			]
-		] );
+		$challenges = get_posts(
+			array(
+				'post_type'   => 'gamerz_challenge',
+				'post_status' => 'publish',
+				'numberposts' => 10,
+				'meta_query'  => array(
+					array(
+						'key'     => '_challenge_week',
+						'value'   => $week_number,
+						'compare' => '=',
+					),
+					array(
+						'key'     => '_challenge_year',
+						'value'   => $year,
+						'compare' => '=',
+					),
+				),
+			)
+		);
+
 
 		$result = [];
 		foreach ( $challenges as $challenge_post ) {
