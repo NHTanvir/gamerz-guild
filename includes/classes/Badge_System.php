@@ -419,16 +419,14 @@ class Badge_System {
 		
 
 		$user_badges[] = [
-			'id' => $badge_id,
+			'id' 		 => $badge_id,
 			'awarded_at' => current_time( 'mysql' ),
 			'awarded_by' => $awarded_by,
-			'manual' => true,
+			'manual' 	 => true,
 		];
 
-		// Update user meta
 		update_user_meta( $user_id, '_gamerz_badges', $user_badges );
-
-		// Trigger action
+		
 		do_action( 'gamerz_badge_manually_awarded', $user_id, $badge_id, $awarded_by );
 
 		return true;
