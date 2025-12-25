@@ -365,28 +365,22 @@ class Badge_System {
 			return false;
 		}
 
-		// Check if user already has this badge
 		if ( $this->user_has_badge( $user_id, $badge_id ) ) {
 			return false;
 		}
 
-		// Get user's current badges
 		$user_badges = $this->get_user_badges( $user_id );
 		
-		// Add new badge
 		$user_badges[] = [
-			'id' => $badge_id,
-			'awarded_at' => current_time( 'mysql' ),
-			'awarded_by' => 'system',
+			'id' 			=> $badge_id,
+			'awarded_at' 	=> current_time( 'mysql' ),
+			'awarded_by' 	=> 'system',
 		];
 
-		// Update user meta
 		update_user_meta( $user_id, '_gamerz_badges', $user_badges );
 
-		// Trigger action
 		do_action( 'gamerz_badge_awarded', $user_id, $badge_id );
 
-		// Add to activity feed
 		$activity = new Guild_Activity();
 		if ( $activity ) {
 			$badge = $this->get_badge( $badge_id );
@@ -417,15 +411,13 @@ class Badge_System {
 			return false;
 		}
 
-		// Check if user already has this badge
 		if ( $this->user_has_badge( $user_id, $badge_id ) ) {
 			return false;
 		}
 
-		// Get user's current badges
 		$user_badges = $this->get_user_badges( $user_id );
 		
-		// Add new badge
+
 		$user_badges[] = [
 			'id' => $badge_id,
 			'awarded_at' => current_time( 'mysql' ),
