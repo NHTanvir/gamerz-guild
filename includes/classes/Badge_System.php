@@ -444,7 +444,7 @@ class Badge_System {
 				$filtered_badges[] = $badge;
 			}
 		}
-		
+
 		update_user_meta( $user_id, '_gamerz_badges', $filtered_badges );
 
 		do_action( 'gamerz_badge_revoked', $user_id, $badge_id );
@@ -590,36 +590,32 @@ class Badge_System {
 	 * Award Weekly Challenge badge
 	 */
 	public function award_weekly_challenge_badge( $user_id, $challenge_name = null ) {
-		$badge_id = 'weekly_challenge';
+		$badge_id   = 'weekly_challenge';
 		$badge_name = 'Weekly Challenge Winner';
 		
 		if ( $challenge_name ) {
-			$badge_id = sanitize_title( 'challenge_' . $challenge_name );
+			$badge_id   = sanitize_title( 'challenge_' . $challenge_name );
 			$badge_name = $challenge_name . ' Challenger';
 		}
 
-		// Check if user already has this badge
 		if ( $this->user_has_badge( $user_id, $badge_id ) ) {
 			return false;
 		}
 
-		// Add this badge to the system temporarily if it doesn't exist
 		if ( ! $this->badge_exists( $badge_id ) ) {
-			$this->badges[ $badge_id ] = [
-				'id' => $badge_id,
-				'name' => $badge_name,
-				'description' => 'Awarded for completing a weekly challenge.',
-				'icon' => 'dashicons dashicons-awards',
-				'criteria' => 'weekly_challenge',
-				'type' => 'auto',
+			$this->badges[ $badge_id ] = array(
+				'id'             => $badge_id,
+				'name'           => $badge_name,
+				'description'    => 'Awarded for completing a weekly challenge.',
+				'icon'           => 'dashicons dashicons-awards',
+				'criteria'       => 'weekly_challenge',
+				'type'           => 'auto',
 				'trigger_action' => 'weekly_challenge_completed',
-			];
+			);
 		}
 
-		// Award the badge
 		$this->award_badge( $user_id, $badge_id );
 
-		// Track total challenges completed
 		$challenge_count = get_user_meta( $user_id, '_gamerz_weekly_challenges_count', true );
 		if ( ! $challenge_count ) {
 			$challenge_count = 1;
