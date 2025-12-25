@@ -426,7 +426,7 @@ class Badge_System {
 		];
 
 		update_user_meta( $user_id, '_gamerz_badges', $user_badges );
-		
+
 		do_action( 'gamerz_badge_manually_awarded', $user_id, $badge_id, $awarded_by );
 
 		return true;
@@ -444,11 +444,9 @@ class Badge_System {
 				$filtered_badges[] = $badge;
 			}
 		}
-
-		// Update user meta
+		
 		update_user_meta( $user_id, '_gamerz_badges', $filtered_badges );
 
-		// Trigger action
 		do_action( 'gamerz_badge_revoked', $user_id, $badge_id );
 
 		return true;
