@@ -363,7 +363,6 @@ class Challenges {
 	 * Handle challenge proof submission
 	 */
 	public function handle_challenge_proof_submission() {
-		// Verify nonce
 		if ( ! wp_verify_nonce( $_POST['nonce'], 'gamerz_challenge_proof_nonce' ) ) {
 			wp_die( __( 'Security check failed', 'gamerz-guild' ) );
 		}
@@ -376,12 +375,10 @@ class Challenges {
 		$user_id = get_current_user_id();
 		$proof = sanitize_textarea_field( $_POST['proof'] );
 
-		// Validate proof
 		if ( empty( $proof ) ) {
 			wp_die( __( 'Proof is required', 'gamerz-guild' ) );
 		}
 
-		// Store proof submission for admin review
 		$submission = [
 			'challenge_id' => $challenge_id,
 			'user_id' => $user_id,
