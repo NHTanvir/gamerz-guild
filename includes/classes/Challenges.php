@@ -269,21 +269,27 @@ class Challenges {
 
 		$activity = new Guild_Activity();
 		if ( $activity ) {
+
 			$title = isset( $challenge_data['title'] ) ? $challenge_data['title'] : 'Weekly Challenge';
-			$activity_data = [
-				'type' => 'challenge_completed',
-				'user_id' => $user_id,
-				'title' => sprintf( __( '%s completed the challenge: %s!', 'gamerz-guild' ), 
+
+			$activity_data = array(
+				'type'      => 'challenge_completed',
+				'user_id'   => $user_id,
+				'title'     => sprintf(
+					/* translators: 1: user display name, 2: challenge title */
+					__( '%1$s completed the challenge: %2$s!', 'gamerz-guild' ),
 					$activity->get_user_display_name( $user_id ),
 					$title
 				),
-				'content' => sprintf( __( '%s earned %d XP for completing the challenge: %s', 'gamerz-guild' ), 
+				'content'   => sprintf(
+					/* translators: 1: user display name, 2: XP earned, 3: challenge title */
+					__( '%1$s earned %2$d XP for completing the challenge: %3$s', 'gamerz-guild' ),
 					$activity->get_user_display_name( $user_id ),
 					$reward_xp,
 					$title
 				),
 				'timestamp' => current_time( 'mysql' ),
-			];
+			);
 		}
 	}
 
