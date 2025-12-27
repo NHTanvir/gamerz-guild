@@ -324,11 +324,9 @@ class Challenges {
 		}
 
 		$challenge_id = absint( $_POST['challenge_id'] );
-		$user_id = get_current_user_id();
-
-		// Get challenge details
-		$challenges = $this->get_current_challenges();
-		$challenge = null;
+		$user_id      = get_current_user_id();
+		$challenges   = $this->get_current_challenges();
+		$challenge    = null;
 		foreach ( $challenges as $chall ) {
 			if ( $chall['id'] == $challenge_id ) {
 				$challenge = $chall;
@@ -340,18 +338,15 @@ class Challenges {
 			wp_die( __( 'Invalid challenge', 'gamerz-guild' ) );
 		}
 
-		// Check if user already completed this challenge
 		if ( $this->has_user_completed_challenge( $user_id, $challenge_id ) ) {
 			wp_die( __( 'You have already completed this challenge', 'gamerz-guild' ) );
 		}
 
-		// Validate challenge completion requirements (this would be specific to each challenge type)
 		$validation = $this->validate_challenge_completion( $user_id, $challenge );
 		if ( ! $validation['valid'] ) {
 			wp_die( $validation['message'] );
 		}
 
-		// Mark as completed
 		$result = $this->mark_challenge_completed( $user_id, $challenge_id, $challenge );
 
 		if ( $result ) {
