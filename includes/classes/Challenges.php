@@ -229,10 +229,8 @@ class Challenges {
 			$completed[ $week_key ][] = $challenge_id;
 			update_user_meta( $user_id, '_gamerz_completed_challenges', $completed );
 
-			// Award XP and badge
 			$this->award_challenge_rewards( $user_id, $challenge_id, $challenge_data );
 
-			// Record in challenge completion log
 			$this->record_challenge_completion( $user_id, $challenge_id );
 
 			return true;
@@ -247,7 +245,6 @@ class Challenges {
 	public function award_challenge_rewards( $user_id, $challenge_id, $challenge_data = [] ) {
 		$xp_system = new XP_System();
 
-		// Award XP
 		$reward_xp = isset( $challenge_data['reward_xp'] ) ? $challenge_data['reward_xp'] : 50;
 		if ( $reward_xp > 0 ) {
 			$mycred = $xp_system->get_mycred();
@@ -265,13 +262,11 @@ class Challenges {
 			}
 		}
 
-		// Award badge
 		if ( isset( $challenge_data['badge_id'] ) ) {
 			$badge_system = new Badge_System();
 			$badge_system->award_weekly_challenge_badge( $user_id, $challenge_data['title'] );
 		}
 
-		// Add to activity feed
 		$activity = new Guild_Activity();
 		if ( $activity ) {
 			$title = isset( $challenge_data['title'] ) ? $challenge_data['title'] : 'Weekly Challenge';
