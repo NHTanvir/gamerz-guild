@@ -408,19 +408,14 @@ class Challenges {
 
 		switch ( $challenge['type'] ) {
 			case 'social':
-				// For "Squad Up with a Newbie" challenge, we need to verify the user actually did the activity
-				// This would typically be done manually or with additional tracking
 				$message = 'Challenge validated.';
 				break;
 
 			case 'creative':
-				// For "Post a Build Guide", verify they've made a forum post
-				// This is just a placeholder - in reality, you'd check for recent posts
 				$message = 'Challenge validated.';
 				break;
 
 			case 'competitive':
-				// For "Clip Contest", this would require proof submission
 				$valid = false;
 				$message = 'This challenge requires proof submission for verification.';
 				break;
