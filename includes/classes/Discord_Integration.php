@@ -146,16 +146,16 @@ class Discord_Integration {
 		}
 
 		$discord_username = get_user_meta( $user_id, '_gamerz_discord_username', true );
-		$discord_id = get_user_meta( $user_id, '_gamerz_discord_id', true );
+		$discord_id       = get_user_meta( $user_id, '_gamerz_discord_id', true );
 
 		$message = [
 			'embeds' => [
 				[
-					'title' => ':medal: New Badge Earned!',
+					'title'       => ':medal: New Badge Earned!',
 					'description' => "<@" . ($discord_id ?: $user->user_login) . "> earned the **{$badge['name']}** badge! :trophy:",
-					'color' => 15844367, // Golden color
-					'timestamp' => date( 'c' ),
-					'footer' => [
+					'color'       => 15844367, // Golden color
+					'timestamp'   => date( 'c' ),
+					'footer'      => [
 						'text' => $badge['description']
 					]
 				]
