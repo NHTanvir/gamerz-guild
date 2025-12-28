@@ -39,30 +39,27 @@ class Discord_Integration {
 	 * Initialize the Discord integration
 	 */
 	public function init() {
-		// Get Discord settings
-		$this->webhook_url = get_option( 'gamerz_discord_webhook_url', '' );
-		$this->bot_token = get_option( 'gamerz_discord_bot_token', '' );
 
-		// If Discord settings are not configured, set up the default configuration
+		$this->webhook_url = get_option( 'gamerz_discord_webhook_url', '' );
+		$this->bot_token   = get_option( 'gamerz_discord_bot_token', '' );
+
+
 		if ( empty( $this->webhook_url ) || empty( $this->bot_token ) ) {
 			$this->setup_default_discord_config();
 			$this->webhook_url = get_option( 'gamerz_discord_webhook_url', '' );
-			$this->bot_token = get_option( 'gamerz_discord_bot_token', '' );
+			$this->bot_token   = get_option( 'gamerz_discord_bot_token', '' );
 		}
 
-		// Only continue if Discord is properly configured
 		if ( ! $this->webhook_url && ! $this->bot_token ) {
 			return;
 		}
-
-		// Hooks have been moved to app/Discord_Hooks.php
 	}
 
 	/**
 	 * Add Discord field to user profile
 	 */
 	public function add_discord_field( $user ) {
-		$discord_id = get_user_meta( $user->ID, '_gamerz_discord_id', true );
+		$discord_id       = get_user_meta( $user->ID, '_gamerz_discord_id', true );
 		$discord_username = get_user_meta( $user->ID, '_gamerz_discord_username', true );
 		?>
 		<h3><?php _e( 'Discord Integration', 'gamerz-guild' ); ?></h3>
