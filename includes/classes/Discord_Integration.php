@@ -111,16 +111,16 @@ class Discord_Integration {
 		}
 
 		$discord_username = get_user_meta( $user_id, '_gamerz_discord_username', true );
-		$discord_id = get_user_meta( $user_id, '_gamerz_discord_id', true );
+		$discord_id       = get_user_meta( $user_id, '_gamerz_discord_id', true );
 
 		$message = [
 			'embeds' => [
 				[
-					'title' => ':tada: Rank Up Achievement!',
+					'title'       => ':tada: Rank Up Achievement!',
 					'description' => "<@" . ($discord_id ?: $user->user_login) . "> has ascended to **{$new_rank['name']}**! :medal:",
-					'color' => $this->get_rank_color( $new_rank['id'] ),
-					'timestamp' => date( 'c' ),
-					'footer' => [
+					'color'       => $this->get_rank_color( $new_rank['id'] ),
+					'timestamp'   => date( 'c' ),
+					'footer'     => [
 						'text' => 'Scrub Gamerz - Level Up!'
 					]
 				]
