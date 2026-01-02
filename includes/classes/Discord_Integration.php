@@ -248,11 +248,11 @@ class Discord_Integration {
 		$message = [
 			'embeds' => [
 				[
-					'title' => ':arrow_up: Guild Promotion!',
+					'title'       => ':arrow_up: Guild Promotion!',
 					'description' => "<@" . ($discord_id ?: $user->user_login) . "> has been promoted to **{$role_display_name}** in **{$guild->post_title}**!",
-					'color' => 16777045, // Gold color
-					'timestamp' => date( 'c' ),
-					'footer' => [
+					'color'       => 16777045, // Gold color
+					'timestamp'   => date( 'c' ),
+					'footer'      => [
 						'text' => 'Congratulations on your promotion!'
 					]
 				]
@@ -267,15 +267,14 @@ class Discord_Integration {
 	 */
 	public function announce_guild_member_demoted( $guild_id, $user_id, $new_role ) {
 		$guild = get_post( $guild_id );
-		$user = get_user_by( 'ID', $user_id );
+		$user  = get_user_by( 'ID', $user_id );
 		
 		if ( ! $guild || ! $user ) {
 			return;
 		}
 
-		$discord_username = get_user_meta( $user_id, '_gamerz_discord_username', true );
-		$discord_id = get_user_meta( $user_id, '_gamerz_discord_id', true );
-
+		$discord_username  = get_user_meta( $user_id, '_gamerz_discord_username', true );
+		$discord_id        = get_user_meta( $user_id, '_gamerz_discord_id', true );
 		$role_display_name = $this->get_guild_role_display_name( $new_role );
 
 		$message = [
