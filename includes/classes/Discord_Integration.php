@@ -216,11 +216,11 @@ class Discord_Integration {
 		$message = [
 			'embeds' => [
 				[
-					'title' => ':busts_in_silhouette: New Guild Member!',
+					'title'       => ':busts_in_silhouette: New Guild Member!',
 					'description' => "<@" . ($discord_id ?: $user->user_login) . "> has joined the guild **{$guild->post_title}**!",
-					'color' => 8388863, // Blue color
-					'timestamp' => date( 'c' ),
-					'footer' => [
+					'color'       => 8388863, // Blue color
+					'timestamp'   => date( 'c' ),
+					'footer'      => [
 						'text' => 'Welcome to the team!'
 					]
 				]
@@ -235,15 +235,14 @@ class Discord_Integration {
 	 */
 	public function announce_guild_member_promoted( $guild_id, $user_id, $new_role ) {
 		$guild = get_post( $guild_id );
-		$user = get_user_by( 'ID', $user_id );
+		$user  = get_user_by( 'ID', $user_id );
 		
 		if ( ! $guild || ! $user ) {
 			return;
 		}
 
-		$discord_username = get_user_meta( $user_id, '_gamerz_discord_username', true );
-		$discord_id = get_user_meta( $user_id, '_gamerz_discord_id', true );
-
+		$discord_username  = get_user_meta( $user_id, '_gamerz_discord_username', true );
+		$discord_id        = get_user_meta( $user_id, '_gamerz_discord_id', true );
 		$role_display_name = $this->get_guild_role_display_name( $new_role );
 
 		$message = [
