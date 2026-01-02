@@ -179,18 +179,18 @@ class Discord_Integration {
 			return;
 		}
 
-		$discord_username = get_user_meta( $args['creator_id'], '_gamerz_discord_username', true );
-		$discord_id = get_user_meta( $args['creator_id'], '_gamerz_discord_id', true );
+		$discord_username 	= get_user_meta( $args['creator_id'], '_gamerz_discord_username', true );
+		$discord_id 		= get_user_meta( $args['creator_id'], '_gamerz_discord_id', true );
 
 		$message = [
 			'embeds' => [
 				[
-					'title' => ':crossed_swords: New Guild Formed!',
-					'description' => "<@" . ($discord_id ?: $user->user_login) . "> has created a new guild: **{$guild->post_title}**!",
-					'color' => 8454143, // Purple color
-					'timestamp' => date( 'c' ),
-					'footer' => [
-						'text' => 'Assemble your team!'
+					'title'			 => ':crossed_swords: New Guild Formed!',
+					'description' 	 => "<@" . ($discord_id ?: $user->user_login) . "> has created a new guild: **{$guild->post_title}**!",
+					'color'          => 8454143, // Purple color
+					'timestamp'      => date( 'c' ),
+					'footer'         => [
+						'text'       => 'Assemble your team!'
 					]
 				]
 			]
@@ -204,14 +204,14 @@ class Discord_Integration {
 	 */
 	public function announce_guild_join( $guild_id, $user_id, $role ) {
 		$guild = get_post( $guild_id );
-		$user = get_user_by( 'ID', $user_id );
+		$user  = get_user_by( 'ID', $user_id );
 		
 		if ( ! $guild || ! $user ) {
 			return;
 		}
 
 		$discord_username = get_user_meta( $user_id, '_gamerz_discord_username', true );
-		$discord_id = get_user_meta( $user_id, '_gamerz_discord_id', true );
+		$discord_id       = get_user_meta( $user_id, '_gamerz_discord_id', true );
 
 		$message = [
 			'embeds' => [
