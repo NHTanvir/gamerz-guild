@@ -280,11 +280,11 @@ class Discord_Integration {
 		$message = [
 			'embeds' => [
 				[
-					'title' => ':arrow_down: Guild Role Change',
+					'title'       => ':arrow_down: Guild Role Change',
 					'description' => "<@" . ($discord_id ?: $user->user_login) . "> has been changed to **{$role_display_name}** in **{$guild->post_title}**.",
-					'color' => 16711680, // Red color
-					'timestamp' => date( 'c' ),
-					'footer' => [
+					'color'       => 16711680, // Red color
+					'timestamp'   => date( 'c' ),
+					'footer'      => [
 						'text' => 'Every role serves the guild!'
 					]
 				]
@@ -311,7 +311,7 @@ class Discord_Integration {
 	 * Announce challenge completion to Discord
 	 */
 	public function announce_challenge_completion( $user_id, $badge_id, $awarded_by ) {
-		$user = get_user_by( 'ID', $user_id );
+		$user            = get_user_by( 'ID', $user_id );
 		$awarded_by_user = get_user_by( 'ID', $awarded_by );
 		
 		if ( ! $user || ! $awarded_by_user ) {
@@ -319,22 +319,22 @@ class Discord_Integration {
 		}
 
 		$badge_system = new Badge_System();
-		$badge = $badge_system->get_badge( $badge_id );
+		$badge        = $badge_system->get_badge( $badge_id );
 		if ( ! $badge ) {
 			return;
 		}
 
 		$discord_username = get_user_meta( $user_id, '_gamerz_discord_username', true );
-		$discord_id = get_user_meta( $user_id, '_gamerz_discord_id', true );
+		$discord_id       = get_user_meta( $user_id, '_gamerz_discord_id', true );
 
 		$message = [
 			'embeds' => [
 				[
-					'title' => ':checkered_flag: Challenge Completed!',
+					'title'       => ':checkered_flag: Challenge Completed!',
 					'description' => "<@" . ($discord_id ?: $user->user_login) . "> completed a special challenge and earned the **{$badge['name']}** badge!",
-					'color' => 16753920, // Orange color
-					'timestamp' => date( 'c' ),
-					'footer' => [
+					'color'       => 16753920, // Orange color
+					'timestamp'   => date( 'c' ),
+					'footer'      => [
 						'text' => 'Awarded by: ' . $awarded_by_user->display_name
 					]
 				]
@@ -352,7 +352,7 @@ class Discord_Integration {
 			return false;
 		}
 
-		$message['username'] = 'Scrub Gamerz Bot';
+		$message['username']   = 'Scrub Gamerz Bot';
 		$message['avatar_url'] = get_site_icon_url() ?: get_template_directory_uri() . '/img/discord-avatar.png';
 
 		$args = [
