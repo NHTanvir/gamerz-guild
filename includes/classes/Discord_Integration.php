@@ -454,7 +454,6 @@ class Discord_Integration {
 			return false;
 		}
 
-		// Get rank role IDs to remove
 		$rank_role_ids = [];
 		foreach ( $role_mapping as $rank => $role_info ) {
 			if ( in_array( $role_info['role_id'], $member_data['roles'] ) ) {
@@ -462,10 +461,9 @@ class Discord_Integration {
 			}
 		}
 
-		// Remove each rank role
 		$remove_args = [
-			'method' => 'DELETE',
-			'headers' => [
+			'method'   => 'DELETE',
+			'headers'  => [
 				'Authorization' => 'Bot ' . $this->bot_token,
 			],
 		];
@@ -481,7 +479,7 @@ class Discord_Integration {
 	 */
 	public function get_discord_role_by_rank( $rank_level ) {
 		$rank_system = new Rank_System();
-		$rank = $rank_system->get_rank_by_level( $rank_level );
+		$rank        = $rank_system->get_rank_by_level( $rank_level );
 		if ( ! $rank ) {
 			return null;
 		}
@@ -508,7 +506,7 @@ class Discord_Integration {
 	 * Get color based on rank level for Discord embeds
 	 */
 	private function get_rank_color( $rank_level ) {
-		// Assign different colors based on rank level
+
 		$colors = [
 			1 => 12552212,  // Gray for Scrubling
 			2 => 12552212,  // Gray for Scrub Recruit
@@ -527,7 +525,7 @@ class Discord_Integration {
 			15 => 16777045, // Gold for Legendary Scrub
 		];
 
-		return isset( $colors[ $rank_level ] ) ? $colors[ $rank_level ] : 0xFFFFFF; // White default
+		return isset( $colors[ $rank_level ] ) ? $colors[ $rank_level ] : 0xFFFFFF;
 	}
 
 	/**
@@ -542,20 +540,20 @@ class Discord_Integration {
 
 		$leaderboard_text = "🏆 **Top 5 Scrubs This Week** 🏆\n\n";
 		foreach ( $leaderboard as $i => $entry ) {
-			$position = $i + 1;
-			$emoji = $this->get_position_emoji( $position );
+			$position          = $i + 1;
+			$emoji             = $this->get_position_emoji( $position );
 			$leaderboard_text .= "{$emoji} **{$position}.** {$entry['display_name']} - {$entry['xp']} XP ({$entry['rank_name']})\n";
 		}
 
 		$message = [
 			'embeds' => [
 				[
-					'title' => 'Weekly Leaderboard',
+					'title'       => 'Weekly Leaderboard',
 					'description' => $leaderboard_text,
-					'color' => 16753920, // Orange
-					'timestamp' => date( 'c' ),
-					'footer' => [
-						'text' => 'Keep grinding to reach the top!'
+					'color'       => 16753920, // Orange
+					'timestamp'   => date( 'c' ),
+					'footer'      => [
+						'text'      => 'Keep grinding to reach the top!'
 					]
 				]
 			]
