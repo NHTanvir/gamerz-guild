@@ -356,11 +356,11 @@ class Discord_Integration {
 		$message['avatar_url'] = get_site_icon_url() ?: get_template_directory_uri() . '/img/discord-avatar.png';
 
 		$args = [
-			'method' => 'POST',
+			'method'  => 'POST',
 			'headers' => [
 				'Content-Type' => 'application/json',
 			],
-			'body' => json_encode( $message ),
+			'body'    => json_encode( $message ),
 		];
 
 		$response = wp_remote_post( $this->webhook_url, $args );
@@ -377,21 +377,17 @@ class Discord_Integration {
 	 * Update Discord role for user (requires Uncanny Automator or custom API)
 	 */
 	public function update_discord_role( $user_id, $rank_name ) {
-		// This would typically be handled by Uncanny Automator
-		// For a standalone solution, we'd need to have Discord bot permissions
 		
 		$discord_id = get_user_meta( $user_id, '_gamerz_discord_id', true );
 		if ( ! $discord_id || ! $this->bot_token ) {
 			return false;
 		}
 
-		// Map rank names to Discord role IDs (these would need to be configured in settings)
 		$role_mapping = get_option( 'gamerz_discord_role_mapping', [] );
 		if ( empty( $role_mapping ) ) {
-			return false; // Roles not mapped yet
+			return false;
 		}
 
-		// Find the role ID for this rank
 		$role_id = null;
 		foreach ( $role_mapping as $rank => $role ) {
 			if ( $rank === $rank_name ) {
@@ -404,25 +400,22 @@ class Discord_Integration {
 			return false;
 		}
 
-		// Get guild ID
 		$guild_id = get_option( 'gamerz_discord_guild_id', '' );
 		if ( ! $guild_id ) {
 			return false;
 		}
 
-		// First, remove all rank roles from the user
 		$this->remove_rank_roles_from_user( $discord_id, $guild_id );
 
-		// Then add the new role
 		$args = [
-			'method' => 'PUT',
+			'method'  => 'PUT',
 			'headers' => [
 				'Authorization' => 'Bot ' . $this->bot_token,
-				'Content-Type' => 'application/json',
+				'Content-Type'  => 'application/json',
 			],
 		];
 
-		$url = "https://discord.com/api/v9/guilds/{$guild_id}/members/{$discord_id}/roles/{$role_id}";
+		$url      = "https://discord.com/api/v9/guilds/{$guild_id}/members/{$discord_id}/roles/{$role_id}";
 		$response = wp_remote_request( $url, $args );
 
 		if ( is_wp_error( $response ) ) {
@@ -443,14 +436,13 @@ class Discord_Integration {
 		}
 
 		$args = [
-			'method' => 'GET',
+			'method'  => 'GET',
 			'headers' => [
 				'Authorization' => 'Bot ' . $this->bot_token,
 			],
 		];
 
-		// Get current member roles
-		$member_url = "https://discord.com/api/v9/guilds/{$guild_id}/members/{$discord_id}";
+		$member_url      = "https://discord.com/api/v9/guilds/{$guild_id}/members/{$discord_id}";
 		$member_response = wp_remote_get( $member_url, $args );
 
 		if ( is_wp_error( $member_response ) ) {
