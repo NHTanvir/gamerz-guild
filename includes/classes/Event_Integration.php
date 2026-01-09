@@ -29,31 +29,26 @@ class Event_Integration {
 	 * Initialize the event integration
 	 */
 	public function init() {
-		// Check if The Events Calendar is active
+
 		if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 			return;
 		}
-
-		// Hooks have been moved to app/Event_Hooks.php
 	}
 
 	/**
 	 * Handle event attendance
 	 */
 	public function handle_event_attendance( $attendee_id, $event_id ) {
-		// Retrieve attendee details
 		$attendee = get_post( $attendee_id );
 		if ( ! $attendee ) {
 			return;
 		}
 
-		// Get the user ID of the attendee
 		$user_id = get_post_meta( $attendee_id, '_tribe_tickets_attendee_user_id', true );
 		if ( ! $user_id ) {
 			return;
 		}
 
-		// Award XP for attending event
 		$xp_system = new XP_System();
 		$xp_system->award_event_participation( $event_id, $user_id );
 	}
@@ -61,10 +56,7 @@ class Event_Integration {
 	/**
 	 * Handle event creation by guild members
 	 */
-	public function handle_event_creation( $event_id ) {
-		// This would be enhanced if we track which guild organized the event
-		// For now, we'll just track general event creation
-	}
+	public function handle_event_creation( $event_id ) {}
 
 	/**
 	 * Handle event status change (useful for awarding victory XP)
@@ -73,18 +65,15 @@ class Event_Integration {
 		if ( $post->post_type !== 'tribe_events' ) {
 			return;
 		}
-
-		// Example: Award victory XP when an event is marked as completed/victory
-		// This would require custom event tracking for victories
 	}
 
 	/**
 	 * Get event participants
 	 */
 	public function get_event_participants( $event_id ) {
-		// Get all attendees for the event
+
 		$attendees = \Tribe__Tickets__Tickets::get_event_attendees( $event_id );
-		$user_ids = [];
+		$user_ids  = [];
 
 		foreach ( $attendees as $attendee ) {
 			if ( isset( $attendee['user_id'] ) && $attendee['user_id'] ) {
@@ -99,7 +88,7 @@ class Event_Integration {
 	 * Create a guild event
 	 */
 	public function create_guild_event( $args = [] ) {
-		// Check if The Events Calendar is available
+
 		if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 			return new \WP_Error( 'tec_not_active', __( 'The Events Calendar is not active', 'gamerz-guild' ) );
 		}
