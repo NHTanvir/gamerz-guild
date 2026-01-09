@@ -157,13 +157,13 @@ class Event_Integration {
 	 */
 	public function get_guild_events( $guild_id, $args = [] ) {
 		$defaults = [
-			'post_type' => 'tribe_events',
-			'post_status' => 'publish',
-			'meta_key' => '_gamerz_guild_event',
-			'meta_value' => $guild_id,
+			'post_type'      => 'tribe_events',
+			'post_status'    => 'publish',
+			'meta_key'       => '_gamerz_guild_event',
+			'meta_value'     => $guild_id,
 			'posts_per_page' => -1,
-			'orderby' => 'meta_value',
-			'order' => 'ASC',
+			'orderby'        => 'meta_value',
+			'order'          => 'ASC',
 		];
 
 		$query_args = wp_parse_args( $args, $defaults );
