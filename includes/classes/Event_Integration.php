@@ -111,40 +111,34 @@ class Event_Integration {
 			return new \WP_Error( 'missing_fields', __( 'Title and start date are required', 'gamerz-guild' ) );
 		}
 
-		// Insert the event post
 		$event_id = wp_insert_post( [
-			'post_title' => sanitize_text_field( $args['title'] ),
+			'post_title'   => sanitize_text_field( $args['title'] ),
 			'post_content' => wp_kses_post( $args['description'] ),
-			'post_status' => 'publish',
-			'post_type' => 'tribe_events',
-			'post_author' => $args['creator_id'],
+			'post_status'  => 'publish',
+			'post_type'    => 'tribe_events',
+			'post_author'  => $args['creator_id'],
 		] );
 
 		if ( is_wp_error( $event_id ) ) {
 			return $event_id;
 		}
 
-		// Set event meta using The Events Calendar functions
 		update_post_meta( $event_id, '_EventStartDate', $args['start_date'] );
 		update_post_meta( $event_id, '_EventEndDate', $args['end_date'] );
 		update_post_meta( $event_id, '_EventCost', sanitize_text_field( $args['cost'] ) );
 		
-		// If we have an organizer
 		if ( $args['organizer_id'] ) {
 			update_post_meta( $event_id, '_EventOrganizerID', $args['organizer_id'] );
 		}
 		
-		// If we have a venue
 		if ( $args['venue_id'] ) {
 			update_post_meta( $event_id, '_EventVenueID', $args['venue_id'] );
 		}
 
-		// Add guild association
 		if ( $args['guild_id'] ) {
 			update_post_meta( $event_id, '_gamerz_guild_event', $args['guild_id'] );
 		}
 
-		// Trigger action
 		do_action( 'gamerz_guild_event_created', $event_id, $args );
 
 		return $event_id;
