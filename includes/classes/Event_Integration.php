@@ -94,20 +94,19 @@ class Event_Integration {
 		}
 
 		$defaults = [
-			'title' => '',
+			'title'       => '',
 			'description' => '',
-			'start_date' => '',
-			'end_date' => '',
-			'cost' => '',
-			'guild_id' => 0,
-			'creator_id' => get_current_user_id(),
-			'organizer_id' => 0,
-			'venue_id' => 0,
+			'start_date'  => '',
+			'end_date'    => '',
+			'cost'        => '',
+			'guild_id'    => 0,
+			'creator_id'  => get_current_user_id(),
+			'organizer_id'=> 0,
+			'venue_id'    => 0,
 		];
 
 		$args = wp_parse_args( $args, $defaults );
 
-		// Validate required fields
 		if ( empty( $args['title'] ) || empty( $args['start_date'] ) ) {
 			return new \WP_Error( 'missing_fields', __( 'Title and start date are required', 'gamerz-guild' ) );
 		}
