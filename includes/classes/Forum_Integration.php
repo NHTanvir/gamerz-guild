@@ -123,8 +123,7 @@ class Forum_Integration {
 				$xp_needed = $next_rank['threshold'] - $user_xp;
 				echo '<p><strong>' . __( 'Next Rank:', 'gamerz-guild' ) . '</strong> ' . esc_html( $next_rank['name'] ) . ' (' . esc_html( $xp_needed ) . ' ' . __( 'XP needed', 'gamerz-guild' ) . ')</p>';
 				
-				// Progress bar
-				$total_range = $next_rank['threshold'] - $rank['threshold'];
+				$total_range      = $next_rank['threshold'] - $rank['threshold'];
 				$current_progress = $user_xp - $rank['threshold'];
 				$progress_percent = $total_range > 0 ? ( $current_progress / $total_range ) * 100 : 0;
 				
@@ -139,9 +138,8 @@ class Forum_Integration {
 				echo '</div>';
 			}
 			
-			// Show badges if available
 			$badge_system = new Badge_System();
-			$badges = $badge_system->get_user_badges( $user_id );
+			$badges       = $badge_system->get_user_badges( $user_id );
 			
 			if ( ! empty( $badges ) ) {
 				echo '<p><strong>' . __( 'Badges:', 'gamerz-guild' ) . '</strong></p>';
