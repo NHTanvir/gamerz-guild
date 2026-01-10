@@ -174,20 +174,17 @@ class Event_Integration {
 	 * Register member to guild event
 	 */
 	public function register_member_to_guild_event( $event_id, $user_id ) {
-		// For The Events Calendar, we rely on their ticketing system
-		// This is a simplified approach - in practice you'd use their API
+
 		$attendee_data = [
-			'event_id' => $event_id,
-			'user_id' => $user_id,
-			'product_id' => 0, // Default ticket product
-			'attendee_status' => 'attending',
-			'payment_status' => 'completed',
+			'event_id'         => $event_id,
+			'user_id'          => $user_id,
+			'product_id'       => 0, // Default ticket product
+			'attendee_status'  => 'attending',
+			'payment_status'   => 'completed',
 		];
 
-		// Trigger action for when someone registers for a guild event
 		do_action( 'gamerz_guild_member_registered_event', $event_id, $user_id, $attendee_data );
 
-		// Award XP for registering
 		$xp_system = new XP_System();
 		$xp_system->award_event_participation( $event_id, $user_id );
 
@@ -198,8 +195,6 @@ class Event_Integration {
 	 * Mark event as completed and award rewards
 	 */
 	public function complete_event( $event_id, $winners = [] ) {
-		// This would be called when an event is completed
-		// Award additional XP to the winners
 		$xp_system = new XP_System();
 
 		foreach ( $winners as $user_id ) {
@@ -214,15 +209,15 @@ class Event_Integration {
 		$events = $this->get_guild_events( $guild_id, [
 			'meta_query' => [
 				[
-					'key' => '_EventStartDate',
-					'value' => date( 'Y-m-d H:i:s' ),
+					'key'     => '_EventStartDate',
+					'value'   => date( 'Y-m-d H:i:s' ),
 					'compare' => '>=',
 				]
 			],
 			'posts_per_page' => $limit,
-			'orderby' => 'meta_value',
-			'meta_key' => '_EventStartDate',
-			'order' => 'ASC',
+			'orderby'        => 'meta_value',
+			'meta_key'       => '_EventStartDate',
+			'order'          => 'ASC',
 		] );
 
 		return $events;
