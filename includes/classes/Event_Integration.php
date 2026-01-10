@@ -254,14 +254,14 @@ class Event_Integration {
 
 		$total_attendees = 0;
 		foreach ( $all_events as $event ) {
-			$attendees = $this->get_event_participants( $event->ID );
+			$attendees       = $this->get_event_participants( $event->ID );
 			$total_attendees += count( $attendees );
 		}
 
 		return [
-			'total_events' => count( $all_events ),
+			'total_events'    => count( $all_events ),
 			'upcoming_events' => count( $upcoming_events ),
-			'past_events' => count( $past_events ),
+			'past_events'     => count( $past_events ),
 			'total_attendees' => $total_attendees,
 		];
 	}
