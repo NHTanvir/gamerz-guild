@@ -120,7 +120,7 @@ class Discord_Integration {
 					'description' => "<@" . ($discord_id ?: $user->user_login) . "> has ascended to **{$new_rank['name']}**! :medal:",
 					'color'       => $this->get_rank_color( $new_rank['id'] ),
 					'timestamp'   => date( 'c' ),
-					'footer'     => [
+					'footer'      => [
 						'text' => 'Scrub Gamerz - Level Up!'
 					]
 				]

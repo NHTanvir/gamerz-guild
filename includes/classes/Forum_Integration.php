@@ -162,7 +162,6 @@ class Forum_Integration {
 		$xp_system = new XP_System();
 		$user_id = bbp_get_topic_author_id( $topic_id );
 		
-		// Use the XP system's method to award XP
 		$xp_system->award_new_topic( $topic_id, $forum_id );
 	}
 
@@ -173,7 +172,6 @@ class Forum_Integration {
 		$xp_system = new XP_System();
 		$user_id = bbp_get_reply_author_id( $reply_id );
 		
-		// Use the XP system's method to award XP
 		$xp_system->award_new_reply( $reply_id, $topic_id );
 	}
 
@@ -181,13 +179,13 @@ class Forum_Integration {
 	 * Get user's forum activity count
 	 */
 	public function get_user_forum_activity( $user_id ) {
-		$topics_count = bbp_get_user_topic_count_raw( $user_id );
+		$topics_count  = bbp_get_user_topic_count_raw( $user_id );
 		$replies_count = bbp_get_user_reply_count_raw( $user_id );
 		
 		return [
-			'topics' => $topics_count,
+			'topics'  => $topics_count,
 			'replies' => $replies_count,
-			'total' => $topics_count + $replies_count,
+			'total'   => $topics_count + $replies_count,
 		];
 	}
 
@@ -195,29 +193,29 @@ class Forum_Integration {
 	 * Get user's top-rated posts in forums
 	 */
 	public function get_user_top_posts( $user_id, $limit = 3 ) {
-		// Get all topics and replies by user
+
 		$topics = get_posts( [
-			'post_type' => 'topic',
-			'author' => $user_id,
+			'post_type'   => 'topic',
+			'author'      => $user_id,
 			'post_status' => 'publish',
 			'numberposts' => $limit,
-			'meta_key' => '_bbp_reply_count', // Sort by reply count as proxy for popularity
-			'orderby' => 'meta_value_num',
-			'order' => 'DESC',
+			'meta_key'    => '_bbp_reply_count',
+			'orderby'     => 'meta_value_num',
+			'order'       => 'DESC',
 		] );
 
 		$replies = get_posts( [
-			'post_type' => 'reply',
-			'author' => $user_id,
+			'post_type'   => 'reply',
+			'author'      => $user_id,
 			'post_status' => 'publish',
 			'numberposts' => $limit,
-			'meta_key' => '_bbp_thumbs_up', // Using thumbs up meta as proxy for popularity
-			'orderby' => 'meta_value_num',
-			'order' => 'DESC',
+			'meta_key'    => '_bbp_thumbs_up',
+			'orderby'     => 'meta_value_num',
+			'order'       => 'DESC',
 		] );
 
 		return [
-			'topics' => $topics,
+			'topics'  => $topics,
 			'replies' => $replies,
 		];
 	}
