@@ -230,15 +230,15 @@ class Event_Integration {
 		$events = $this->get_guild_events( $guild_id, [
 			'meta_query' => [
 				[
-					'key' => '_EventEndDate',
-					'value' => date( 'Y-m-d H:i:s' ),
+					'key'     => '_EventEndDate',
+					'value'   => date( 'Y-m-d H:i:s' ),
 					'compare' => '<',
 				]
 			],
 			'posts_per_page' => $limit,
-			'orderby' => 'meta_value',
-			'meta_key' => '_EventEndDate',
-			'order' => 'DESC',
+			'orderby'        => 'meta_value',
+			'meta_key'       => '_EventEndDate',
+			'order'          => 'DESC',
 		] );
 
 		return $events;
@@ -248,9 +248,9 @@ class Event_Integration {
 	 * Get guild event attendance stats
 	 */
 	public function get_guild_event_stats( $guild_id ) {
-		$all_events = $this->get_guild_events( $guild_id );
+		$all_events      = $this->get_guild_events( $guild_id );
 		$upcoming_events = $this->get_upcoming_guild_events( $guild_id );
-		$past_events = $this->get_past_guild_events( $guild_id );
+		$past_events     = $this->get_past_guild_events( $guild_id );
 
 		$total_attendees = 0;
 		foreach ( $all_events as $event ) {
