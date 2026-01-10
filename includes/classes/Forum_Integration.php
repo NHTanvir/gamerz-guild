@@ -29,12 +29,9 @@ class Forum_Integration {
 	 * Initialize the forum integration
 	 */
 	public function init() {
-		// Check if bbPress is active
 		if ( ! class_exists( 'bbPress' ) ) {
 			return;
 		}
-
-		// Hooks have been moved to app/Forum_Hooks.php
 	}
 
 	/**
@@ -65,10 +62,10 @@ class Forum_Integration {
 		}
 
 		$rank_system = new Rank_System();
-		$rank = $rank_system->get_user_rank( $user_id );
-		$xp_system = new XP_System();
-		$user_xp = $xp_system->get_user_xp( $user_id );
-		$next_rank = $rank_system->get_next_rank( $user_xp );
+		$rank        = $rank_system->get_user_rank( $user_id );
+		$xp_system   = new XP_System();
+		$user_xp     = $xp_system->get_user_xp( $user_id );
+		$next_rank   = $rank_system->get_next_rank( $user_xp );
 		
 		if ( $rank ) {
 			echo '<div class="gamerz-forum-rank" style="margin-top: 5px; font-size: 0.85em; color: #666;">';
@@ -85,8 +82,7 @@ class Forum_Integration {
 				);
 				echo '</span>';
 				
-				// Progress bar
-				$total_range = $next_rank['threshold'] - $rank['threshold'];
+				$total_range      = $next_rank['threshold'] - $rank['threshold'];
 				$current_progress = $user_xp - $rank['threshold'];
 				$progress_percent = $total_range > 0 ? ( $current_progress / $total_range ) * 100 : 0;
 				
