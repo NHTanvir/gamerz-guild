@@ -106,12 +106,12 @@ class Forum_Integration {
 			return;
 		}
 
-		$user_id = $display_user->ID;
+		$user_id     = $display_user->ID;
 		$rank_system = new Rank_System();
-		$rank = $rank_system->get_user_rank( $user_id );
-		$xp_system = new XP_System();
-		$user_xp = $xp_system->get_user_xp( $user_id );
-		$next_rank = $rank_system->get_next_rank( $user_xp );
+		$rank        = $rank_system->get_user_rank( $user_id );
+		$xp_system   = new XP_System();
+		$user_xp     = $xp_system->get_user_xp( $user_id );
+		$next_rank   = $rank_system->get_next_rank( $user_xp );
 		
 		if ( $rank ) {
 			echo '<div class="gamerz-profile-xp-info" style="background: #f9f9f9; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #0073aa;">';
