@@ -130,17 +130,17 @@ class Guild_Activity {
 		$role_display = $member->get_role_display_name( $new_role );
 
 		$activity_data = [
-			'type' => 'member_demoted',
+			'type'     => 'member_demoted',
 			'guild_id' => $guild_id,
-			'user_id' => $user_id,
-			'title' => sprintf( __( '%s was demoted in the guild', 'gamerz-guild' ), 
+			'user_id'  => $user_id,
+			'title'    => sprintf( __( '%s was demoted in the guild', 'gamerz-guild' ), 
 				$this->get_user_display_name( $user_id )
 			),
-			'content' => sprintf( __( '%s was demoted to %s', 'gamerz-guild' ), 
+			'content'  => sprintf( __( '%s was demoted to %s', 'gamerz-guild' ), 
 				$this->get_user_display_name( $user_id ),
 				$role_display
 			),
-			'timestamp' => current_time( 'mysql' ),
+			'timestamp'=> current_time( 'mysql' ),
 		];
 
 		$this->add_activity( $activity_data );
