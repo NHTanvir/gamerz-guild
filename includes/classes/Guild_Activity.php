@@ -174,10 +174,8 @@ class Guild_Activity {
 			return [];
 		}
 
-		// Reverse to show newest first
 		$activities = array_reverse( $activities );
 
-		// Limit results
 		return array_slice( $activities, 0, $limit );
 	}
 
