@@ -37,14 +37,14 @@ class Guild_Activity {
 	 */
 	public function activity_guild_created( $guild_id, $args ) {
 		$activity_data = [
-			'type' => 'guild_created',
+			'type'     => 'guild_created',
 			'guild_id' => $guild_id,
-			'user_id' => $args['creator_id'],
-			'title' => sprintf( __( '%s created a new guild: %s', 'gamerz-guild' ), 
+			'user_id'  => $args['creator_id'],
+			'title'    => sprintf( __( '%s created a new guild: %s', 'gamerz-guild' ), 
 				$this->get_user_display_name( $args['creator_id'] ), 
 				get_the_title( $guild_id )
 			),
-			'content' => sprintf( __( 'Guild "%s" was created by %s', 'gamerz-guild' ), 
+			'content'  => sprintf( __( 'Guild "%s" was created by %s', 'gamerz-guild' ), 
 				get_the_title( $guild_id ), 
 				$this->get_user_display_name( $args['creator_id'] )
 			),
@@ -59,22 +59,21 @@ class Guild_Activity {
 	 */
 	public function activity_member_joined( $guild_id, $user_id, $role ) {
 		$activity_data = [
-			'type' => 'member_joined',
+			'type'     => 'member_joined',
 			'guild_id' => $guild_id,
-			'user_id' => $user_id,
-			'title' => sprintf( __( '%s joined the guild', 'gamerz-guild' ), 
+			'user_id'  => $user_id,
+			'title'    => sprintf( __( '%s joined the guild', 'gamerz-guild' ), 
 				$this->get_user_display_name( $user_id )
 			),
-			'content' => sprintf( __( '%s has joined the guild as a %s', 'gamerz-guild' ), 
+			'content'  => sprintf( __( '%s has joined the guild as a %s', 'gamerz-guild' ), 
 				$this->get_user_display_name( $user_id ),
 				ucfirst( $role )
 			),
-			'timestamp' => current_time( 'mysql' ),
+			'timestamp'=> current_time( 'mysql' ),
 		];
 
 		$this->add_activity( $activity_data );
 		
-		// Set join date
 		$member = new Guild_Member();
 		$member->set_join_date( $guild_id, $user_id );
 	}
@@ -84,16 +83,16 @@ class Guild_Activity {
 	 */
 	public function activity_member_left( $guild_id, $user_id ) {
 		$activity_data = [
-			'type' => 'member_left',
+			'type'     => 'member_left',
 			'guild_id' => $guild_id,
-			'user_id' => $user_id,
-			'title' => sprintf( __( '%s left the guild', 'gamerz-guild' ), 
+			'user_id'  => $user_id,
+			'title'    => sprintf( __( '%s left the guild', 'gamerz-guild' ), 
 				$this->get_user_display_name( $user_id )
 			),
-			'content' => sprintf( __( '%s has left the guild', 'gamerz-guild' ), 
+			'content'  => sprintf( __( '%s has left the guild', 'gamerz-guild' ), 
 				$this->get_user_display_name( $user_id )
 			),
-			'timestamp' => current_time( 'mysql' ),
+			'timestamp'=> current_time( 'mysql' ),
 		];
 
 		$this->add_activity( $activity_data );
