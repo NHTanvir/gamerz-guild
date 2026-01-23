@@ -102,21 +102,21 @@ class Guild_Activity {
 	 * Log member promotion activity
 	 */
 	public function activity_member_promoted( $guild_id, $user_id, $new_role ) {
-		$member = new Guild_Member();
+		$member       = new Guild_Member();
 		$role_display = $member->get_role_display_name( $new_role );
 
 		$activity_data = [
-			'type' => 'member_promoted',
+			'type'     => 'member_promoted',
 			'guild_id' => $guild_id,
-			'user_id' => $user_id,
-			'title' => sprintf( __( '%s was promoted in the guild', 'gamerz-guild' ), 
+			'user_id'  => $user_id,
+			'title'    => sprintf( __( '%s was promoted in the guild', 'gamerz-guild' ), 
 				$this->get_user_display_name( $user_id )
 			),
-			'content' => sprintf( __( '%s was promoted to %s', 'gamerz-guild' ), 
+			'content'  => sprintf( __( '%s was promoted to %s', 'gamerz-guild' ), 
 				$this->get_user_display_name( $user_id ),
 				$role_display
 			),
-			'timestamp' => current_time( 'mysql' ),
+			'timestamp'=> current_time( 'mysql' ),
 		];
 
 		$this->add_activity( $activity_data );
@@ -126,7 +126,7 @@ class Guild_Activity {
 	 * Log member demotion activity
 	 */
 	public function activity_member_demoted( $guild_id, $user_id, $new_role ) {
-		$member = new Guild_Member();
+		$member       = new Guild_Member();
 		$role_display = $member->get_role_display_name( $new_role );
 
 		$activity_data = [
