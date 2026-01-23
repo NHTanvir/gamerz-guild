@@ -150,21 +150,18 @@ class Guild_Activity {
 	 * Add activity to guild
 	 */
 	public function add_activity( $activity_data ) {
-		// Get existing activities
+
 		$activities = get_post_meta( $activity_data['guild_id'], '_guild_activities', true );
 		if ( ! is_array( $activities ) ) {
 			$activities = [];
 		}
 
-		// Add new activity
 		$activities[] = $activity_data;
 
-		// Limit to last 50 activities to prevent DB bloat
 		if ( count( $activities ) > 50 ) {
 			$activities = array_slice( $activities, -50 );
 		}
 
-		// Save activities
 		update_post_meta( $activity_data['guild_id'], '_guild_activities', $activities );
 	}
 
