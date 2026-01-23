@@ -160,7 +160,7 @@ class Forum_Integration {
 	 */
 	public function award_xp_for_new_topic( $topic_id, $forum_id ) {
 		$xp_system = new XP_System();
-		$user_id = bbp_get_topic_author_id( $topic_id );
+		$user_id   = bbp_get_topic_author_id( $topic_id );
 		
 		$xp_system->award_new_topic( $topic_id, $forum_id );
 	}
@@ -170,7 +170,7 @@ class Forum_Integration {
 	 */
 	public function award_xp_for_new_reply( $reply_id, $topic_id ) {
 		$xp_system = new XP_System();
-		$user_id = bbp_get_reply_author_id( $reply_id );
+		$user_id   = bbp_get_reply_author_id( $reply_id );
 		
 		$xp_system->award_new_reply( $reply_id, $topic_id );
 	}
