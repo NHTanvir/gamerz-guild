@@ -199,11 +199,11 @@ class Guild_Activity {
 	 */
 	public function get_activity_icon( $type ) {
 		$icons = [
-			'guild_created' => 'dashicons dashicons-groups',
-			'member_joined' => 'dashicons dashicons-plus-alt',
-			'member_left' => 'dashicons dashicons-minus',
+			'guild_created'   => 'dashicons dashicons-groups',
+			'member_joined'   => 'dashicons dashicons-plus-alt',
+			'member_left'     => 'dashicons dashicons-minus',
 			'member_promoted' => 'dashicons dashicons-arrow-up-alt',
-			'member_demoted' => 'dashicons dashicons-arrow-down-alt',
+			'member_demoted'  => 'dashicons dashicons-arrow-down-alt',
 		];
 
 		return isset( $icons[ $type ] ) ? $icons[ $type ] : 'dashicons dashicons-info';
