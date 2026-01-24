@@ -337,12 +337,11 @@ class Guild_Member {
 			'status'      => 'active'
 		];
 
-		// Validate required fields
 		if ( empty( $args['title'] ) ) {
 			wp_die( __( 'Guild name is required', 'gamerz-guild' ) );
 		}
 
-		// Validate max members range
+
 		if ( $args['max_members'] < 5 || $args['max_members'] > 100 ) {
 			wp_die( __( 'Maximum members must be between 5 and 100', 'gamerz-guild' ) );
 		}
@@ -353,14 +352,11 @@ class Guild_Member {
 			wp_die( $guild_id->get_error_message() );
 		}
 
-		// Award XP for creating guild
 		if ( class_exists( 'myCRED' ) ) {
-			$mycred = mycred();
-
-			// Award 50 XP for creating a guild
+			$mycred    = mycred();
 			$xp_amount = apply_filters( 'gamerz_guild_creation_xp', 50 );
 			$reference = 'guild_creation';
-			$entry = apply_filters(
+			$entry      = apply_filters(
 				'gamerz_guild_creation_log_entry',
 				sprintf( __( 'Created guild "%s"', 'gamerz-guild' ), $args['title'] ),
 				$guild_id,
@@ -369,12 +365,12 @@ class Guild_Member {
 
 			$mycred->add_creds(
 				$reference,
-				$user_id, // creator_id
+				$user_id,
 				$xp_amount,
 				$entry,
-				$guild_id, // ref_id
-				[], // data
-				'gamerz_xp' // point type
+				$guild_id,
+				[],
+				'gamerz_xp'
 			);
 		}
 
