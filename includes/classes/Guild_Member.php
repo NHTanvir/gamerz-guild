@@ -393,10 +393,9 @@ class Guild_Member {
 		}
 
 		$guild_id = intval( $_POST['guild_id'] );
-		$user_id = get_current_user_id();
-		$guild = new Guild();
+		$user_id  = get_current_user_id();
+		$guild    = new Guild();
 
-		// Check if user has permission to manage members (must be leader)
 		$user_role = $guild->get_user_role( $guild_id, $user_id );
 		if ( $user_role !== 'leader' ) {
 			wp_die( __( 'Only the guild leader can manage members', 'gamerz-guild' ) );
