@@ -268,11 +268,11 @@ class Guild_Member {
 			if ( $user ) {
 				$role = $guild->get_user_role( $guild_id, $member_id );
 				$members_with_roles[] = [
-					'id' => $member_id,
+					'id'           => $member_id,
 					'display_name' => $user->display_name,
-					'user_login' => $user->user_login,
-					'role' => $role,
-					'join_date' => get_user_meta( $member_id, "_guild_join_date_{$guild_id}", true ),
+					'user_login'   => $user->user_login,
+					'role'         => $role,
+					'join_date'    => get_user_meta( $member_id, "_guild_join_date_{$guild_id}", true ),
 				];
 			}
 		}
@@ -300,9 +300,9 @@ class Guild_Member {
 	 */
 	public function get_role_display_name( $role ) {
 		$roles = [
-			'leader' => __( 'Guild Leader', 'gamerz-guild' ),
+			'leader'  => __( 'Guild Leader', 'gamerz-guild' ),
 			'officer' => __( 'Guild Officer', 'gamerz-guild' ),
-			'member' => __( 'Guild Member', 'gamerz-guild' ),
+			'member'  => __( 'Guild Member', 'gamerz-guild' ),
 		];
 
 		return isset( $roles[ $role ] ) ? $roles[ $role ] : $role;
@@ -320,11 +320,10 @@ class Guild_Member {
 			wp_die( __( 'You must be logged in to create a guild', 'gamerz-guild' ) );
 		}
 
-		$user_id = get_current_user_id();
-		$guild = new Guild();
-
-		// Check if user is already in a guild
+		$user_id     = get_current_user_id();
+		$guild       = new Guild();
 		$user_guilds = $guild->get_user_guilds( $user_id );
+		
 		if ( ! empty( $user_guilds ) ) {
 			wp_die( __( 'You are already in a guild', 'gamerz-guild' ) );
 		}
