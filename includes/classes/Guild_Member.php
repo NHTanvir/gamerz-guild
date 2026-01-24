@@ -168,22 +168,19 @@ class Guild_Member {
 		$guild_id        = intval( $_POST['guild_id'] );
 		$member_id       = intval( $_POST['member_id'] );
 		$current_user_id = get_current_user_id();
+		$guild           = new Guild();
 
-		$guild = new Guild();
 
-		// Check if user has permission to promote (must be leader)
 		$user_role = $guild->get_user_role( $guild_id, $current_user_id );
 		if ( $user_role !== 'leader' ) {
 			wp_die( __( 'Only the guild leader can promote members', 'gamerz-guild' ) );
 		}
 
-		// Don't allow promoting the guild leader (they're already at highest rank)
 		$member_role = $guild->get_user_role( $guild_id, $member_id );
 		if ( $member_role === 'leader' ) {
 			wp_die( __( 'The guild leader is already at the highest rank', 'gamerz-guild' ) );
 		}
 
-		// Determine next role
 		$next_role = 'member';
 		switch ( $member_role ) {
 			case 'member':
@@ -194,16 +191,14 @@ class Guild_Member {
 				break;
 		}
 
-		// Update user role in this guild
 		update_user_meta( $member_id, "_guild_role_{$guild_id}", $next_role );
 
-		// Trigger action
 		do_action( 'gamerz_guild_member_promoted', $guild_id, $member_id, $next_role );
 
 		wp_send_json_success( [
-			'message' => __( 'Successfully promoted member', 'gamerz-guild' ),
+			'message'   => __( 'Successfully promoted member', 'gamerz-guild' ),
 			'member_id' => $member_id,
-			'new_role' => $next_role
+			'new_role'  => $next_role
 		] );
 	}
 
@@ -219,25 +214,21 @@ class Guild_Member {
 			wp_die( __( 'You must be logged in to manage guild members', 'gamerz-guild' ) );
 		}
 
-		$guild_id = intval( $_POST['guild_id'] );
-		$member_id = intval( $_POST['member_id'] );
+		$guild_id        = intval( $_POST['guild_id'] );
+		$member_id       = intval( $_POST['member_id'] );
 		$current_user_id = get_current_user_id();
+		$guild           = new Guild();
 
-		$guild = new Guild();
-
-		// Check if user has permission to demote (must be leader)
 		$user_role = $guild->get_user_role( $guild_id, $current_user_id );
 		if ( $user_role !== 'leader' ) {
 			wp_die( __( 'Only the guild leader can demote members', 'gamerz-guild' ) );
 		}
 
-		// Don't allow demoting the guild leader
 		$member_role = $guild->get_user_role( $guild_id, $member_id );
 		if ( $member_role === 'leader' ) {
 			wp_die( __( 'The guild leader cannot be demoted', 'gamerz-guild' ) );
 		}
 
-		// Don't allow demoting below member rank
 		if ( $member_role === 'member' ) {
 			wp_die( __( 'The member is already at the lowest rank', 'gamerz-guild' ) );
 		}
@@ -249,20 +240,18 @@ class Guild_Member {
 				$next_role = 'member';
 				break;
 			case 'leader':
-				$next_role = 'officer'; // If demoting leader, make them officer
+				$next_role = 'officer';
 				break;
 		}
 
-		// Update user role in this guild
 		update_user_meta( $member_id, "_guild_role_{$guild_id}", $next_role );
 
-		// Trigger action
 		do_action( 'gamerz_guild_member_demoted', $guild_id, $member_id, $next_role );
 
 		wp_send_json_success( [
-			'message' => __( 'Successfully demoted member', 'gamerz-guild' ),
+			'message'   => __( 'Successfully demoted member', 'gamerz-guild' ),
 			'member_id' => $member_id,
-			'new_role' => $next_role
+			'new_role'  => $next_role
 		] );
 	}
 
@@ -270,8 +259,8 @@ class Guild_Member {
 	 * Get all members for a guild with their roles
 	 */
 	public function get_guild_members_with_roles( $guild_id ) {
-		$guild = new Guild();
-		$member_ids = $guild->get_members( $guild_id );
+		$guild              = new Guild();
+		$member_ids         = $guild->get_members( $guild_id );
 		$members_with_roles = [];
 
 		foreach ( $member_ids as $member_id ) {
