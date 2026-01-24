@@ -418,12 +418,11 @@ class Guild_Member {
 			wp_die( __( 'You must be logged in to manage guilds', 'gamerz-guild' ) );
 		}
 
-		$guild_id = intval( $_POST['guild_id'] );
-		$user_id = get_current_user_id();
-		$guild = new Guild();
-
-		// Check if user is the guild leader (only leader can edit guild details)
+		$guild_id  = intval( $_POST['guild_id'] );
+		$user_id   = get_current_user_id();
+		$guild     = new Guild();
 		$user_role = $guild->get_user_role( $guild_id, $user_id );
+
 		if ( $user_role !== 'leader' ) {
 			wp_die( __( 'Only the guild leader can edit guild details', 'gamerz-guild' ) );
 		}
@@ -433,22 +432,20 @@ class Guild_Member {
 			wp_die( __( 'Guild not found', 'gamerz-guild' ) );
 		}
 
-		// Get guild meta
 		$meta = [
-			'_guild_tagline' => get_post_meta( $guild_id, '_guild_tagline', true ),
+			'_guild_tagline'     => get_post_meta( $guild_id, '_guild_tagline', true ),
 			'_guild_description' => get_post_meta( $guild_id, '_guild_description', true ),
 			'_guild_max_members' => get_post_meta( $guild_id, '_guild_max_members', true ),
-			'_guild_creator_id' => get_post_meta( $guild_id, '_guild_creator_id', true ),
-			'_guild_status' => get_post_meta( $guild_id, '_guild_status', true ),
+			'_guild_creator_id'  => get_post_meta( $guild_id, '_guild_creator_id', true ),
+			'_guild_status'      => get_post_meta( $guild_id, '_guild_status', true ),
 		];
 
-		// Prepare guild data
 		$guild_data = [
-			'ID' => $guild_post->ID,
-			'post_title' => $guild_post->post_title,
+			'ID'           => $guild_post->ID,
+			'post_title'   => $guild_post->post_title,
 			'post_content' => $guild_post->post_content,
-			'post_status' => $guild_post->post_status,
-			'meta' => $meta,
+			'post_status'  => $guild_post->post_status,
+			'meta'         => $meta,
 		];
 
 		wp_send_json_success( $guild_data );
