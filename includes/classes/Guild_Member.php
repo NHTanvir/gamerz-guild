@@ -121,8 +121,8 @@ class Guild_Member {
 			wp_die( __( 'You must be logged in to manage guild members', 'gamerz-guild' ) );
 		}
 
-		$guild_id = intval( $_POST['guild_id'] );
-		$member_id = intval( $_POST['member_id'] );
+		$guild_id        = intval( $_POST['guild_id'] );
+		$member_id       = intval( $_POST['member_id'] );
 		$current_user_id = get_current_user_id();
 
 		$guild = new Guild();
