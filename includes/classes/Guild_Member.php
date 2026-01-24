@@ -329,12 +329,12 @@ class Guild_Member {
 		}
 
 		$args = [
-			'title' => sanitize_text_field( $_POST['title'] ),
+			'title'       => sanitize_text_field( $_POST['title'] ),
 			'description' => wp_kses_post( $_POST['description'] ),
-			'tagline' => sanitize_text_field( $_POST['tagline'] ),
+			'tagline'     => sanitize_text_field( $_POST['tagline'] ),
 			'max_members' => absint( $_POST['max_members'] ),
-			'creator_id' => $user_id,
-			'status' => 'active'
+			'creator_id'  => $user_id,
+			'status'      => 'active'
 		];
 
 		// Validate required fields
