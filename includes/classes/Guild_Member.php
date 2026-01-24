@@ -124,22 +124,18 @@ class Guild_Member {
 		$guild_id        = intval( $_POST['guild_id'] );
 		$member_id       = intval( $_POST['member_id'] );
 		$current_user_id = get_current_user_id();
+		$guild           = new Guild();
 
-		$guild = new Guild();
-
-		// Check if user has permission to kick (must be leader or officer)
 		$user_role = $guild->get_user_role( $guild_id, $current_user_id );
 		if ( $user_role !== 'leader' && $user_role !== 'officer' ) {
 			wp_die( __( 'You do not have permission to kick members', 'gamerz-guild' ) );
 		}
 
-		// Don't allow kicking the guild leader
 		$member_role = $guild->get_user_role( $guild_id, $member_id );
 		if ( $member_role === 'leader' ) {
 			wp_die( __( 'You cannot kick the guild leader', 'gamerz-guild' ) );
 		}
 
-		// Don't allow kicking yourself
 		if ( $current_user_id === $member_id ) {
 			wp_die( __( 'You cannot kick yourself', 'gamerz-guild' ) );
 		}
@@ -147,9 +143,9 @@ class Guild_Member {
 		$result = $guild->remove_member( $guild_id, $member_id );
 
 		if ( $result === true ) {
-			// Success
+
 			wp_send_json_success( [
-				'message' => __( 'Successfully kicked member from guild', 'gamerz-guild' ),
+				'message'   => __( 'Successfully kicked member from guild', 'gamerz-guild' ),
 				'member_id' => $member_id
 			] );
 		} else {
