@@ -47,22 +47,20 @@ class Guild_Member {
 		}
 
 		$guild_id = intval( $_POST['guild_id'] );
-		$user_id = get_current_user_id();
-		$guild = new Guild();
+		$user_id  = get_current_user_id();
+		$guild    = new Guild();
 		
-		// Check if user is already in a guild
 		$user_guilds = $guild->get_user_guilds( $user_id );
 		if ( ! empty( $user_guilds ) ) {
 			wp_die( __( 'You are already in a guild', 'gamerz-guild' ) );
 		}
 
-		// Add member to guild
 		$result = $guild->add_member( $guild_id, $user_id );
 
 		if ( $result === true ) {
-			// Success
+
 			wp_send_json_success( [
-				'message' => __( 'Successfully joined the guild', 'gamerz-guild' ),
+				'message'  => __( 'Successfully joined the guild', 'gamerz-guild' ),
 				'guild_id' => $guild_id
 			] );
 		} else if ( is_wp_error( $result ) ) {
@@ -85,15 +83,13 @@ class Guild_Member {
 		}
 
 		$guild_id = intval( $_POST['guild_id'] );
-		$user_id = get_current_user_id();
-		$guild = new Guild();
+		$user_id  = get_current_user_id();
+		$guild    = new Guild();
 
-		// Check if user is a member
 		if ( ! $guild->is_member( $guild_id, $user_id ) ) {
 			wp_die( __( 'You are not a member of this guild', 'gamerz-guild' ) );
 		}
 
-		// Don't allow guild leaders to leave without transferring leadership
 		if ( $guild->get_user_role( $guild_id, $user_id ) === 'leader' ) {
 			$members = $guild->get_members( $guild_id );
 			if ( count( $members ) > 1 ) {
@@ -101,13 +97,11 @@ class Guild_Member {
 			}
 		}
 
-		// Remove member from guild
 		$result = $guild->remove_member( $guild_id, $user_id );
 
 		if ( $result === true ) {
-			// Success
 			wp_send_json_success( [
-				'message' => __( 'Successfully left the guild', 'gamerz-guild' ),
+				'message'  => __( 'Successfully left the guild', 'gamerz-guild' ),
 				'guild_id' => $guild_id
 			] );
 		} else {
