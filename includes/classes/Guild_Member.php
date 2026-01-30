@@ -463,10 +463,10 @@ class Guild_Member {
 			wp_die( __( 'You must be logged in to manage guilds', 'gamerz-guild' ) );
 		}
 
-		$guild_id = intval( $_POST['guild_id'] );
-		$user_id = get_current_user_id();
-		$guild = new Guild();
-		$user_role = $guild->get_user_role( $guild_id, $user_id );
+		$guild_id   = intval( $_POST['guild_id'] );
+		$user_id    = get_current_user_id();
+		$guild      = new Guild();
+		$user_role  = $guild->get_user_role( $guild_id, $user_id );
 		if ( $user_role !== 'leader' ) {
 			wp_die( __( 'Only the guild leader can update guild details', 'gamerz-guild' ) );
 		}
