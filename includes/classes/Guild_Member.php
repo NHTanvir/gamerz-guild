@@ -233,7 +233,6 @@ class Guild_Member {
 			wp_die( __( 'The member is already at the lowest rank', 'gamerz-guild' ) );
 		}
 
-		// Determine next role
 		$next_role = 'member';
 		switch ( $member_role ) {
 			case 'officer':
