@@ -218,8 +218,8 @@ class Guild_Member {
 		$member_id       = intval( $_POST['member_id'] );
 		$current_user_id = get_current_user_id();
 		$guild           = new Guild();
-
-		$user_role = $guild->get_user_role( $guild_id, $current_user_id );
+		$user_role       = $guild->get_user_role( $guild_id, $current_user_id );
+		
 		if ( $user_role !== 'leader' ) {
 			wp_die( __( 'Only the guild leader can demote members', 'gamerz-guild' ) );
 		}
