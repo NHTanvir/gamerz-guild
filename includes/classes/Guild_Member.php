@@ -353,9 +353,9 @@ class Guild_Member {
 		}
 
 		if ( class_exists( 'myCRED' ) ) {
-			$mycred    = mycred();
-			$xp_amount = apply_filters( 'gamerz_guild_creation_xp', 50 );
-			$reference = 'guild_creation';
+			$mycred     = mycred();
+			$xp_amount  = apply_filters( 'gamerz_guild_creation_xp', 50 );
+			$reference  = 'guild_creation';
 			$entry      = apply_filters(
 				'gamerz_guild_creation_log_entry',
 				sprintf( __( 'Created guild "%s"', 'gamerz-guild' ), $args['title'] ),
@@ -396,7 +396,7 @@ class Guild_Member {
 		$user_id   = get_current_user_id();
 		$guild     = new Guild();
 		$user_role = $guild->get_user_role( $guild_id, $user_id );
-		
+
 		if ( $user_role !== 'leader' ) {
 			wp_die( __( 'Only the guild leader can manage members', 'gamerz-guild' ) );
 		}
