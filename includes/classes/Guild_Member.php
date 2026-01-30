@@ -473,19 +473,16 @@ class Guild_Member {
 			wp_die( __( 'Only the guild leader can update guild details', 'gamerz-guild' ) );
 		}
 
-		// Sanitize input data
 		$update_data = [
-			'ID' => $guild_id,
-			'post_title' => sanitize_text_field( $_POST['title'] ),
+			'ID'           => $guild_id,
+			'post_title'   => sanitize_text_field( $_POST['title'] ),
 			'post_content' => wp_kses_post( $_POST['description'] ),
 		];
 
-		// Validate required fields
 		if ( empty( $update_data['post_title'] ) ) {
 			wp_die( __( 'Guild name is required', 'gamerz-guild' ) );
 		}
 
-		// Update the post
 		$updated = wp_update_post( $update_data );
 
 		if ( is_wp_error( $updated ) ) {
@@ -503,15 +500,14 @@ class Guild_Member {
 
 		if ( isset( $_POST['max_members'] ) ) {
 			$max_members = absint( $_POST['max_members'] );
-			// Validate max_members range
 			if ( $max_members < 5 || $max_members > 100 ) {
-				$max_members = 20; // Default
+				$max_members = 20; 
 			}
 			update_post_meta( $guild_id, '_guild_max_members', $max_members );
 		}
 
 		wp_send_json_success( [
-			'message' => __( 'Guild updated successfully!', 'gamerz-guild' ),
+			'message'  => __( 'Guild updated successfully!', 'gamerz-guild' ),
 			'guild_id' => $guild_id
 		] );
 	}
