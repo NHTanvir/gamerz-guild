@@ -189,13 +189,13 @@ class Guild {
 	 */
 	public function create_guild( $args = [] ) {
 		$defaults = [
-			'title' => '',
+			'title'       => '',
 			'description' => '',
-			'tagline' => '',
+			'tagline'     => '',
 			'max_members' => 20,
-			'creator_id' => get_current_user_id(),
-			'status' => 'active',
-			'meta' => [],
+			'creator_id'  => get_current_user_id(),
+			'status'      => 'active',
+			'meta'        => [],
 		];
 
 		$args = wp_parse_args( $args, $defaults );
