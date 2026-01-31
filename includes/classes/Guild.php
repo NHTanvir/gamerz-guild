@@ -267,17 +267,14 @@ class Guild {
 		$members = $this->get_members( $guild_id );
 		
 		if ( ! in_array( $user_id, $members ) ) {
-			return false; // User is not a member
+			return false; 
 		}
 
-		// Remove user from guild
 		$members = array_diff( $members, [ $user_id ] );
 		update_post_meta( $guild_id, '_guild_members', $members );
 
-		// Remove role meta
 		delete_user_meta( $user_id, "_guild_role_{$guild_id}" );
 
-		// Trigger action
 		do_action( 'gamerz_guild_member_removed', $guild_id, $user_id );
 
 		return true;
