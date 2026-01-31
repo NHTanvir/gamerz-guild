@@ -335,9 +335,9 @@ class Guild {
 		}
 
 		$all_guilds = get_posts( [
-			'post_type' => $this->post_type,
+			'post_type'      => $this->post_type,
 			'posts_per_page' => -1,
-			'post_status' => 'publish',
+			'post_status'    => 'publish',
 		] );
 
 		$user_guilds = [];
