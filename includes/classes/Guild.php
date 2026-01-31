@@ -240,10 +240,10 @@ class Guild {
 		$members = $this->get_members( $guild_id );
 		
 		if ( in_array( $user_id, $members ) ) {
-			return false; // User is already a member
+			return false; 
 		}
 
-		$max_members = get_post_meta( $guild_id, '_guild_max_members', true );
+		$max_members          = get_post_meta( $guild_id, '_guild_max_members', true );
 		$current_member_count = count( $members );
 
 		if ( $max_members && $current_member_count >= $max_members ) {
