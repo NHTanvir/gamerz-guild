@@ -201,10 +201,10 @@ class Guild {
 		$args = wp_parse_args( $args, $defaults );
 
 		$guild_id = wp_insert_post( [
-			'post_title' => sanitize_text_field( $args['title'] ),
+			'post_title'   => sanitize_text_field( $args['title'] ),
 			'post_content' => wp_kses_post( $args['description'] ),
-			'post_status' => 'publish',
-			'post_type' => $this->post_type,
+			'post_status'  => 'publish',
+			'post_type'    => $this->post_type,
 		] );
 
 		if ( is_wp_error( $guild_id ) ) {
