@@ -228,7 +228,6 @@ class Guild {
 			}
 		}
 
-		// Trigger action
 		do_action( 'gamerz_guild_created', $guild_id, $args );
 
 		return $guild_id;
