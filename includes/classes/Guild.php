@@ -147,10 +147,8 @@ class Guild {
 	 * Save meta box data
 	 */
 	public function save_meta_box( $post_id ) {
-		// Check if the request is coming from classic editor by checking for our nonce
 		$is_classic_editor_save = isset( $_POST['guild_details_nonce'] );
 
-		// For classic editor, verify nonce
 		if ( $is_classic_editor_save ) {
 			if ( ! isset( $_POST['guild_details_nonce'] ) || ! wp_verify_nonce( $_POST['guild_details_nonce'], 'save_guild_details' ) ) {
 				return;
@@ -165,9 +163,6 @@ class Guild {
 			return;
 		}
 
-		// Save data - this handles both classic editor and serves as a fallback
-		// In Gutenberg, the meta fields registered with register_post_meta are saved automatically
-		// But we still process these fields to ensure compatibility across both editors
 		if ( isset( $_POST['guild_tagline'] ) ) {
 			update_post_meta( $post_id, '_guild_tagline', sanitize_text_field( $_POST['guild_tagline'] ) );
 		}
