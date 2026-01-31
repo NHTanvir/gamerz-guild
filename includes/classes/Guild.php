@@ -250,14 +250,11 @@ class Guild {
 			return new \WP_Error( 'guild_full', __( 'Guild is at maximum capacity', 'gamerz-guild' ) );
 		}
 
-		// Add user to guild
 		$members[] = $user_id;
 		update_post_meta( $guild_id, '_guild_members', $members );
 
-		// Set role for this user in this guild
 		update_user_meta( $user_id, "_guild_role_{$guild_id}", $role );
 
-		// Trigger action
 		do_action( 'gamerz_guild_member_added', $guild_id, $user_id, $role );
 
 		return true;
