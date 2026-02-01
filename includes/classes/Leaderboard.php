@@ -33,13 +33,13 @@ class Leaderboard {
 		}
 
 		$users = get_users( [
-			'number' => $limit,
-			'offset' => $offset,
+			'number'  => $limit,
+			'offset'  => $offset,
 			'orderby' => 'meta_value_num',
-			'order' => 'DESC',
+			'order'   => 'DESC',
 			'meta_query' => [
 				[
-					'key' => $mycred->get_point_type_key(),
+					'key'     => $mycred->get_point_type_key(),
 					'compare' => 'EXISTS'
 				]
 			],
