@@ -105,11 +105,11 @@ class Guild {
 	public function render_meta_box( $post ) {
 		wp_nonce_field( 'save_guild_details', 'guild_details_nonce' );
 
-		$guild_tagline = get_post_meta( $post->ID, '_guild_tagline', true );
+		$guild_tagline     = get_post_meta( $post->ID, '_guild_tagline', true );
 		$guild_description = get_post_meta( $post->ID, '_guild_description', true );
 		$guild_max_members = get_post_meta( $post->ID, '_guild_max_members', true );
-		$guild_creator_id = get_post_meta( $post->ID, '_guild_creator_id', true );
-		$guild_status = get_post_meta( $post->ID, '_guild_status', true );
+		$guild_creator_id  = get_post_meta( $post->ID, '_guild_creator_id', true );
+		$guild_status      = get_post_meta( $post->ID, '_guild_status', true );
 
 		?>
 		<table class="form-table">
