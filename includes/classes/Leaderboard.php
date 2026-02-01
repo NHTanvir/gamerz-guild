@@ -54,7 +54,7 @@ class Leaderboard {
 
 			if ( $user_xp > 0 ) {
 				$rank_system = new Rank_System();
-				$rank_info = $rank_system->get_user_rank( $user->ID );
+				$rank_info   = $rank_system->get_user_rank( $user->ID );
 
 				$leaderboard[] = [
 					'rank' => $rank,
