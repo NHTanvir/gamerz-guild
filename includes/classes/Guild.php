@@ -32,9 +32,7 @@ class Guild {
 	/**
 	 * Initialize the guild system
 	 */
-	public function init() {
-		// Hooks have been moved to app/Guild_Hooks.php
-	}
+	public function init() {}
 
 	/**
 	 * Add meta boxes for guild
