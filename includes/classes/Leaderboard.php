@@ -57,13 +57,13 @@ class Leaderboard {
 				$rank_info   = $rank_system->get_user_rank( $user->ID );
 
 				$leaderboard[] = [
-					'rank' => $rank,
-					'user_id' => $user->ID,
+					'rank'         => $rank,
+					'user_id'      => $user->ID,
 					'display_name' => $user->display_name,
-					'user_login' => $user->user_login,
-					'xp' => $user_xp,
-					'rank_name' => $rank_info['name'],
-					'avatar' => get_avatar_url( $user->ID, [ 'size' => 40 ] ),
+					'user_login'   => $user->user_login,
+					'xp'           => $user_xp,
+					'rank_name'    => $rank_info['name'],
+					'avatar'       => get_avatar_url( $user->ID, [ 'size' => 40 ] ),
 				];
 				$rank++;
 			}
