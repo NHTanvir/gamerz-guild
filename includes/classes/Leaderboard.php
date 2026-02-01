@@ -21,9 +21,7 @@ class Leaderboard {
 	/**
 	 * Constructor function
 	 */
-	public function __construct() {
-		// Hooks have been moved to app/Leaderboard_Hooks.php
-	}
+	public function __construct() {}
 
 	/**
 	 * Get global XP leaderboard
@@ -34,7 +32,6 @@ class Leaderboard {
 			return [];
 		}
 
-		// Get all users with their XP
 		$users = get_users( [
 			'number' => $limit,
 			'offset' => $offset,
