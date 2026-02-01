@@ -57,12 +57,10 @@ class Guild {
 
 		global $post;
 
-		// Check if we're editing a guild post
 		$is_guild_post_type = false;
 		if ( $post && $post->post_type === $this->post_type ) {
 			$is_guild_post_type = true;
 		} else {
-			// Check if post_type parameter in URL is 'guild'
 			if ( isset( $_GET['post'] ) && get_post_type( intval( $_GET['post'] ) ) === $this->post_type ) {
 				$is_guild_post_type = true;
 			} elseif ( isset( $_GET['post_type'] ) && $_GET['post_type'] === $this->post_type ) {
@@ -90,7 +88,6 @@ class Guild {
 				true
 			);
 
-			// Localize script to ensure i18n works properly
 			wp_add_inline_script(
 				'guild-gutenberg-sidebar',
 				'wp.i18n.setLocaleData( { "gamerz-guild": { domain: "gamerz-guild" } }, "gamerz-guild" );',
