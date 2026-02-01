@@ -52,7 +52,7 @@ class Leaderboard {
 		foreach ( $users as $user ) {
 			$user_xp = $mycred->get_users_cred( $user->ID );
 
-			if ( $user_xp > 0 ) { // Only include users with XP
+			if ( $user_xp > 0 ) {
 				$rank_system = new Rank_System();
 				$rank_info = $rank_system->get_user_rank( $user->ID );
 
