@@ -47,7 +47,7 @@ class Leaderboard {
 		] );
 
 		$leaderboard = [];
-		$rank = $offset + 1;
+		$rank        = $offset + 1;
 
 		foreach ( $users as $user ) {
 			$user_xp = $mycred->get_users_cred( $user->ID );
