@@ -211,17 +211,14 @@ class Guild {
 			return $guild_id;
 		}
 
-		// Add creator as guild leader
 		$this->add_member( $guild_id, $args['creator_id'], 'leader' );
 
-		// Add meta data
 		update_post_meta( $guild_id, '_guild_tagline', sanitize_text_field( $args['tagline'] ) );
 		update_post_meta( $guild_id, '_guild_description', wp_kses_post( $args['description'] ) );
 		update_post_meta( $guild_id, '_guild_max_members', absint( $args['max_members'] ) );
 		update_post_meta( $guild_id, '_guild_creator_id', absint( $args['creator_id'] ) );
 		update_post_meta( $guild_id, '_guild_status', sanitize_text_field( $args['status'] ) );
 
-		// Add any custom meta
 		if ( ! empty( $args['meta'] ) ) {
 			foreach ( $args['meta'] as $key => $value ) {
 				update_post_meta( $guild_id, $key, $value );
